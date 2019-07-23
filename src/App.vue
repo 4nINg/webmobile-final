@@ -2,7 +2,7 @@
   <div id="app">
     <Header></Header>
     <MainPage></MainPage>
-    <Footer></Footer>
+    <!-- <Footer></Footer> -->
   </div>
 </template>
 <script>
@@ -28,6 +28,11 @@ export default {
 </script>
 <style>
 body {
+  margin: 0;
+  padding: 0;
+}
+
+body * {
   margin: 0;
   padding: 0;
 }
