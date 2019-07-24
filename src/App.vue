@@ -15,7 +15,6 @@ import MainPage from "@/views/MainPage";
 export default {
   name: "App",
   store,
-  methods: {},
   data() {
     return {};
   },
@@ -23,7 +22,8 @@ export default {
     Header,
     Footer,
     MainPage
-  }
+  },
+  methods: {}
 };
 </script>
 <style>
