@@ -4,21 +4,18 @@
       <span class="logo">빠른 영화, 빠른 영화관</span>
       <span class="mainLogo">빠영빠영.</span>
     </div>
-    <div class="sidebar openBtn" @click="openNav()">
-      <i class="fas fa-bars"></i>
-    </div>
-    <div class="routerDiv sideNav">
-      <span class="closebtn" @click="closeNav()">
-        <i class="fas fa-times"></i>
+    <div class="sideNav">
+      <span>
+        <router-link to="/">Login</router-link>
+      </span>
+      <span>
+        <router-link to="/">Preview</router-link>
       </span>
       <span>
         <router-link to="/">Review</router-link>
       </span>
       <span>
-        <router-link to="/">Comments</router-link>
-      </span>
-      <span>
-        <router-link to="/">Login</router-link>
+        <router-link to="/">Search</router-link>
       </span>
     </div>
   </div>
@@ -29,14 +26,7 @@ export default {
     return {};
   },
   components: {},
-  methods: {
-    openNav() {
-      document.querySelector(".sideNav").style.height = "100%";
-    },
-    closeNav() {
-      document.querySelector(".sideNav").style.height = "0";
-    }
-  }
+  methods: {}
 };
 </script>
 <style>
@@ -48,15 +38,11 @@ export default {
   font-style: normal;
 }
 .headerDiv {
-  /* background-color: rgb(44, 62, 80); */
   display: flex;
   justify-content: space-between;
   color: black;
   text-align: center;
   width: 100%;
-  /* top: 0;
-  position: sticky;
-  background-color: white; */
 }
 
 .headerDiv span {
@@ -64,81 +50,60 @@ export default {
 }
 .logo {
   font-size: 0.85em;
-  color: gray;
+  /* color: rgb(255, 98, 0); */
+  color: white;
   opacity: 0.6;
 }
 .mainLogo {
-  font-size: 2.8em;
+  font-size: 3.7em;
   margin-left: 0.3em;
   margin-top: -0.1em;
-  font-family: "Song Myung", serif;
+  /* font-family: "Song Myung", serif; */
+  /* font-family: "East Sea Dokdo", cursive; */
+  font-family: "Nanum Brush Script", cursive;
+  font-weight: 400;
 }
 
 .logoDiv {
   display: flex;
   flex-direction: column;
-  margin-top: 1.5%;
+  margin-top: 3%;
   margin-left: 1.5%;
   margin-bottom: 1%;
 }
 
-.routerDiv {
-  display: flex;
-  flex-direction: column;
-  /* margin-right: 7%;
-  margin-top: 2.3%; */
-  justify-content: space-evenly;
-}
-
-.routerDiv span {
-  /* margin-left: 10%; */
-  /* margin-right: 30%; */
-  font-size: 2em;
-  text-decoration: none;
-}
-
-a:link,
-a:visited,
-a {
-  color: white;
-  text-decoration: none;
-}
-
 .sideNav {
-  height: 0;
-  width: 100%;
-  position: fixed;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  background-color: rgb(44, 62, 80);
-  opacity: 0.9;
-  overflow: hidden;
-  transition: 0.5s;
+  display: flex;
+  /* flex-direction: column; */
+  width: 40vw;
+  /* justify-content: space-between !important; */
+  position: absolute;
+  top: 40%;
+  left: -18%;
+  transform: rotate(-90deg);
 }
 
 .sideNav span {
   cursor: pointer;
-  font-size: 2.5em;
+  font-size: 1.3em;
   color: white;
   transition: 0.3s;
+  margin-right: 10%;
+  font-family: "Courgette", cursive;
+  /* text-shadow: 5px 5px black; */
 }
 
-.closebtn {
-  position: absolute;
-  top: 4.5%;
-  right: 4.8%;
-  font-size: 3em !important;
-  /* margin-right: 100%; */
+a:visited,
+a:active,
+a:link {
+  /* color: rgb(255, 98, 0); */
+  color: white;
+  text-decoration: none;
 }
 
-.openBtn {
-  cursor: pointer;
-  top: 15%;
-  right: 15%;
-  font-size: 2em;
-  margin-right: 5%;
-  margin-top: 2.5%;
+.sideNav span:hover,
+.sideNav a:hover {
+  color: rgb(255, 98, 0);
 }
 </style>
 
