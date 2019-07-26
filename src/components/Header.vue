@@ -6,7 +6,10 @@
       <i class="fas fa-home homeIcon hide"></i>
     </div>
     <div class="sideNav">
-      <span>
+      <span v-if="this.$store.state.user" @click="goToLogout()">
+        <router-link to="/">Logout</router-link>
+      </span>
+      <span v-else @click="goToLogin()">
         <router-link to="/">Login</router-link>
       </span>
       <span>
@@ -27,7 +30,17 @@ export default {
     return {};
   },
   components: {},
-  methods: {}
+  // mounted(){
+  //   alert(this.$store.state.accessToken)
+  // },
+  methods: {
+    goToLogin(){
+      document.querySelector('#loginForm').style.display = "block"
+    },
+    goToLogout(){
+      this.$store.dispatch("userSignOut");
+    }
+  }
 };
 </script>
 <style>
@@ -107,4 +120,3 @@ a:link {
   color: rgb(255, 98, 0);
 }
 </style>
-

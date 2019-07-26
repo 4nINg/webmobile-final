@@ -10,6 +10,7 @@ import router from "./router.js";
 import Header from "@/components/Header";
 // import Footer from "@/components/Footer";
 import MainPage from "@/views/MainPage";
+import firebase from "firebase";
 
 export default {
   name: "App",
@@ -53,4 +54,3 @@ body * {
   background-position: center center;
 }
 </style>
-
