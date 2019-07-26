@@ -13,11 +13,8 @@
         </span>
       </div>
     </div>
-    <ImageBanner></ImageBanner>
-    <moviePoster></moviePoster>
-    <ReviewWriter></ReviewWriter>
-    <PreviewWriter></PreviewWriter>
-    <ImgUploader></ImgUploader>
+    <LoginForm/>
+    <SignUpForm/>
   </div>
 </template>
 
@@ -26,8 +23,9 @@ import ImageBanner from "../components/ImageBanner";
 import moviePoster from "../components/moviePoster";
 import PreviewWriter from "../components/PreviewWriter";
 import ReviewWriter from "../components/ReviewWriter";
-import ImgUploader from "../components/ImgUploader";
 import Header from "@/components/Header";
+import LoginForm from "../components/LoginForm";
+import SignUpForm from "../components/SignUpForm";
 
 export default {
   components: {
@@ -35,7 +33,9 @@ export default {
     moviePoster,
     PreviewWriter,
     ReviewWriter,
-    Header
+    Header,
+    LoginForm,
+    SignUpForm
   }
 };
 </script>
