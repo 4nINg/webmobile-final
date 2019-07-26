@@ -18,7 +18,7 @@
     <moviePoster></moviePoster>
     <ReviewWriter></ReviewWriter>
     <PreviewWriter></PreviewWriter>
-    <ImgUploader></ImgUploader>-->
+    <ImgUploader></ImgUploader> -->
   </div>
 </template>
 
