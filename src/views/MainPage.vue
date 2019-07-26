@@ -13,11 +13,14 @@
         </span>
       </div>
     </div>
-    <ImageBanner></ImageBanner>
+    <!-- <ImageBanner></ImageBanner>
     <moviePoster></moviePoster>
+
+
+    
     <ReviewWriter></ReviewWriter>
     <PreviewWriter></PreviewWriter>
-    <ImgUploader></ImgUploader>
+    <ImgUploader></ImgUploader> -->
   </div>
 </template>
 
