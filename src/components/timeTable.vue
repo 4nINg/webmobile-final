@@ -2,8 +2,12 @@
   <div class="tableMainDiv">
     <div class="searchBox">
       <input type="text" placeholder="Search" class="searchTxt" />
-      <i class="fas fa-search searchBtn"></i>
-      <i class="far fa-calendar-alt calendarBtn" @click="openModal()"></i>
+      <span>
+        <i class="fas fa-search searchBtn"></i>
+      </span>
+      <span @click="openModal()">
+        <i class="far fa-calendar-alt calendarBtn"></i>
+      </span>
     </div>
     <div class="tableDiv">
       <div class="partDiv">
@@ -39,7 +43,7 @@
     </div>
     <div id="myModal" class="modal">
       <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="close" @click="closeModal()">&times;</span>
         <div class="container col-sm-4 col-md-7 col-lg-4 mt-5">
           <div class="card">
             <h3 class="card-header" id="monthAndYear"></h3>
@@ -240,6 +244,9 @@ export default {
     openModal() {
       alert("!!@!@!@!@!@!@");
       document.getElementById("myModal").style.display = "block";
+    },
+    closeModal() {
+      document.getElementById("myModal").style.display = "none";
     }
   }
 };
@@ -253,17 +260,10 @@ export default {
 }
 
 .searchBox {
-  width: 100%;
+  width: 80%;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-}
-
-.searchBox * {
-  /* margin-left: 5%; */
-  /* margin-right: 2%; */
-  /* margin-bottom: 3%; */
-  /* transform: translateY(-170%); */
   font-size: 1.4em;
 }
 
@@ -351,7 +351,7 @@ export default {
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
+  overflow: hidden; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
