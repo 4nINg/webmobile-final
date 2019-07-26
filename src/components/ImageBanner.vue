@@ -7,7 +7,6 @@
       </span>
       <span class="calendarBtn">
         <input type="text" id="datepicker" />
-        <!-- <i class="far fa-calendar-alt"></i> -->
       </span>
     </div>
   </div>
@@ -20,8 +19,13 @@ export default {
   },
   methods: {
     search() {
-      var posterDiv = document.querySelector(".posterDiv");
-      posterDiv.classList.toggle("visible");
+      $(".posterDiv").show(300);
+      var moveTop = document.querySelector(".posterDiv").offsetTop;
+      window.scrollTo({
+        top: moveTop,
+        left: 0,
+        behavior: "smooth"
+      });
     }
   }
 };

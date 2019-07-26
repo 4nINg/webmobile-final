@@ -4,9 +4,19 @@
       <span class="logo">빠른 영화, 빠른 영화관</span>
       <span class="mainLogo">빠영빠영.</span>
     </div>
-    <div class="routerDiv">
-      <span>Review</span>
-      <span>Comments</span>
+    <div class="sideNav">
+      <span>
+        <router-link to="/">Login</router-link>
+      </span>
+      <span>
+        <router-link to="/">Preview</router-link>
+      </span>
+      <span>
+        <router-link to="/">Review</router-link>
+      </span>
+      <span>
+        <router-link to="/">Search</router-link>
+      </span>
     </div>
   </div>
 </template>
@@ -28,7 +38,6 @@ export default {
   font-style: normal;
 }
 .headerDiv {
-  /* background-color: rgb(44, 62, 80); */
   display: flex;
   justify-content: space-between;
   color: black;
@@ -41,35 +50,60 @@ export default {
 }
 .logo {
   font-size: 0.85em;
-  color: gray;
+  /* color: rgb(255, 98, 0); */
+  color: white;
   opacity: 0.6;
 }
 .mainLogo {
-  font-size: 2.8em;
+  font-size: 3.7em;
   margin-left: 0.3em;
   margin-top: -0.1em;
-  font-family: "Song Myung", serif;
+  /* font-family: "Song Myung", serif; */
+  /* font-family: "East Sea Dokdo", cursive; */
+  font-family: "Nanum Brush Script", cursive;
+  font-weight: 400;
 }
 
 .logoDiv {
   display: flex;
   flex-direction: column;
-  margin-top: 1.5%;
+  margin-top: 3%;
   margin-left: 1.5%;
   margin-bottom: 1%;
 }
 
-.routerDiv {
+.sideNav {
   display: flex;
-  margin-right: 7%;
-  margin-top: 2.3%;
-  justify-content: space-around;
+  /* flex-direction: column; */
+  width: 40vw;
+  /* justify-content: space-between !important; */
+  position: absolute;
+  top: 40%;
+  left: -18%;
+  transform: rotate(-90deg);
 }
 
-.routerDiv span {
-  margin-left: 10%;
-  margin-right: 30%;
-  font-size: 1.7em;
+.sideNav span {
+  cursor: pointer;
+  font-size: 1.3em;
+  color: white;
+  transition: 0.3s;
+  margin-right: 10%;
+  font-family: "Courgette", cursive;
+  /* text-shadow: 5px 5px black; */
+}
+
+a:visited,
+a:active,
+a:link {
+  /* color: rgb(255, 98, 0); */
+  color: white;
+  text-decoration: none;
+}
+
+.sideNav span:hover,
+.sideNav a:hover {
+  color: rgb(255, 98, 0);
 }
 </style>
 
