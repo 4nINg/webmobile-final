@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="mainDiv">
-    <Header></Header>
-    <div class="slogan">
-      <span class="firstSlogan">
-        Life is a
-        <span class="colorSlogan">tragedy</span> when seen in close-up,
-      </span>
-      <span class="secondSlogan">
-        but a
-        <span class="colorSlogan">comedy</span> in long-shot.
-      </span>
+      <Header></Header>
+      <div class="slogan">
+        <span class="firstSlogan">
+          Life is a
+          <span class="colorSlogan">tragedy</span> when seen in close-up,
+        </span>
+        <span class="secondSlogan">
+          but a
+          <span class="colorSlogan">comedy</span> in long-shot.
+        </span>
+      </div>
     </div>
-  </div>
     <ImageBanner></ImageBanner>
     <moviePoster></moviePoster>
     <ReviewWriter></ReviewWriter>
@@ -34,19 +34,10 @@ export default {
     ImageBanner,
     moviePoster,
     PreviewWriter,
-    ReviewWriter
-  }
-};
-
-export default {
-  components: {
+    ReviewWriter,
     Header
-  },
-  data() {
-    return {};
   }
 };
-
 </script>
 
 <style>

@@ -3,6 +3,7 @@
     <div class="logoDiv">
       <span class="logo">빠른 영화, 빠른 영화관</span>
       <span class="mainLogo">빠영빠영.</span>
+      <i class="fas fa-home homeIcon hide"></i>
     </div>
     <div class="sideNav">
       <span>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Song+Myung&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="/resources/demos/style.css" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Great+Vibes|Kaushan+Script&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=East+Sea+Dokdo|Nanum+Brush+Script&display=swap" rel="stylesheet" />
+    <script>
+        $(function() {
+            $("#datepicker").datepicker({
+                showOn: "button",
+                buttonImage: "img/calendar.png",
+                buttonImageOnly: true
+            });
+        });
+    </script>
+    <title>movie-project</title>
+</head>
+
+<body>
+    <noscript>
+      <strong
+        >We're sorry but movie-project doesn't work properly without JavaScript
+        enabled. Please enable it to continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <!-- 챗봇 -->
+    <div id="frogue-container" class="position-right-bottom" data-chatbot="9ba5528b-e743-4e2a-9ccc-68281a200d2e" data-user="사용자ID" data-init-key="9ba5528b-e743-4e2a-9ccc-68281a200d2e"></div>
+
+    <script>
+        (function(d, s, id) {
+            var js,
+                fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src =
+                "https:\/\/danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        })(document, "script", "frogue-embed");
+    </script>
+    <!-- 챗봇 -->
+</body>
+
+</html>

@@ -22,7 +22,16 @@ export default {
     // Footer,
     MainPage
   },
-  methods: {}
+  methods: {},
+  mounted() {
+    var address = document.location.href;
+    if (address !== "http://localhost:8080/") {
+      var logo = document.querySelector(".logo");
+      var mainLogo = document.querySelector(".mainLogo");
+      logo.classList.add("hide");
+      mainLogo.classList.add("hide");
+    }
+  }
 };
 </script>
 <style>
