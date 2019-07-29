@@ -5,6 +5,7 @@ import store from './store'
 import './registerServiceWorker'
 import axios from "axios";
 import cheerio from "cheerio";
+import firebase from "firebase";
 
 Vue.use(axios);
 Vue.use(cheerio);
@@ -14,5 +15,12 @@ Vue.prototype.$http = require('axios');
 new Vue({
     router,
     store,
-    render: h => h(App)
+    render: h => h(App),
+    created(){
+      firebase.auth().onAuthStateChanged((firebaseUser) => {
+          if (firebaseUser) {
+              store.dispatch('autoSignIn', firebaseUser)
+          }
+      })
+    }
 }).$mount("#app");

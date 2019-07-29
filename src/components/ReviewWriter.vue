@@ -4,7 +4,7 @@
     <form>
       <input type="text" placeholder="제목을 입력해주세요." v-model="writerTitle" style="width:100%; height:15px;"></input>
       <input type="text" placeholder="내용을 입력해주세요."v-model="writerBody" style="width:100%; height:100px;"></input>
-      <button @click="submit()" style="display:block  ">submit</button>
+      <button @click="submit()" style="display:block">submit</button>
     </form>
 </div>
 </template>
@@ -34,10 +34,9 @@ export default {
       return true;
     },
     submit: function() {
-      alert("섭밑 들어옴")
       if(this.checkForm()){
         FirebaseService.postReview(this.writerTitle, this.writerBody, "test");
-        // FirebaseService.postInfo(this.title, this.body, this.$store.state.nickname);
+        // FirebaseService.postInfo(this.title, this.body, this.$store.state.Username);
       }
     }
   }

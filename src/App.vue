@@ -12,6 +12,7 @@ import store from "./store";
 import router from "./router.js";
 import Header from "@/components/Header";
 import MainPage from "@/views/MainPage";
+import firebase from "firebase";
 import timeTable from "@/components/timeTable";
 
 export default {
@@ -89,4 +90,3 @@ body * {
   background-position: center center;
 }
 </style>
-

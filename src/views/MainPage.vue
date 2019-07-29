@@ -12,11 +12,13 @@
         </span>
       </div>
     </div>
+    <!-- <LoginForm/>
+    <SignUpForm/> -->
     <!-- <ImageBanner></ImageBanner>
     <moviePoster></moviePoster>
     <ReviewWriter></ReviewWriter>
     <PreviewWriter></PreviewWriter>
-    <ImgUploader></ImgUploader>-->
+    <ImgUploader></ImgUploader> -->
   </div>
 </template>
 
@@ -27,9 +29,18 @@
 // import ReviewWriter from "../components/ReviewWriter";
 // import ImgUploader from "../components/ImgUploader";
 import Header from "@/components/Header";
+// import LoginForm from "../components/LoginForm";
+// import SignUpForm from "../components/SignUpForm";
 
 export default {
   components: {
+    // ImageBanner,
+    // moviePoster,
+    // PreviewWriter,
+    // ReviewWriter,
+    // Header,
+    // LoginForm,
+    // SignUpForm,
     // ImageBanner,
     // moviePoster,
     // PreviewWriter,
