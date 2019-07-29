@@ -257,7 +257,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 82.5vh;
+  height: 81vh;
   background-color: rgb(255, 255, 255, 0.7);
 }
 

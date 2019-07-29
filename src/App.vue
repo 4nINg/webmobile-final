@@ -4,7 +4,7 @@
     <div class="backgroudDiv"></div>
     <MainPage v-if="selectPage === 0"></MainPage>
     <timeTable v-if="selectPage === 1"></timeTable>
-    <!-- <Footer></Footer> -->
+    <Review v-if="selectPage === 2"></Review>
   </div>
 </template>
 <script>
@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import MainPage from "@/views/MainPage";
 import firebase from "firebase";
 import timeTable from "@/components/timeTable";
+import Review from "@/components/Review";
 
 export default {
   name: "App",
@@ -26,7 +27,8 @@ export default {
   components: {
     Header,
     MainPage,
-    timeTable
+    timeTable,
+    Review
   },
   methods: {
     childSelectPage(i) {
@@ -65,6 +67,7 @@ export default {
 body {
   margin: 0;
   padding: 0;
+  width: 100vw;
   height: 100vh;
 }
 
@@ -79,11 +82,10 @@ body * {
 }
 
 .backgroudDiv {
-  height: 82.5vh;
-  width: 30vw;
+  height: 81vh;
+  width: 32vw;
   position: absolute;
   left: 45%;
-  /* top: 13%; */
   z-index: -1;
   background-image: url("./assets/film.jpg");
   background-size: cover;
