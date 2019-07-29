@@ -4,7 +4,7 @@
       <i class="far fa-edit"></i>
     </div>
     <div class="ReviewsDiv">
-      <div v-for></div>
+      <!-- <div v-for></div> -->
     </div>
   </div>
 </template>
