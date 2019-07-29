@@ -4,6 +4,7 @@
     <div class="backgroudDiv"></div>
     <MainPage v-if="selectPage === 0"></MainPage>
     <timeTable v-if="selectPage === 1"></timeTable>
+    <LoginForm></LoginForm>
     <!-- <Footer></Footer> -->
   </div>
 </template>
@@ -14,6 +15,8 @@ import Header from "@/components/Header";
 import MainPage from "@/views/MainPage";
 import firebase from "firebase";
 import timeTable from "@/components/timeTable";
+import LoginForm from "@/components/LoginForm";
+import ReviewWriter from "@/components/ReviewWriter";
 
 export default {
   name: "App",
@@ -26,7 +29,9 @@ export default {
   components: {
     Header,
     MainPage,
-    timeTable
+    timeTable,
+    LoginForm,
+    ReviewWriter,
   },
   methods: {
     childSelectPage(i) {
