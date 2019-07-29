@@ -64,6 +64,7 @@ export default {
 body {
   margin: 0;
   padding: 0;
+  height: 100vh;
 }
 
 body * {
@@ -73,11 +74,11 @@ body * {
 
 #app {
   width: 100vw;
-  height: 100wh;
+  height: 100vh;
 }
 
 .backgroudDiv {
-  height: 81vh;
+  height: 82.5vh;
   width: 30vw;
   position: absolute;
   left: 45%;
