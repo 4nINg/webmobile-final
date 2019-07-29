@@ -8,6 +8,7 @@
     <!-- <Footer></Footer> -->
     <button @click="crawlingData()">크롤링가즈아</button>
     <div id="movieList">{{temp}}</div>
+    <Review v-if="selectPage === 2"></Review>
   </div>
 </template>
 <script>
@@ -19,6 +20,7 @@ import firebase from "firebase";
 import timeTable from "@/components/timeTable";
 import LoginForm from "@/components/LoginForm";
 import axios from "axios";
+import Review from "@/components/Review";
 
 export default {
   name: "App",
@@ -33,7 +35,8 @@ export default {
     Header,
     MainPage,
     timeTable,
-    LoginForm
+    LoginForm,
+    Review,
   },
   methods: {
     childSelectPage(i) {
@@ -87,6 +90,7 @@ export default {
 body {
   margin: 0;
   padding: 0;
+  width: 100vw;
   height: 100vh;
 }
 
@@ -101,11 +105,10 @@ body * {
 }
 
 .backgroudDiv {
-  height: 82.5vh;
-  width: 30vw;
+  height: 81vh;
+  width: 32vw;
   position: absolute;
   left: 45%;
-  /* top: 13%; */
   z-index: -1;
   background-image: url("./assets/film.jpg");
   background-size: cover;
