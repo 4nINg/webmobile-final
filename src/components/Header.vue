@@ -37,7 +37,12 @@ export default {
   //   alert(this.$store.state.accessToken)
   // },
   methods: {
+    goToLogin(){
+      document.querySelector('#loginForm').style.display = "block"
+      this.changeSelectPage(4);
+    },
     goToLogout(){
+      this.changeSelectPage(4);
       this.$store.dispatch("userSignOut");
     },
     changeSelectPage(i) {

@@ -100,6 +100,7 @@ export default new Vuex.Store({
                 commit('setAccessToken', firebaseUser.user.uid)
                 currentUser = firebase.auth().currentUser;
                 // FirebaseService.mgrUserLog(currentUser.uid);
+                console.log(currentUser);
                 alert("반갑습니다.\n" + currentUser.displayName + "님 Google 아이디로 로그인되었습니다.");
             })
             .catch(err => {
