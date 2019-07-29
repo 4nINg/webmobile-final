@@ -4,7 +4,10 @@
     <div class="backgroudDiv"></div>
     <MainPage v-if="selectPage === 0"></MainPage>
     <timeTable v-if="selectPage === 1"></timeTable>
+    <LoginForm v-if="selectPage === 4"></LoginForm>
     <!-- <Footer></Footer> -->
+    <button @click="crawlingData()">크롤링가즈아</button>
+    <div id="movieList">{{temp}}</div>
   </div>
 </template>
 <script>
@@ -14,23 +17,40 @@ import Header from "@/components/Header";
 import MainPage from "@/views/MainPage";
 import firebase from "firebase";
 import timeTable from "@/components/timeTable";
+import LoginForm from "@/components/LoginForm";
+import axios from "axios";
 
 export default {
   name: "App",
   store,
   data() {
     return {
-      selectPage: 0
+      selectPage: 0,
+      temp: null
     };
   },
   components: {
     Header,
     MainPage,
-    timeTable
+    timeTable,
+    LoginForm
   },
   methods: {
     childSelectPage(i) {
       this.selectPage = i;
+    },
+    crawlingData(){
+      var movieInfo;
+      axios.get("http://localhost:8888/megabox",{
+        headers : {
+          'Access-Control-Allow-Origin' : '*'
+        }
+      }).then((response)=>{
+        // console.log(data)
+        console.log(response.data.info)
+        this.temp = response.data.info;
+      });
+      // this.temp = data.data.info;
     }
   },
   mounted() {
@@ -53,6 +73,8 @@ export default {
       if (this.selectPage === 1) {
         document.querySelector(".headerDiv").style.backgroundColor =
           "rgb(255, 255, 255, 0.7)";
+      } else if(this.selectPage === 4) {
+        document.querySelector('#loginForm').style.display = "block"
       } else {
         document.querySelector(".headerDiv").style.backgroundColor =
           "transparent";
