@@ -61,7 +61,7 @@ export default {
       });
   },
   postReview(title, body, writer) { //리뷰 작성
-    alert(title + " " + body + " " +writer)
+    // alert(title + " " + body + " " +writer)
     firestore.collection(REVIEW).add({
       title : title,
       writer : writer,
@@ -70,21 +70,18 @@ export default {
       id: ""
     })
     .then(()=>{
-      alert("보내는중")
+      // alert("보내는중")
     }).catch((error)=>{
       alert(error)
     }).finally(()=>{
-      alert("작성끝")
+      // alert("작성끝")
     });
   },
   deleteReview(o) { //리뷰 삭제
     firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
       firestorage.ref().child('review/' + o.num).delete()
       alert("삭제완료!")
-      router.push("/review");
-      setTimeout(function(){
-        window.location.reload()
-      },100);
+      window.location.reload();
     });
   },
   getPreview(){ //시사회정보 상세보기
@@ -114,10 +111,7 @@ export default {
     firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
       firestorage.ref().child('review/' + o.num).delete()
       alert("삭제완료!")
-      router.push("/review");
-      setTimeout(function(){
-        window.location.reload()
-      },100);
+      window.location.reload();
     });
   },
   loginWithGoogle() {

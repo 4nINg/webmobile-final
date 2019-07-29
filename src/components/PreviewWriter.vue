@@ -79,7 +79,7 @@ export default {
           });
         });
         FirebaseService.postPreview(this.writerTitle, this.writerBody, "test")
-        // FirebaseService.postPreview(this.writerTitle, this.writerBody, this.imageUrl, this.imageName, this.$store.state.nickname)
+        // FirebaseService.postPreview(this.writerTitle, this.writerBody, this.imageUrl, this.imageName, this.$store.state.Username)
       }
     }
   }
