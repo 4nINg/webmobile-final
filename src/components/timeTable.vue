@@ -1,12 +1,12 @@
 <template>
   <div class="tableMainDiv">
     <div class="searchBox">
+      <span @click="openModal()" class="calendarBtn">
+        <i class="far fa-calendar-alt"></i>
+      </span>
       <input type="text" placeholder="Search" class="searchTxt" />
       <span>
         <i class="fas fa-search searchBtn"></i>
-      </span>
-      <span @click="openModal()">
-        <i class="far fa-calendar-alt calendarBtn"></i>
       </span>
     </div>
     <div class="tableDiv">
@@ -43,8 +43,7 @@
     </div>
     <div id="myModal" class="modal">
       <div class="modal-content">
-        <span class="close" @click="closeModal()">&times;</span>
-        <div class="container col-sm-4 col-md-7 col-lg-4 mt-5">
+        <div class="container col-sm-4 col-md-7 col-lg-4 mt-5 modalContainer">
           <div class="card">
             <h3 class="card-header" id="monthAndYear"></h3>
             <table class="table table-bordered table-responsive-sm" id="calendar">
@@ -63,18 +62,13 @@
               <tbody id="calendar-body"></tbody>
             </table>
 
-            <div class="form-inline">
-              <button
-                class="btn btn-outline-primary col-sm-6"
-                id="previous"
-                @click="previous()"
-              >Previous</button>
-
+            <div class="form-inline preNextDiv">
+              <button class="btn btn-outline-primary col-sm-6" id="previous" @click="previous()">Pre</button>
               <button class="btn btn-outline-primary col-sm-6" id="next" @click="next()">Next</button>
             </div>
             <br />
-            <form class="form-inline">
-              <label class="lead mr-2 ml-2" for="month">Jump To:</label>
+            <form class="form-inline jumpDiv">
+              <!-- <label class="lead mr-2 ml-2" for="month">Jump To:</label> -->
               <select class="form-control col-sm-4" name="month" id="month" @change="jump()">
                 <option value="0">Jan</option>
                 <option value="1">Feb</option>
@@ -136,6 +130,7 @@
               </select>
             </form>
           </div>
+          <span class="close" @click="closeModal()">&times;</span>
         </div>
       </div>
     </div>
@@ -150,6 +145,7 @@ export default {
       currentYear: null,
       selectYear: null,
       selectMonth: null,
+      selectDay: null,
       months: [
         "Jan",
         "Feb",
@@ -232,6 +228,11 @@ export default {
             ) {
               cell.classList.add("bg-info");
             } // color today's date
+            cell.classList.add("selectDay");
+            cell.addEventListener("click", function() {
+              this.selectDay = i * 7 + j;
+              document.getElementById("myModal").style.display = "none";
+            });
             cell.appendChild(cellText);
             row.appendChild(cell);
             date++;
@@ -242,7 +243,6 @@ export default {
       }
     },
     openModal() {
-      alert("!!@!@!@!@!@!@");
       document.getElementById("myModal").style.display = "block";
     },
     closeModal() {
@@ -255,46 +255,56 @@ export default {
 .tableMainDiv {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  justify-content: center;
+  align-items: center;
+  height: 82.5vh;
   background-color: rgb(255, 255, 255, 0.7);
 }
 
 .searchBox {
+  position: absolute;
+  top: 10%;
   width: 80%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   font-size: 1.4em;
+  margin-bottom: 2%;
 }
 
 .searchBtn {
   cursor: pointer;
+  margin-left: 50%;
 }
 
 .searchTxt {
   width: 35%;
-  padding: 0.6%;
+  padding: 1%;
   box-sizing: border-box;
   /* border: 1px solid rgb(240, 240, 240); */
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  border: none;
   border-radius: 0.7em;
-  background-color: rgb(150, 150, 150, 0.9);
-  color: white;
+  background-color: rgb(150, 150, 150, 0.2);
+  color: black;
+}
+
+.searchTxt:focus {
+  outline: none;
 }
 
 ::-webkit-input-placeholder {
-  color: white;
+  color: black;
 }
 
 .searchBtn {
-  margin-left: -1.9%;
   margin-bottom: 0.8%;
 }
 
 .tableDiv {
   display: flex;
   justify-content: space-evenly;
-  height: 75vh;
+  height: 70vh;
   margin-left: 1%;
 }
 .partDiv {
@@ -302,23 +312,18 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 25%;
-  /* margin-top: 5%; */
 }
 
 .partInnerDiv {
   width: 100%;
-  /* margin-top: 5%; */
-  /* margin-bottom: 5%; */
   height: 40em;
-  /* padding: 1% 1%; */
   border: 1px solid rgb(0, 0, 0, 0.1);
-  /* border: 1px solid red; */
   overflow: auto;
 }
 
 .partDiv img {
   width: 30%;
-  height: 7%;
+  /* height: 32%; */
   background-size: cover;
   margin-bottom: 3%;
 }
@@ -339,8 +344,7 @@ export default {
 
 .calendarBtn {
   cursor: pointer;
-  margin-left: 1.5%;
-  margin-bottom: 1%;
+  margin-right: 1.5%;
 }
 
 .modal {
@@ -358,16 +362,46 @@ export default {
 
 /* Modal Content/Box */
 .modal-content {
+  display: flex;
+  justify-content: center;
+  text-align: center;
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 50%; /* Could be more or less, depending on screen size */
+  width: 25%; /* Could be more or less, depending on screen size */
+}
+
+.modalContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.modalContainer .card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content td,
+.modal-content th {
+  padding-left: 2%;
+  padding-right: 2%;
+  width: 2em;
+}
+
+#calendar-body td {
+  cursor: pointer;
 }
 /* The Close Button */
 .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateY(-50%);
   color: #aaa;
-  float: right;
   font-size: 28px;
   font-weight: bold;
 }
@@ -376,6 +410,26 @@ export default {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+.preNextDiv {
+  margin-top: 6%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.jumpDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.bg-info {
+  transform: scale(1.5);
+}
+
+.selectDay:hover {
+  background-color: rgb(255, 98, 0);
+  border-radius: 0.7em;
 }
 </style>
 
