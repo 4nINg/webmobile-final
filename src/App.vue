@@ -17,6 +17,7 @@ import firebase from "firebase";
 import timeTable from "@/components/timeTable";
 import LoginForm from "@/components/LoginForm";
 import ReviewWriter from "@/components/ReviewWriter";
+import CommentWriter from "@/components/CommentWriter";
 
 export default {
   name: "App",
@@ -32,6 +33,7 @@ export default {
     timeTable,
     LoginForm,
     ReviewWriter,
+    CommentWriter,
   },
   methods: {
     childSelectPage(i) {

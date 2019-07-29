@@ -8,12 +8,18 @@
   <button @click="signUp()">SignUp</button>
   <button @click="loginWithGoogle()">Google</button>
   <button @click="loginWithFacebook()">Facebook</button>
+  <SignUpForm></SignUpForm>
 </div>
 </template>
 <script>
 import FirebaseService from "../services/FirebaseService"
+import SignUpForm from "@/components/SignUpForm"
+
 export default {
   name: "LoginForm",
+  components:{
+    SignUpForm
+  },
   data(){
     return{
       email: "",
@@ -66,6 +72,11 @@ export default {
 }
 </script>
 <style>
+
+#loginForm{
+  margin-left: 30%;
+  margin-top: 30%;
+}
 #loginForm button{
   margin-right:5px;
 }
