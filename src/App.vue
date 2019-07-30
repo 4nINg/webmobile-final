@@ -18,16 +18,14 @@ import MainPage from "@/views/MainPage";
 import firebase from "firebase";
 import timeTable from "@/components/timeTable";
 import LoginForm from "@/components/LoginForm";
-import axios from "axios";
+// import axios from "axios";
 import Review from "@/components/Review";
-import ReviewWriter from "@/components/ReviewWriter";
-import CommentWriter from "@/components/CommentWriter";
 
 export default {
   name: "App",
   store,
   data() {
-    return {
+    return {  
       selectPage: 0,
       temp: null
     };
@@ -37,9 +35,7 @@ export default {
     MainPage,
     timeTable,
     LoginForm,
-    Review,
-    ReviewWriter,
-    CommentWriter
+    Review
   },
   methods: {
     childSelectPage(i) {

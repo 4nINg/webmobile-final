@@ -53,6 +53,9 @@
                 <h3>{{reviewCommentUser[i-1]}}</h3>
                 <p>{{reviewCommentContent[i-1]}}</p>
               </div>
+              <div class="commentWriterDiv">
+                <CommentWriter :reviewId="reviewId" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
+              </div>
             </div>
             <div>
               <span class="showInModalreview" @click="backToTheComment()">
@@ -67,13 +70,18 @@
 </template>
 <script>
 import FirebaseService from "@/services/FirebaseService";
+import CommentWriter from "@/components/CommentWriter";
 
 export default {
+  components:{
+    CommentWriter,   
+  },
   data() {
     return {
       reviewList: [],
       displayReviews: [],
       showIdx: 0,
+      reviewId: "",
       reviewTitle: "",
       reviewContent: "",
       reviewCommentContent: [],
@@ -116,6 +124,8 @@ export default {
       this.reShowList();
     },
     showReview(i) {
+      this.reviewId = this.displayReviews[i].id;
+      console.log("dfdf : "+this.reviewId );
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {

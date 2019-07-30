@@ -86,6 +86,14 @@ export default {
             window.location.reload();
         });
     },
+    postComment(reviewId, userList, contentList) { //reviewId - review식별자
+        firestore.collection(REVIEW).doc(reviewId).update({
+            userId: userList,
+            comment: contentList
+        })
+            
+        
+    },
     getPreview() { //시사회정보 상세보기
         const reviewCollection = firestore.collection(REVIEW);
         return reviewCollection

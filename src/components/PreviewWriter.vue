@@ -3,7 +3,7 @@
   <h2>시사회 등록</h2>
     <form>
       <input type="text" placeholder="제목을 입력해주세요." v-model="writerTitle" style="width:100%; height:15px;"></input>
-      <input type="text" placeholder="내용을 입력해주세요."v-model="writerBody" style="width:100%; height:100px;"></input>
+      <input type="text" placeholder="내용을 입력해주세요." v-model="writerBody" style="width:100%; height:100px;"></input>
       <ImgUploader ref="uploader"></ImgUploader>
       <button @click="submit()">submit</button>
     </form>
