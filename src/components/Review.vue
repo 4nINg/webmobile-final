@@ -317,6 +317,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   height: 100%;
+  overflow: scroll;
 }
 
 .showInModalreview {

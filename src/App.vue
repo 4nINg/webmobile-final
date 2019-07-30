@@ -7,8 +7,6 @@
     <LoginForm v-if="selectPage === 4"></LoginForm>
     <LoginForm></LoginForm>
     <!-- <Footer></Footer> -->
-    <button @click="crawlingData()">크롤링가즈아</button>
-    <div id="movieList">{{temp}}</div>
     <Review v-if="selectPage === 2"></Review>
   </div>
 </template>
@@ -41,24 +39,11 @@ export default {
     LoginForm,
     Review,
     ReviewWriter,
-    CommentWriter,
+    CommentWriter
   },
   methods: {
     childSelectPage(i) {
       this.selectPage = i;
-    },
-    crawlingData(){
-      var movieInfo;
-      axios.get("http://localhost:8888/megabox",{
-        headers : {
-          'Access-Control-Allow-Origin' : '*'
-        }
-      }).then((response)=>{
-        // console.log(data)
-        console.log(response.data.info)
-        this.temp = response.data.info;
-      });
-      // this.temp = data.data.info;
     }
   },
   mounted() {
@@ -81,8 +66,8 @@ export default {
       if (this.selectPage === 1) {
         document.querySelector(".headerDiv").style.backgroundColor =
           "rgb(255, 255, 255, 0.7)";
-      } else if(this.selectPage === 4) {
-        document.querySelector('#loginForm').style.display = "block"
+      } else if (this.selectPage === 4) {
+        document.querySelector("#loginForm").style.display = "block";
       } else {
         document.querySelector(".headerDiv").style.backgroundColor =
           "transparent";

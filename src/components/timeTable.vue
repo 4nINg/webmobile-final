@@ -4,48 +4,38 @@
       <span @click="openModal()" class="calendarBtn">
         <i class="far fa-calendar-alt"></i>
       </span>
-      <input type="text" placeholder="Search" class="searchTxt" />
-      <span>
+      <input type="text" v-model="searchKeyword" placeholder="Search" class="searchTxt" />
+      <span @click="searchMovie()">
         <i class="fas fa-search searchBtn"></i>
       </span>
     </div>
     <div class="tableDiv">
       <div class="partDiv">
         <img src="@/assets/cgv.png" />
-        <div class="partInnerDiv">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            <br />Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            <br />Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-        </div>
+        <div class="partInnerDiv cgvDiv"></div>
       </div>
       <div class="partDiv">
         <img src="@/assets/megabox.png" />
-        <div class="partInnerDiv">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            <br />Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            <br />Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-        </div>
+        <div class="partInnerDiv megaboxDiv"></div>
       </div>
       <div class="partDiv">
         <img src="@/assets/lotte.png" />
-        <div class="partInnerDiv">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            <br />Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            <br />Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-        </div>
+        <div class="partInnerDiv lotteDiv"></div>
       </div>
     </div>
     <div id="myModal" class="modal">
       <div class="modal-content">
         <div class="container col-sm-4 col-md-7 col-lg-4 mt-5 modalContainer">
           <div class="card">
-            <h3 class="card-header" id="monthAndYear"></h3>
+            <div class="modalHeader">
+              <span @click="previous()">
+                <i class="fas fa-caret-left"></i>
+              </span>
+              <h3 class="card-header" id="monthAndYear"></h3>
+              <span @click="next()">
+                <i class="fas fa-caret-right"></i>
+              </span>
+            </div>
             <table class="table table-bordered table-responsive-sm" id="calendar">
               <thead>
                 <tr>
@@ -62,10 +52,10 @@
               <tbody id="calendar-body"></tbody>
             </table>
 
-            <div class="form-inline preNextDiv">
+            <!-- <div class="form-inline preNextDiv">
               <button class="btn btn-outline-primary col-sm-6" id="previous" @click="previous()">Pre</button>
               <button class="btn btn-outline-primary col-sm-6" id="next" @click="next()">Next</button>
-            </div>
+            </div>-->
             <br />
             <form class="form-inline jumpDiv">
               <!-- <label class="lead mr-2 ml-2" for="month">Jump To:</label> -->
@@ -86,47 +76,10 @@
 
               <label for="year"></label>
               <select class="form-control col-sm-4" name="year" id="year" @change="jump()">
-                <option value="1990">1990</option>
-                <option value="1991">1991</option>
-                <option value="1992">1992</option>
-                <option value="1993">1993</option>
-                <option value="1994">1994</option>
-                <option value="1995">1995</option>
-                <option value="1996">1996</option>
-                <option value="1997">1997</option>
-                <option value="1998">1998</option>
-                <option value="1999">1999</option>
-                <option value="2000">2000</option>
-                <option value="2001">2001</option>
-                <option value="2002">2002</option>
-                <option value="2003">2003</option>
-                <option value="2004">2004</option>
-                <option value="2005">2005</option>
-                <option value="2006">2006</option>
-                <option value="2007">2007</option>
-                <option value="2008">2008</option>
-                <option value="2009">2009</option>
-                <option value="2010">2010</option>
-                <option value="2011">2011</option>
-                <option value="2012">2012</option>
-                <option value="2013">2013</option>
-                <option value="2014">2014</option>
-                <option value="2015">2015</option>
-                <option value="2016">2016</option>
-                <option value="2017">2017</option>
                 <option value="2018">2018</option>
                 <option value="2019">2019</option>
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-                <option value="2027">2027</option>
-                <option value="2028">2028</option>
-                <option value="2029">2029</option>
-                <option value="2030">2030</option>
               </select>
             </form>
           </div>
@@ -137,6 +90,8 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -160,10 +115,22 @@ export default {
         "Nov",
         "Dec"
       ],
-      monthAndYear: null
+      monthAndYear: null,
+      showMoveList: [],
+      megaboxDate: [],
+      megaboxList: [],
+      megaboxResult: null,
+      lotteDate: [],
+      lotteList: [],
+      lotteResult: null,
+      cgvDate: [],
+      cgvList: [],
+      cgvResult: null,
+      searchKeyword: null
     };
   },
   mounted() {
+    this.crawlingData();
     this.today = new Date();
     this.currentMonth = this.today.getMonth();
     this.currentYear = this.today.getFullYear();
@@ -190,6 +157,7 @@ export default {
       this.showCalendar(this.currentMonth, this.currentYear);
     },
     showCalendar(month, year) {
+      var self = this;
       let firstDay = new Date(year, month).getDay();
       let daysInMonth = 32 - new Date(year, month, 32).getDate();
 
@@ -229,8 +197,19 @@ export default {
               cell.classList.add("bg-info");
             } // color today's date
             cell.classList.add("selectDay");
-            cell.addEventListener("click", function() {
-              this.selectDay = i * 7 + j;
+            cell.addEventListener("click", () => {
+              self.selectDay =
+                "" +
+                year +
+                "-" +
+                (month + 1 < 10 ? "0" + (month + 1) : month + 1) +
+                "-" +
+                (cell.innerHTML < 10 ? "0" + cell.innerHTML : cell.innerHTML);
+              var selectedDay = document.querySelectorAll(".selectedDay");
+              for (var z = 0; z < selectedDay.length; ++z) {
+                selectedDay[z].classList.remove("selectedDay");
+              }
+              cell.classList.add("selectedDay");
               document.getElementById("myModal").style.display = "none";
             });
             cell.appendChild(cellText);
@@ -247,6 +226,190 @@ export default {
     },
     closeModal() {
       document.getElementById("myModal").style.display = "none";
+    },
+    crawlingData() {
+      this.crawMegabox();
+      this.crawLotte();
+      this.crawCgv();
+    },
+    crawMegabox() {
+      var self = this;
+      axios
+        .get("http://localhost:8888/megabox", {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          }
+        })
+        .then(response => {
+          var byDate = response.data.info.split("&"); //날짜별;
+          var date = [];
+          var movieList = [];
+          var temp = null;
+          for (var i = 0; i < byDate.length; ++i) {
+            temp = byDate[i].split("*");
+            date.push(temp[0]);
+            movieList.push(temp[1]);
+          }
+          this.megaboxDate = date;
+          this.megaboxList = movieList;
+        });
+    },
+    crawLotte() {
+      var self = this;
+      axios
+        .get("http://localhost:8888/lottecinema", {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          }
+        })
+        .then(response => {
+          var byDate = response.data.info.split("&"); //날짜별;
+          var date = [];
+          var movieList = [];
+          var temp = null;
+          for (var i = 0; i < byDate.length; ++i) {
+            temp = byDate[i].split("*");
+            date.push(temp[0]);
+            movieList.push(temp[1]);
+          }
+          this.lotteDate = date;
+          this.lotteList = movieList;
+        });
+    },
+    crawCgv() {
+      var self = this;
+      axios
+        .get("http://localhost:8888/cgv", {
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          }
+        })
+        .then(response => {
+          var byDate = response.data.info.split("&"); //날짜별;
+          var date = [];
+          var movieList = [];
+          var temp = null;
+          for (var i = 0; i < byDate.length; ++i) {
+            temp = byDate[i].split("*");
+            date.push(temp[0]);
+            movieList.push(temp[1]);
+          }
+          this.cgvDate = date;
+          this.cgvList = movieList;
+        });
+    },
+    searchMovie() {
+      if (this.selectDay == null) {
+        alert("날짜를 선택해주세요!");
+        return;
+      }
+      this.searchMegabox();
+      this.searchLotte();
+      this.searchCgv();
+    },
+    searchLotte() {
+      var lotteDiv = document.querySelector(".lotteDiv");
+      this.lotteResult = null;
+      var result = [];
+      var bfsplit = null;
+      for (var i = 0; i < this.lotteDate.length - 1; ++i) {
+        if (this.lotteDate[i] == this.selectDay) {
+          bfsplit = this.lotteList[i];
+          break;
+        }
+      }
+
+      var afsplit = bfsplit.split(",");
+      var temp = null;
+      var final = null;
+      for (var i = 0; i < afsplit.length - 1; ++i) {
+        temp = afsplit[i].split("/");
+        if (temp[0].includes(this.searchKeyword)) {
+          final = temp[1].split("|");
+          this.lotteResult = final;
+          break;
+        }
+      }
+      if (bfsplit === null || this.lotteResult === null) {
+        lotteDiv.innerHTML =
+          '<div class="lotteInner">현재 상영 정보가 없습니다.</div>';
+        return;
+      }
+
+      var htmlText = "";
+      for (var n = 0; n < this.lotteResult.length; ++n) {
+        htmlText += '<div class="lotteInner">' + this.lotteResult[n] + "</div>";
+      }
+      lotteDiv.innerHTML = htmlText;
+    },
+    searchMegabox() {
+      var megaboxDiv = document.querySelector(".megaboxDiv");
+      this.megaboxResult = null;
+      var result = [];
+      var bfsplit = null;
+      for (var i = 0; i < this.megaboxDate.length - 1; ++i) {
+        if (this.megaboxDate[i] == this.selectDay) {
+          bfsplit = this.megaboxList[i];
+          break;
+        }
+      }
+
+      var afsplit = bfsplit.split(",");
+      var temp = null;
+      var final = null;
+      for (var i = 0; i < afsplit.length - 1; ++i) {
+        temp = afsplit[i].split("/");
+        if (temp[0].includes(this.searchKeyword)) {
+          final = temp[1].split("|");
+          this.megaboxResult = final;
+          break;
+        }
+      }
+      if (bfsplit === null || this.megaboxResult === null) {
+        megaboxDiv.innerHTML =
+          '<div class="megaboxInner">현재 상영 정보가 없습니다.</div>';
+        return;
+      }
+      var htmlText = "";
+      for (var n = 0; n < this.megaboxResult.length; ++n) {
+        htmlText +=
+          '<div class="megaboxInner">' + this.megaboxResult[n] + "</div>";
+      }
+      megaboxDiv.innerHTML = htmlText;
+    },
+    searchCgv() {
+      var cgvDiv = document.querySelector(".cgvDiv");
+      this.cgvResult = null;
+      var result = [];
+      var bfsplit = null;
+      for (var i = 0; i < this.cgvDate.length - 1; ++i) {
+        if (this.cgvDate[i] == this.selectDay) {
+          bfsplit = this.cgvList[i];
+          break;
+        }
+      }
+
+      var afsplit = bfsplit.split(",");
+      var temp = null;
+      var final = null;
+      for (var i = 0; i < afsplit.length - 1; ++i) {
+        temp = afsplit[i].split("/");
+        if (temp[0].includes(this.searchKeyword)) {
+          final = temp[1].split("|");
+          this.cgvResult = final;
+          break;
+        }
+      }
+      if (bfsplit === null || this.cgvResult === null) {
+        cgvDiv.innerHTML =
+          '<div class="cgvInner">현재 상영 정보가 없습니다.</div>';
+        return;
+      }
+      var htmlText = "";
+      for (var n = 0; n < this.cgvResult.length; ++n) {
+        htmlText += '<div class="cgvInner">' + this.cgvResult[n] + "</div>";
+      }
+      cgvDiv.innerHTML = htmlText;
     }
   }
 };
@@ -281,8 +444,6 @@ export default {
   width: 35%;
   padding: 1%;
   box-sizing: border-box;
-  /* border: 1px solid rgb(240, 240, 240); */
-  /* border: 1px solid black; */
   border: none;
   border-radius: 0.7em;
   background-color: rgb(150, 150, 150, 0.2);
@@ -316,14 +477,16 @@ export default {
 
 .partInnerDiv {
   width: 100%;
-  height: 40em;
+  height: 25em;
   border: 1px solid rgb(0, 0, 0, 0.1);
   overflow: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .partDiv img {
   width: 30%;
-  /* height: 32%; */
   background-size: cover;
   margin-bottom: 3%;
 }
@@ -424,12 +587,37 @@ export default {
 }
 
 .bg-info {
-  transform: scale(1.5);
+  transform: scale(1.2);
+  font-weight: 600;
 }
 
-.selectDay:hover {
+.selectDay:hover,
+.selectedDay {
   background-color: rgb(255, 98, 0);
-  border-radius: 0.7em;
+}
+
+.megaboxInner,
+.lotteInner,
+.cgvInner {
+  width: 80%;
+  padding-bottom: 4%;
+  margin-top: 4%;
+  font-size: 1.1em;
+  border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalHeader span {
+  cursor: pointer;
+  margin-left: 1em;
+  margin-right: 1em;
+  font-size: 1.2em;
 }
 </style>
 

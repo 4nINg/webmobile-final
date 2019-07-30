@@ -5,7 +5,7 @@
       <span class="mainLogo">빠영빠영.</span>
       <i class="fas fa-home homeIcon logoHide"></i>
     </div>
-    <div class="">
+    <div class>
       <span>
         <router-link to="/admin">Admin</router-link>
       </span>
@@ -16,8 +16,8 @@
       </span>
       <span v-else @click="goToLogin()">
         <router-link to="/">Login</router-link>
-      </span> -->
-      <span  v-if="this.$store.state.user" @click="changeSelectPage(4)">Login</span>
+      </span>-->
+      <span v-if="this.$store.state.user" @click="changeSelectPage(4)">Login</span>
       <span v-else @click="goToLogout()"></span>
       <span @click="changeSelectPage(3)">Preview</span>
       <span @click="changeSelectPage(2)">Review</span>
@@ -37,11 +37,11 @@ export default {
   //   alert(this.$store.state.accessToken)
   // },
   methods: {
-    goToLogin(){
-      document.querySelector('#loginForm').style.display = "block"
+    goToLogin() {
+      document.querySelector("#loginForm").style.display = "block";
       this.changeSelectPage(4);
     },
-    goToLogout(){
+    goToLogout() {
       this.changeSelectPage(4);
       this.$store.dispatch("userSignOut");
     },
