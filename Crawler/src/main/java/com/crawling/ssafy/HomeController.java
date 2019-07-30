@@ -81,20 +81,26 @@ public class HomeController {
 
          String title = "";
          String time = "";
-         for(Element el : element.select("tr")) {   
-            title = el.select("th").select("a").text();
-            result += title;
-            result += "/";
-            time = el.select("td").text().replace(" | ", "|");
-            result += time;
-            result += ",";
+         
+         Elements tr = element.select("tr");
+         for(int j=0; j<tr.size(); ++j) {
+        	 title = tr.get(j).select("th").select("a").text();
+        	 result += title+"/";
+        	 time = tr.get(j).select("td").text().replace(" | ", "|");
+        	 result += time;
+        	 if(j != tr.size()-1) {
+        		 result += ",";
+        	 }
          }
+         
          if(title.equals("") && time.equals("")){
             result += "@";
          }
-         result += "&";
+         if(i != 6) {        	 
+        	 result += "&";
+         }
       }
-      System.out.println(result);
+      System.out.println("mega   "+result);
       MovieInfo vo = new MovieInfo(result);
       return vo;
    }
@@ -132,20 +138,25 @@ public class HomeController {
 
          String title = "";
          String time = "";
-         for(Element el : element.select("tr")) {    
-            title = el.select("th").select("a").text();
-            result += title;
-            result += "/";
-            time = el.select("td").text().replace(" | ", "|");
-            result += time;
-            result += ",";
+         
+         Elements tr = element.select("tr");
+         for(int j=0; j<tr.size(); ++j) {
+        	 title = tr.get(j).select("th").select("a").text();
+        	 result += title+"/";
+        	 time = tr.get(j).select("td").text().replace(" | ", "|");
+        	 result += time;
+        	 if(j != tr.size()-1) {
+        		 result += ",";
+        	 }
          }
          if(title.equals("") && time.equals("")){
             result += "@";
          }
-         result += "&";
+         if(i != 6) {        	 
+        	 result += "&";
+         }
       }
-      System.out.println(result);
+      System.out.println("lotte   "+result);
       MovieInfo vo = new MovieInfo(result);
       return vo;
    }
@@ -184,27 +195,32 @@ public class HomeController {
          String title = "";
          String time = "";
          String[] temp = null;
-         for(Element el : element.select(".col-times")) {    
-            title = el.select(".info-movie").select("a").select("strong").text();
-            result += title;
-            result += "/";
-            time = el.select("li").select("em").text();
-            temp = time.split(" ");
-            Arrays.sort(temp);
-            for(int j=0; j<temp.length; ++j){
-               result += temp[j];
-               if(j != temp.length -1){
-                  result += "|";
-               }
-            }
-            result += ",";
+         
+         Elements col = element.select(".col-times");
+         for(int k=0; k<col.size(); ++k) {
+        	 title = col.get(k).select(".info-movie").select("a").select("strong").text();
+        	 result += title+"/";
+        	 time = col.get(k).select("li").select("em").text();
+        	 temp = time.split(" ");
+             Arrays.sort(temp);
+             for(int j=0; j<temp.length; ++j){
+                result += temp[j];
+                if(j != temp.length -1){
+                   result += "|";
+                }
+             }
+        	 if(k != col.size()-1) {
+        		 result += ",";
+        	 }
          }
          if(title.equals("") && time.equals("")){
             result += "@";
          }
-         result += "&";
+         if(i != 6) {        	 
+        	 result += "&";
+         }
       }
-      System.out.println(result);
+      System.out.println("cgv    "+result);
       MovieInfo vo = new MovieInfo(result);
       return vo;
    }

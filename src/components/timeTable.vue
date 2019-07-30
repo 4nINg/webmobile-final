@@ -116,7 +116,6 @@ export default {
         "Dec"
       ],
       monthAndYear: null,
-      showMoveList: [],
       megaboxDate: [],
       megaboxList: [],
       megaboxResult: null,
@@ -126,7 +125,8 @@ export default {
       cgvDate: [],
       cgvList: [],
       cgvResult: null,
-      searchKeyword: null
+      searchKeyword: null,
+      totalMovieList: []
     };
   },
   mounted() {
@@ -246,12 +246,39 @@ export default {
           var movieList = [];
           var temp = null;
           for (var i = 0; i < byDate.length; ++i) {
-            temp = byDate[i].split("*");
+            temp = byDate[i].split("*"); //날짜와 영화들 분리
+            if (temp[1] === "@") {
+              continue;
+            }
             date.push(temp[0]);
             movieList.push(temp[1]);
           }
-          this.megaboxDate = date;
-          this.megaboxList = movieList;
+          self.megaboxDate = date;
+          self.megaboxList = movieList;
+
+          var byMovie = null;
+          var byTitle = null;
+          var flag = true;
+          var byTitleTime = null;
+          for (var q = 0; q < movieList.length; ++q) {
+            if (movieList[q] === "@") {
+              continue;
+            }
+            byMovie = movieList[q].split(",");
+            for (var j = 0; j < byMovie.length; j++) {
+              flag = true;
+              byTitleTime = byMovie[j].split("/");
+              for (var k = 0; k < self.totalMovieList.length; ++k) {
+                if (self.totalMovieList[k].includes(byTitleTime[0])) {
+                  flag = false;
+                  break;
+                }
+              }
+              if (flag) {
+                self.totalMovieList.push(byTitleTime[0]);
+              }
+            }
+          }
         });
     },
     crawLotte() {
@@ -269,11 +296,38 @@ export default {
           var temp = null;
           for (var i = 0; i < byDate.length; ++i) {
             temp = byDate[i].split("*");
+            if (temp[1] === "@") {
+              continue;
+            }
             date.push(temp[0]);
             movieList.push(temp[1]);
           }
-          this.lotteDate = date;
-          this.lotteList = movieList;
+          self.lotteDate = date;
+          self.lotteList = movieList;
+
+          var byMovie = null;
+          var byTitle = null;
+          var flag = true;
+          var byTitleTime = null;
+          for (var q = 0; q < movieList.length; ++q) {
+            if (movieList[q] === "@") {
+              continue;
+            }
+            byMovie = movieList[q].split(",");
+            for (var j = 0; j < byMovie.length; j++) {
+              flag = true;
+              byTitleTime = byMovie[j].split("/");
+              for (var k = 0; k < self.totalMovieList.length; ++k) {
+                if (self.totalMovieList[k].includes(byTitleTime[0])) {
+                  flag = false;
+                  break;
+                }
+              }
+              if (flag) {
+                self.totalMovieList.push(byTitleTime[0]);
+              }
+            }
+          }
         });
     },
     crawCgv() {
@@ -291,11 +345,38 @@ export default {
           var temp = null;
           for (var i = 0; i < byDate.length; ++i) {
             temp = byDate[i].split("*");
+            if (temp[1] === "@") {
+              continue;
+            }
             date.push(temp[0]);
             movieList.push(temp[1]);
           }
-          this.cgvDate = date;
-          this.cgvList = movieList;
+          self.cgvDate = date;
+          self.cgvList = movieList;
+
+          var byMovie = null;
+          var byTitle = null;
+          var flag = true;
+          var byTitleTime = null;
+          for (var q = 0; q < movieList.length; ++q) {
+            if (movieList[q] === "@") {
+              continue;
+            }
+            byMovie = movieList[q].split(",");
+            for (var j = 0; j < byMovie.length; j++) {
+              flag = true;
+              byTitleTime = byMovie[j].split("/");
+              for (var k = 0; k < self.totalMovieList.length; ++k) {
+                if (self.totalMovieList[k].includes(byTitleTime[0])) {
+                  flag = false;
+                  break;
+                }
+              }
+              if (flag) {
+                self.totalMovieList.push(byTitleTime[0]);
+              }
+            }
+          }
         });
     },
     searchMovie() {
@@ -620,4 +701,3 @@ export default {
   font-size: 1.2em;
 }
 </style>
-
