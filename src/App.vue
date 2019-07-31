@@ -49,6 +49,9 @@ export default {
     }
   },
   mounted() {
+    //사이트 입장 시 세션에 따른 로그인 정보 초기화
+    this.$store.dispatch("initLoginInfo");
+
     var address = document.location.href;
     var logo = document.querySelector(".logo");
     var mainLogo = document.querySelector(".mainLogo");
@@ -70,6 +73,12 @@ export default {
           "rgb(255, 255, 255, 0.7)";
       } else if (this.selectPage === 4) {
         document.querySelector("#loginForm").style.display = "block";
+      } else if(this.selectPage === -1) {
+        if(this.$store.dispatch("checkIsAdmin")){
+          this.selectPage = -1;
+        }else{
+          this.selectPage = 0;
+        }
       } else {
         document.querySelector(".headerDiv").style.backgroundColor =
           "transparent";

@@ -91,8 +91,8 @@ export default {
             userId: userList,
             comment: contentList
         })
-            
-        
+
+
     },
     getPreview() { //시사회정보 상세보기
         const reviewCollection = firestore.collection(REVIEW);
@@ -124,22 +124,8 @@ export default {
             window.location.reload();
         });
     },
-    loginWithGoogle() {
-        let provider = new firebase.auth.GoogleAuthProvider();
-        return firebase
-            .auth()
-            .signInWithPopup(provider)
-            .then(function(result) {
-                // let accessToken = result.credential.accessToken;
-                // let user = result.user;
-                return result;
-            })
-            .catch(function(error) {
-                console.error("[Google Login Error]", error);
-            });
-    },
     createUserInfo(uid, id, username) { // 회원가입
-      alert("크리에이트 입장")
+        // alert("uid : " + uid + "id : " + "username : " + username);
          firestore.collection(USERINFO).doc(uid).set({
             uid,
             id,
@@ -147,13 +133,15 @@ export default {
             login_time: firebase.firestore.FieldValue.serverTimestamp(),
             logout_time: '',
             grade: 3
-        }).catch((error) => alert(error))
+        })
+        .catch((error) => {
+          alert(error)
+        })
         .finally(() => {
-          alert("크리에이트 완료")
             window.location.reload();
         })
     },
-    mgrUserInfoLog(uid, id, username) {
+    mgrUserInfoLog(uid, id, username) { //사용자 로그 관리
         var userList = [];
         firestore.collection(USERINFO)
             .get()
@@ -183,7 +171,7 @@ export default {
                 }
             })
     },
-    mgrUserInfoGrade(uid, grade){
+    mgrUserInfoGrade(uid, grade){ //사용자 등급 정보 관리
       var userInfoRef = firestore.collection(USERINFO);
       userInfoRef.doc(uid).update({
         grade : grade
@@ -191,14 +179,14 @@ export default {
         //재로드가 이루어져야함
       })
     },
-    changeLogoutTime(uid) {
+    changeLogoutTime(uid) { //사용자 정보 중 로그아웃 시간 변경
         var userLogRef = firestore.collection(USERINFO).doc(uid).update({
             logout_time: firebase.firestore.FieldValue.serverTimestamp()
         }).finally(() => {
             window.location.href = "/";
         });
     },
-    getUserInfoList() {
+    getUserInfoList() { //사용자 정보 리스트(list) get
         var userList = [];
         firestore.collection(USERINFO)
             .get()
@@ -215,5 +203,16 @@ export default {
                 })
             })
         return userList;
+    },
+    getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
+      if(uid == "0"){
+          return "0";
+      }else{
+        return firestore.collection(USERINFO).doc(uid)
+        .get()
+          .then((doc) => {
+          return doc.data()
+        })
+      }
     }
 }

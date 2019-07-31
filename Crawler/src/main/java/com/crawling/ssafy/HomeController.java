@@ -29,187 +29,6 @@ import com.crawling.vo.MovieInfo;
 @Controller
 public class HomeController {
 
-<<<<<<< HEAD
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
-		String formattedDate = dateFormat.format(date);
-
-		model.addAttribute("serverTime", formattedDate );
-
-		return "home";
-	}
-
-	//�ް��ڽ�
-	@CrossOrigin
-	@RequestMapping(value = "/megabox", method = RequestMethod.GET)
-	public @ResponseBody MovieInfo megabox(){
-		String result = "";
-		Document doc = null;
-
-		SimpleDateFormat format1 = new SimpleDateFormat ("yyyy-MM-dd");
-		Date curTime = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(curTime);
-
-		for(int i = 0; i < 7; i++){
-			if(i != 0){
-				cal.add(Calendar.DATE, 1);
-			}
-
-			String urlTime = format1.format(cal.getTime());
-			result += urlTime;
-			result += "*";
-			String url = "https://movie.naver.com/movie/bi/ti/running.nhn?code=451&sdate=" + urlTime;
-
-			try {
-				doc = Jsoup.connect(url).get();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			
-			Elements element = doc.select("tbody");
-
-			String title = "";
-			String time = "";
-			for(Element el : element.select("tr")) {   
-				title = el.select("th").select("a").text();
-				result += title;
-				result += "/";
-				time = el.select("td").text().replace(" | ", "|");
-				result += time;
-				result += ",";
-			}
-			if(title.equals("") && time.equals("")){
-				result += "@";
-			}
-			result += "&";
-		}
-		System.out.println(result);
-		MovieInfo vo = new MovieInfo(result);
-		return vo;
-	}
-
-	//�Ե��ó׸�
-	@CrossOrigin
-	@RequestMapping(value = "/lottecinema", method = RequestMethod.GET)
-	public @ResponseBody MovieInfo lottecinema(){
-		String result = "";
-		Document doc = null;
-
-		SimpleDateFormat format1 = new SimpleDateFormat ("yyyy-MM-dd");
-		Date curTime = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(curTime);
-
-		for(int i = 0; i < 7; i++){
-			if(i != 0){
-				cal.add(Calendar.DATE, 1);
-			}
-
-			String urlTime = format1.format(cal.getTime());
-			result += urlTime;
-			result += "*";
-			String url = "https://movie.naver.com/movie/bi/ti/running.nhn?code=167&sdate=" + urlTime;
-
-			try {
-				doc = Jsoup.connect(url).get();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			
-			Elements element = doc.select("tbody");
-
-			String title = "";
-			String time = "";
-			for(Element el : element.select("tr")) {    
-				title = el.select("th").select("a").text();
-				result += title;
-				result += "/";
-				time = el.select("td").text().replace(" | ", "|");
-				result += time;
-				result += ",";
-			}
-			if(title.equals("") && time.equals("")){
-				result += "@";
-			}
-			result += "&";
-		}
-		System.out.println(result);
-		MovieInfo vo = new MovieInfo(result);
-		return vo;
-	}
-
-	@CrossOrigin
-	@RequestMapping(value = "/cgv", method = RequestMethod.GET)
-	public @ResponseBody MovieInfo cgv(){
-		String result = "";
-		Document doc = null;
-
-		StringBuffer sb;
-
-		SimpleDateFormat format1 = new SimpleDateFormat ("yyyyMMdd");
-		Date curTime = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(curTime);
-		for(int i = 0; i < 7; i++){
-			if(i != 0){
-				cal.add(Calendar.DATE, 1);
-			}
-			String urlTime = format1.format(cal.getTime());
-			String url = "http://www.cgv.co.kr/common/showtimes/iframeTheater.aspx?areacode=204&theatercode=0053&date=" + urlTime;
-			sb = new StringBuffer(urlTime);
-			sb.insert(4,"-");
-			sb.insert(7,"-");
-			result += sb;
-			result += "*";
-			
-			try {
-				doc = Jsoup.connect(url).get();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			Elements element = doc.select("div.sect-showtimes").select("ul");
-			String title = "";
-			String time = "";
-			String[] temp = null;
-			for(Element el : element.select(".col-times")) {    
-				title = el.select(".info-movie").select("a").select("strong").text();
-				result += title;
-				result += "/";
-				time = el.select("li").select("em").text();
-				temp = time.split(" ");
-				Arrays.sort(temp);
-				for(int j=0; j<temp.length; ++j){
-					result += temp[j];
-					if(j != temp.length -1){
-						result += "|";
-					}
-				}
-				result += ",";
-			}
-			if(title.equals("") && time.equals("")){
-				result += "@";
-			}
-			result += "&";
-		}
-		System.out.println(result);
-		MovieInfo vo = new MovieInfo(result);
-		return vo;
-	}
-=======
    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
    /**
@@ -229,7 +48,7 @@ public class HomeController {
       return "home";
    }
 
-   //메가박스
+   //硫붽�諛뺤뒪
    @CrossOrigin
    @RequestMapping(value = "/megabox", method = RequestMethod.GET)
    public @ResponseBody MovieInfo megabox(){
@@ -286,7 +105,7 @@ public class HomeController {
       return vo;
    }
 
-   //롯데시네마
+   //濡��뜲�떆�꽕留�
    @CrossOrigin
    @RequestMapping(value = "/lottecinema", method = RequestMethod.GET)
    public @ResponseBody MovieInfo lottecinema(){
@@ -405,5 +224,5 @@ public class HomeController {
       MovieInfo vo = new MovieInfo(result);
       return vo;
    }
->>>>>>> 9758d8caa341efe16a89044988d3d3bb82d68d50
+
 }

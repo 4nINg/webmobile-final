@@ -16,8 +16,8 @@
       <span v-else @click="goToLogin()">
         <router-link to="/">Login</router-link>
       </span> -->
-      <span v-if="this.$store.state.user !== null" @click="changeSelectPage(4)">Login</span>
-      <span v-else @click="goToLogout()">Logout</span>
+      <span v-if="!checkLoginSession()" @click="changeSelectPage(4)" id="sideNavLogin">Login</span>
+      <span v-else @click="goToLogout()" id="sideNavLogout">Logout</span>
       <span @click="changeSelectPage(3)">Preview</span>
       <span @click="changeSelectPage(2)">Review</span>
       <span @click="changeSelectPage(1)">Search</span>
@@ -44,10 +44,21 @@ export default {
     },
     goToLogout() {
       this.changeSelectPage(4);
-      this.$store.dispatch("userSignOut");
+      this.$store.dispatch("userSignOut").finally(()=>{
+        window.location.reload();
+      });;
     },
     changeSelectPage(i) {
       this.$emit("inChildSelectPage", i);
+    },
+    checkLoginSession(){
+      if(sessionStorage.getItem('accessToken') == "0"){
+        // alert("없당 : ", sessionStorage.getItem('accessToken'), typeof sessionStorage.getItem('accessToken'))
+        return false;
+      }else{
+        // alert("있다 : ", sessionStorage.getItem('accessToken'), typeof sessionStorage.getItem('accessToken'))
+        return true;
+      }
     }
   }
 };

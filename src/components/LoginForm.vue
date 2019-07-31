@@ -1,10 +1,8 @@
 <template>
 <div id="loginForm">
-  <form style="display:inline">
-    <div><span>E-Mail</span><input type="text" placeholder="ID" id="loginID" v-model="email" required></div>
-    <div><span>Password</span><input type="password" placeholder="Password" id="loginPW" v-model="password" required></div>
-    <button @click="userSignIn()">SignIn</button>
-  </form>
+  <div><span>E-Mail</span><input type="text" placeholder="ID" id="loginID" v-model="email" required></div>
+  <div><span>Password</span><input type="password" placeholder="Password" id="loginPW" v-model="password" required></div>
+  <button @click="userSignIn()">SignIn</button>
   <button @click="signUp()">SignUp</button>
   <button @click="loginWithGoogle()">Google</button>
   <button @click="loginWithFacebook()">Facebook</button>
@@ -27,23 +25,29 @@ export default {
     }
   },
   methods : {
-    async userSignIn(){
-      await this.$store.dispatch("userSignIn", {
+    userSignIn(){
+      this.$store.dispatch("userSignIn", {
         email: this.email,
         password: this.password
+      }).finally(()=>{
+        // window.location.reload();
       });
-      this.email = "";
-      this.password = "";
-      document.querySelector("#loginForm").style.display = "none";
-      document.querySelector("#signUpForm").style.display = "none";
+      // this.email = "";
+      // this.password = "";
+      // document.querySelector("#loginForm").style.display = "none";
+      // document.querySelector("#signUpForm").style.display = "none";
     },
     //google login
     loginWithGoogle() {
-      this.$store.dispatch("userSignInWithGoogle", {});
+      this.$store.dispatch("userSignInWithGoogle", {}).finally(()=>{
+        window.location.reload();
+      });
     },
     //facebook login
     loginWithFacebook() {
-      this.$store.dispatch("userSignInWithFacebook", {});
+      this.$store.dispatch("userSignInWithFacebook", {}).finally(()=>{
+        window.location.reload();
+      });
     },
     signUp(){
       document.querySelector("#signUpForm").style.display = "block";
