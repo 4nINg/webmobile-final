@@ -42,7 +42,7 @@ export default {
       // document.querySelector('#loginForm').style.display = "block";
       this.changeSelectPage(4);
     },
-    goToLogout(){
+    goToLogout() {
       this.changeSelectPage(4);
       this.$store.dispatch("userSignOut");
     },

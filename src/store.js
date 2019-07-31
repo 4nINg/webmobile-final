@@ -22,7 +22,10 @@ facebook_provider.setCustomParameters({
 export default new Vuex.Store({
   state: {
     accessToken: '',
-    user: null,
+    user: {
+        email : "",
+        userName : "이지현"
+    },
     error: null,
     loading: false,
     grade: 0
