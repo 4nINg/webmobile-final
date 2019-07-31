@@ -10,7 +10,6 @@
 </div>
 </template>
 <script>
-import FirebaseService from "../services/FirebaseService"
 import SignUpForm from "@/components/SignUpForm"
 
 export default {

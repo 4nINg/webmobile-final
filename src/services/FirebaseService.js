@@ -2,10 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import "firebase/auth";
-import store from "../store.js"
-const INFO = "info";
 const REVIEW = "review";
-const USER = "user";
 // const BANNERS = "bannerImages";
 const USERINFO = "userInfo";
 
@@ -186,7 +183,7 @@ export default {
       })
     },
     changeLogoutTime(uid) { //사용자 정보 중 로그아웃 시간 변경
-        var userLogRef = firestore.collection(USERINFO).doc(uid).update({
+        firestore.collection(USERINFO).doc(uid).update({
             logout_time: firebase.firestore.FieldValue.serverTimestamp()
         }).finally(() => {
             window.location.href = "/";
