@@ -1,7 +1,7 @@
 <template>
   <div class="reviewMainDiv">
     <div class="writeBtnDiv">
-      <span>
+      <span @click="showReviewWrite()">
         <i class="far fa-edit"></i>글쓰기
       </span>
     </div>
@@ -55,7 +55,15 @@
                 <button @click="deleteComment(reviewCommentUser[i-1].reviewId)">삭제</button>
               </div>
               <div class="commentWriterDiv">
+<<<<<<< HEAD
                 <CommentWriter :reviewId="reviewId" :comments="comments" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
+=======
+                <CommentWriter
+                  :reviewId="reviewId"
+                  :reviewCommentUser="reviewCommentUser"
+                  :reviewCommentContent="reviewCommentContent"
+                ></CommentWriter>
+>>>>>>> jg
               </div>
             </div>
             <div>
@@ -67,15 +75,23 @@
         </div>
       </div>
     </div>
+
+    <div class="reviewWriteModal">
+      <div class="reviewWriteModalContent">
+        <ReviewWriter></ReviewWriter>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import FirebaseService from "@/services/FirebaseService";
 import CommentWriter from "@/components/CommentWriter";
+import ReviewWriter from "@/components/ReviewWriter";
 
 export default {
-  components:{
-    CommentWriter,   
+  components: {
+    CommentWriter,
+    ReviewWriter
   },
   data() {
     return {
@@ -127,7 +143,11 @@ export default {
     },
     showReview(i) {
       this.reviewId = this.displayReviews[i].id;
+<<<<<<< HEAD
       // console.log("dfdf : "+this.reviewId );
+=======
+      console.log("dfdf : " + this.reviewId);
+>>>>>>> jg
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
@@ -150,8 +170,13 @@ export default {
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".comment").style.display = "none";
     },
+<<<<<<< HEAD
     deleteComment(reviewId) {
       // FirebaseService.deleteComment(reviewId);
+=======
+    showReviewWrite() {
+      document.querySelector(".reviewWriteModal").style.display = "block";
+>>>>>>> jg
     }
   },
   watch: {}
@@ -281,6 +306,18 @@ export default {
   background-color: rgb(255, 255, 255, 0.7);
 }
 
+.reviewWriteModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: rgb(255, 255, 255, 0.7);
+}
+
 .reviewModalContainer {
   display: flex;
   justify-content: center;
@@ -289,6 +326,16 @@ export default {
   margin: 10% auto;
   height: 65%;
   width: 45%;
+  position: relative;
+  border: 1px solid black;
+}
+
+.reviewWriteModalContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   position: relative;
   border: 1px solid black;
 }

@@ -10,6 +10,7 @@
       </span>
     </div>
     <div class="sideNav">
+<<<<<<< HEAD
       <!-- <span v-if="this.$store.state.user" @click="goToLogout()">
         <router-link to="/">Logout</router-link>
       </span>
@@ -18,6 +19,10 @@
       </span> -->
       <span v-if="!checkLoginSession()" @click="changeSelectPage(4)" id="sideNavLogin">Login</span>
       <span v-else @click="goToLogout()" id="sideNavLogout">Logout</span>
+=======
+      <span v-if="this.$store.state.user" @click="changeSelectPage(4)">Login</span>
+      <span v-else @click="goToLogout()"></span>
+>>>>>>> jg
       <span @click="changeSelectPage(3)">Preview</span>
       <span @click="changeSelectPage(2)">Review</span>
       <span @click="changeSelectPage(1)">Search</span>
@@ -34,9 +39,6 @@ export default {
 
   },
   components: {},
-  // mounted(){
-  //   alert(this.$store.state.accessToken)
-  // },
   methods: {
     goToLogin(){
       // document.querySelector('#loginForm').style.display = "block";
@@ -108,7 +110,7 @@ export default {
   width: 40vw;
   position: absolute;
   top: 43%;
-  left: -18%;
+  left: -17%;
   transform: rotate(-90deg);
 }
 
@@ -129,8 +131,6 @@ a:link {
 
 .sideNav span:hover,
 .sideNav a:hover {
-  /* color: rgb(255, 98, 0); */
-  /* color: rgb(231, 76, 60); */
   color: red;
   transform: scale(1.3);
 }
