@@ -10,7 +10,6 @@
       </span>
     </div>
     <div class="sideNav">
-<<<<<<< HEAD
       <!-- <span v-if="this.$store.state.user" @click="goToLogout()">
         <router-link to="/">Logout</router-link>
       </span>
@@ -19,10 +18,6 @@
       </span> -->
       <span v-if="!checkLoginSession()" @click="changeSelectPage(4)" id="sideNavLogin">Login</span>
       <span v-else @click="goToLogout()" id="sideNavLogout">Logout</span>
-=======
-      <span v-if="this.$store.state.user" @click="changeSelectPage(4)">Login</span>
-      <span v-else @click="goToLogout()"></span>
->>>>>>> jg
       <span @click="changeSelectPage(3)">Preview</span>
       <span @click="changeSelectPage(2)">Review</span>
       <span @click="changeSelectPage(1)">Search</span>
