@@ -7,7 +7,7 @@ const INFO = "info";
 const REVIEW = "review";
 const USER = "user";
 // const BANNERS = "bannerImages";
-// const USERINFO = "userInfo";
+const USERINFO = "userInfo";
 
 // Setup Firebase
 const config = {
@@ -68,7 +68,7 @@ export default {
                 body: body,
                 created_at: firebase.firestore.FieldValue.serverTimestamp(),
                 id: "",
-                comment: [],
+                comments: [],
                 userId: []
             })
             .then(() => {
@@ -86,13 +86,19 @@ export default {
             window.location.reload();
         });
     },
-    postComment(reviewId, userList, contentList) { //reviewId - review식별자
-        firestore.collection(REVIEW).doc(reviewId).update({
-            userId: userList,
-            comment: contentList
-        })
-            
-        
+    // postComment(reviewId, userList, contentList) { //reviewId - review식별자 //댓글 작성
+    //     firestore.collection(REVIEW).doc(reviewId).update({
+    //         userId: userList,
+    //         comment: contentList
+    //     })
+    // },
+    postComment(reviewId, comment) { //reviewId - review식별자 //댓글 작성
+        firestore.collection(REVIEW).doc(reviewId).collection('comments').add(comment)
+    },
+    deleteComment(reviewId) {
+        firestore.collection(REVIEW).doc(reviewId).delete()
+        alert("삭제완료!")
+        window.location.reload();
     },
     getPreview() { //시사회정보 상세보기
         const reviewCollection = firestore.collection(REVIEW);
@@ -124,32 +130,24 @@ export default {
             window.location.reload();
         });
     },
-    loginWithGoogle() {
-        let provider = new firebase.auth.GoogleAuthProvider();
-        return firebase
-            .auth()
-            .signInWithPopup(provider)
-            .then(function(result) {
-                // let accessToken = result.credential.accessToken;
-                // let user = result.user;
-                return result;
-            })
-            .catch(function(error) {
-                console.error("[Google Login Error]", error);
-            });
-    },
-    // create Email - password
-    createUserLog(uid, id) {
-        return firestore.collection(USERINFO).doc(uid).set({
+    createUserInfo(uid, id, username) { // 회원가입
+        // alert("uid : " + uid + "id : " + "username : " + username);
+         firestore.collection(USERINFO).doc(uid).set({
             uid,
             id,
+            username,
             login_time: firebase.firestore.FieldValue.serverTimestamp(),
-            logout_time: ''
-        }).finally(() => {
+            logout_time: '',
+            grade: 3
+        })
+        .catch((error) => {
+          alert(error)
+        })
+        .finally(() => {
             window.location.reload();
         })
     },
-    mgrUserLog(uid, id) {
+    mgrUserInfoLog(uid, id, username) { //사용자 로그 관리
         var userList = [];
         firestore.collection(USERINFO)
             .get()
@@ -175,18 +173,26 @@ export default {
                         window.location.reload();
                     });
                 } else {
-                    this.createUserLog(uid, id);
+                    this.createUserInfo(uid, id, username);
                 }
             })
     },
-    changeLogoutTime(uid) {
+    mgrUserInfoGrade(uid, grade){ //사용자 등급 정보 관리
+      var userInfoRef = firestore.collection(USERINFO);
+      userInfoRef.doc(uid).update({
+        grade : grade
+      }).finally(()=>{
+        //재로드가 이루어져야함
+      })
+    },
+    changeLogoutTime(uid) { //사용자 정보 중 로그아웃 시간 변경
         var userLogRef = firestore.collection(USERINFO).doc(uid).update({
             logout_time: firebase.firestore.FieldValue.serverTimestamp()
         }).finally(() => {
             window.location.href = "/";
         });
     },
-    getUserInfoList() {
+    getUserInfoList() { //사용자 정보 리스트(list) get
         var userList = [];
         firestore.collection(USERINFO)
             .get()
@@ -203,5 +209,16 @@ export default {
                 })
             })
         return userList;
+    },
+    getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
+      if(uid == "0"){
+          return "0";
+      }else{
+        return firestore.collection(USERINFO).doc(uid)
+        .get()
+          .then((doc) => {
+          return doc.data()
+        })
+      }
     }
 }

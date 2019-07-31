@@ -5,9 +5,9 @@
     <MainPage v-if="selectPage === 0"></MainPage>
     <timeTable v-if="selectPage === 1"></timeTable>
     <LoginForm v-if="selectPage === 4"></LoginForm>
-    <LoginForm></LoginForm>
     <!-- <Footer></Footer> -->
     <Review v-if="selectPage === 2"></Review>
+    <Admin v-if="selectPage === -1"></Admin>
   </div>
 </template>
 <script>
@@ -20,12 +20,15 @@ import timeTable from "@/components/timeTable";
 import LoginForm from "@/components/LoginForm";
 // import axios from "axios";
 import Review from "@/components/Review";
+import ReviewWriter from "@/components/ReviewWriter";
+import CommentWriter from "@/components/CommentWriter";
+import Admin from "@/components/Admin";
 
 export default {
   name: "App",
   store,
   data() {
-    return {  
+    return {
       selectPage: 0,
       temp: null
     };
@@ -35,7 +38,10 @@ export default {
     MainPage,
     timeTable,
     LoginForm,
-    Review
+    Review,
+    ReviewWriter,
+    CommentWriter,
+    Admin
   },
   methods: {
     childSelectPage(i) {
@@ -43,6 +49,9 @@ export default {
     }
   },
   mounted() {
+    //사이트 입장 시 세션에 따른 로그인 정보 초기화
+    this.$store.dispatch("initLoginInfo");
+
     var address = document.location.href;
     var logo = document.querySelector(".logo");
     var mainLogo = document.querySelector(".mainLogo");
@@ -64,6 +73,12 @@ export default {
           "rgb(255, 255, 255, 0.7)";
       } else if (this.selectPage === 4) {
         document.querySelector("#loginForm").style.display = "block";
+      } else if(this.selectPage === -1) {
+        if(this.$store.dispatch("checkIsAdmin")){
+          this.selectPage = -1;
+        }else{
+          this.selectPage = 0;
+        }
       } else {
         document.querySelector(".headerDiv").style.backgroundColor =
           "transparent";
