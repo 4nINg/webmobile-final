@@ -48,7 +48,7 @@ public class HomeController {
       return "home";
    }
 
-   //메가박스
+   //硫붽�諛뺤뒪
    @CrossOrigin
    @RequestMapping(value = "/megabox", method = RequestMethod.GET)
    public @ResponseBody MovieInfo megabox(){
@@ -105,7 +105,7 @@ public class HomeController {
       return vo;
    }
 
-   //롯데시네마
+   //濡��뜲�떆�꽕留�
    @CrossOrigin
    @RequestMapping(value = "/lottecinema", method = RequestMethod.GET)
    public @ResponseBody MovieInfo lottecinema(){
@@ -224,4 +224,5 @@ public class HomeController {
       MovieInfo vo = new MovieInfo(result);
       return vo;
    }
+
 }
