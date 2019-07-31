@@ -65,7 +65,7 @@ export default {
                 body: body,
                 created_at: firebase.firestore.FieldValue.serverTimestamp(),
                 id: "",
-                comment: [],
+                comments: [],
                 userId: []
             })
             .then(() => {
@@ -83,13 +83,19 @@ export default {
             window.location.reload();
         });
     },
-    postComment(reviewId, userList, contentList) { //reviewId - review식별자
-        firestore.collection(REVIEW).doc(reviewId).update({
-            userId: userList,
-            comment: contentList
-        })
-
-
+    // postComment(reviewId, userList, contentList) { //reviewId - review식별자 //댓글 작성
+    //     firestore.collection(REVIEW).doc(reviewId).update({
+    //         userId: userList,
+    //         comment: contentList
+    //     })
+    // },
+    postComment(reviewId, comment) { //reviewId - review식별자 //댓글 작성
+        firestore.collection(REVIEW).doc(reviewId).collection('comments').add(comment)
+    },
+    deleteComment(reviewId) {
+        firestore.collection(REVIEW).doc(reviewId).delete()
+        alert("삭제완료!")
+        window.location.reload();
     },
     getPreview() { //시사회정보 상세보기
         const reviewCollection = firestore.collection(REVIEW);

@@ -34,9 +34,6 @@ export default {
 
   },
   components: {},
-  // mounted(){
-  //   alert(this.$store.state.accessToken)
-  // },
   methods: {
     goToLogin(){
       // document.querySelector('#loginForm').style.display = "block";
@@ -108,7 +105,7 @@ export default {
   width: 40vw;
   position: absolute;
   top: 43%;
-  left: -18%;
+  left: -17%;
   transform: rotate(-90deg);
 }
 
@@ -129,8 +126,6 @@ a:link {
 
 .sideNav span:hover,
 .sideNav a:hover {
-  /* color: rgb(255, 98, 0); */
-  /* color: rgb(231, 76, 60); */
   color: red;
   transform: scale(1.3);
 }

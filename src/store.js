@@ -23,8 +23,8 @@ export default new Vuex.Store({
   state: {
     accessToken: "0",
     user: {
-        email : "",
-        userName : "이지현",
+        email: "",
+        userName: "",
         grade : 0
     },
     error: null,
@@ -148,7 +148,8 @@ export default new Vuex.Store({
             })
     },
     autoSignIn({ commit }, payload) {
-        commit('setUser', { email: payload.email })
+        // console.log(payload)
+        commit('setUser', { email: payload.email, userName: payload.displayName })
     },
     userSignOut({ commit }) {
         // var currentUser = firebase.auth().currentUser;
