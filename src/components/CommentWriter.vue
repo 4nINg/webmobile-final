@@ -1,6 +1,6 @@
 <template>
 <div>
-      <input type="text" placeholder="댓글을 입력해주세요." v-model="commentBody" style="width:100%; height:100px;">
+      <input type="text" placeholder="댓글을 입력해주세요." v-model="comment.body" style="width:100%; height:100px;">
       <button @click="trans()">submit</button>
 </div>
 </template>
@@ -18,7 +18,11 @@ export default {
   },
   data() {
     return {
-      commentBody: '',
+      comment: {
+        id: '',
+        userName: '',
+        body: '',
+      }
     //   reviewId1: this.reviewId,
     //   reviewCommentUser1: this.reviewCommentUser,
     //   reviewCommentContent1: this.reviewCommentContent
@@ -26,12 +30,19 @@ export default {
   },
   methods: {
     trans: function() {
-      if(this.commentBody !== ''){
-        //   alert(this.$store.state.user.userName);
-        console.log("확인 : "+this.reviewId, this.reviewCommentUser, this.reviewCommentContent)
-          this.reviewCommentUser.push(this.$store.state.user.userName);
-          this.reviewCommentContent.push(this.commentBody);
-          FirebaseService.postComment(this.reviewId, this.reviewCommentUser, this.reviewCommentContent);
+      if(this.comment.body !== '') {
+          console.log(this.$store)
+          alert(this.$store.state.user.userName);
+          // console.log("확인 : "+this.reviewId, this.reviewCommentUser, this.reviewCommentContent)
+          this.comment = {
+            id: 1,
+            userName: this.$store.state.user.userName,
+            body: this.body,
+          }
+          // this.reviewCommentUser.push(this.$store.state.user.userName);
+          // this.reviewCommentContent.push(this.commentBody);
+          // FirebaseService.postComment(this.reviewId, this.reviewCommentUser, this.reviewCommentContent);
+          FirebaseService.postComment(this.reviewId, this.comment);
           alert("작성완료!");
       }else{
           alert("댓글을 입력하세요.");

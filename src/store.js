@@ -23,8 +23,8 @@ export default new Vuex.Store({
   state: {
     accessToken: '',
     user: {
-        email : "",
-        userName : "이지현"
+        email: "",
+        userName: ""
     },
     error: null,
     loading: false
@@ -97,7 +97,7 @@ export default new Vuex.Store({
         commit('setLoading', true)
         firebase.auth().signInWithPopup(google_provider)
             .then(firebaseUser => {
-                commit('setUser', { email: firebaseUser.user.email })
+                commit('setUser', { email: firebaseUser.user.email})
                 commit('setLoading', false)
                 commit('setError', null)
                 commit('setAccessToken', firebaseUser.user.uid)
@@ -132,7 +132,8 @@ export default new Vuex.Store({
     },
 
     autoSignIn({ commit }, payload) {
-        commit('setUser', { email: payload.email })
+        // console.log(payload)
+        commit('setUser', { email: payload.email, userName: payload.displayName })
     },
 
     userSignOut({ commit }) {

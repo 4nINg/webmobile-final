@@ -52,9 +52,10 @@
               <div v-for="i in reviewCommentUser.length" :key="i" class="vForDiv">
                 <h3>{{reviewCommentUser[i-1]}}</h3>
                 <p>{{reviewCommentContent[i-1]}}</p>
+                <button @click="deleteComment(reviewCommentUser[i-1].reviewId)">삭제</button>
               </div>
               <div class="commentWriterDiv">
-                <CommentWriter :reviewId="reviewId" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
+                <CommentWriter :reviewId="reviewId" :comments="comments" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
               </div>
             </div>
             <div>
@@ -85,7 +86,8 @@ export default {
       reviewTitle: "",
       reviewContent: "",
       reviewCommentContent: [],
-      reviewCommentUser: []
+      reviewCommentUser: [],
+      comments: [],
     };
   },
   mounted() {
@@ -125,7 +127,7 @@ export default {
     },
     showReview(i) {
       this.reviewId = this.displayReviews[i].id;
-      console.log("dfdf : "+this.reviewId );
+      // console.log("dfdf : "+this.reviewId );
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
@@ -147,6 +149,9 @@ export default {
     backToTheComment() {
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".comment").style.display = "none";
+    },
+    deleteComment(reviewId) {
+      // FirebaseService.deleteComment(reviewId);
     }
   },
   watch: {}
