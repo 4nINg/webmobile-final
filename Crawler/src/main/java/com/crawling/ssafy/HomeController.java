@@ -3,6 +3,7 @@ package com.crawling.ssafy;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -28,74 +29,183 @@ import com.crawling.vo.MovieInfo;
 @Controller
 public class HomeController {
 
-   private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-   /**
-    * Simply selects the home view to render by returning its name.
-    */
-   @RequestMapping(value = "/", method = RequestMethod.GET)
-   public String home(Locale locale, Model model) {
-      logger.info("Welcome home! The client locale is {}.", locale);
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
 
-      Date date = new Date();
-      DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 
-      String formattedDate = dateFormat.format(date);
+		String formattedDate = dateFormat.format(date);
 
-      model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("serverTime", formattedDate );
 
-      return "home";
-   }
-   
+		return "home";
+	}
 
-   @CrossOrigin
-   @RequestMapping(value = "/megabox", method = RequestMethod.GET)
-   public @ResponseBody MovieInfo doc(){
-	  String result = "";
-      Document doc = null;
+	//메가박스
+	@CrossOrigin
+	@RequestMapping(value = "/megabox", method = RequestMethod.GET)
+	public @ResponseBody MovieInfo megabox(){
+		String result = "";
+		Document doc = null;
 
-      SimpleDateFormat format1 = new SimpleDateFormat ("yyyy-MM-dd");
-      Date curTime = new Date();
-      Calendar cal = Calendar.getInstance();
-      cal.setTime(curTime);
-      
-      for(int i = 0; i < 7; i++){
-         if(i != 0){
-            cal.add(Calendar.DATE, 1);
-         }
-         
-         String urlTime = format1.format(cal.getTime());
-         result += urlTime;
-         result += "*";
-         String url = "https://movie.naver.com/movie/bi/ti/running.nhn?code=451&sdate=" + urlTime;
-        
-         try {
-            doc = Jsoup.connect(url).get();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
+		SimpleDateFormat format1 = new SimpleDateFormat ("yyyy-MM-dd");
+		Date curTime = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(curTime);
 
-         // 주요 뉴스로 나오는 태그를 찾아서 가져오도록 한다.
-         Elements element = doc.select("tbody");
+		for(int i = 0; i < 7; i++){
+			if(i != 0){
+				cal.add(Calendar.DATE, 1);
+			}
 
-         String title = "";
-         String time = "";
-         for(Element el : element.select("tr")) {    // 하위 뉴스 기사들을 for문 돌면서 출력
-            title = el.select("th").select("a").text();
-            result += title;
-            result += "/";
-            time = el.select("td").text().replace(" | ", "|");
-            result += time;
-            result += ",";
-         }
-         if(title.equals("") && time.equals("")){
-        	result += "@";
-         }
-         result += "&";
-      }
-      System.out.println(result);
-      MovieInfo vo = new MovieInfo(result);
-      return vo;
-   }
+			String urlTime = format1.format(cal.getTime());
+			result += urlTime;
+			result += "*";
+			String url = "https://movie.naver.com/movie/bi/ti/running.nhn?code=451&sdate=" + urlTime;
 
+			try {
+				doc = Jsoup.connect(url).get();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			
+			Elements element = doc.select("tbody");
+
+			String title = "";
+			String time = "";
+			for(Element el : element.select("tr")) {   
+				title = el.select("th").select("a").text();
+				result += title;
+				result += "/";
+				time = el.select("td").text().replace(" | ", "|");
+				result += time;
+				result += ",";
+			}
+			if(title.equals("") && time.equals("")){
+				result += "@";
+			}
+			result += "&";
+		}
+		System.out.println(result);
+		MovieInfo vo = new MovieInfo(result);
+		return vo;
+	}
+
+	//롯데시네마
+	@CrossOrigin
+	@RequestMapping(value = "/lottecinema", method = RequestMethod.GET)
+	public @ResponseBody MovieInfo lottecinema(){
+		String result = "";
+		Document doc = null;
+
+		SimpleDateFormat format1 = new SimpleDateFormat ("yyyy-MM-dd");
+		Date curTime = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(curTime);
+
+		for(int i = 0; i < 7; i++){
+			if(i != 0){
+				cal.add(Calendar.DATE, 1);
+			}
+
+			String urlTime = format1.format(cal.getTime());
+			result += urlTime;
+			result += "*";
+			String url = "https://movie.naver.com/movie/bi/ti/running.nhn?code=167&sdate=" + urlTime;
+
+			try {
+				doc = Jsoup.connect(url).get();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			
+			Elements element = doc.select("tbody");
+
+			String title = "";
+			String time = "";
+			for(Element el : element.select("tr")) {    
+				title = el.select("th").select("a").text();
+				result += title;
+				result += "/";
+				time = el.select("td").text().replace(" | ", "|");
+				result += time;
+				result += ",";
+			}
+			if(title.equals("") && time.equals("")){
+				result += "@";
+			}
+			result += "&";
+		}
+		System.out.println(result);
+		MovieInfo vo = new MovieInfo(result);
+		return vo;
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/cgv", method = RequestMethod.GET)
+	public @ResponseBody MovieInfo cgv(){
+		String result = "";
+		Document doc = null;
+
+		StringBuffer sb;
+
+		SimpleDateFormat format1 = new SimpleDateFormat ("yyyyMMdd");
+		Date curTime = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(curTime);
+		for(int i = 0; i < 7; i++){
+			if(i != 0){
+				cal.add(Calendar.DATE, 1);
+			}
+			String urlTime = format1.format(cal.getTime());
+			String url = "http://www.cgv.co.kr/common/showtimes/iframeTheater.aspx?areacode=204&theatercode=0053&date=" + urlTime;
+			sb = new StringBuffer(urlTime);
+			sb.insert(4,"-");
+			sb.insert(7,"-");
+			result += sb;
+			result += "*";
+			
+			try {
+				doc = Jsoup.connect(url).get();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			Elements element = doc.select("div.sect-showtimes").select("ul");
+			String title = "";
+			String time = "";
+			String[] temp = null;
+			for(Element el : element.select(".col-times")) {    
+				title = el.select(".info-movie").select("a").select("strong").text();
+				result += title;
+				result += "/";
+				time = el.select("li").select("em").text();
+				temp = time.split(" ");
+				Arrays.sort(temp);
+				for(int j=0; j<temp.length; ++j){
+					result += temp[j];
+					if(j != temp.length -1){
+						result += "|";
+					}
+				}
+				result += ",";
+			}
+			if(title.equals("") && time.equals("")){
+				result += "@";
+			}
+			result += "&";
+		}
+		System.out.println(result);
+		MovieInfo vo = new MovieInfo(result);
+		return vo;
+	}
 }

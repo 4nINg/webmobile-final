@@ -5,11 +5,11 @@
     <MainPage v-if="selectPage === 0"></MainPage>
     <timeTable v-if="selectPage === 1"></timeTable>
     <LoginForm v-if="selectPage === 4"></LoginForm>
-    <LoginForm></LoginForm>
     <!-- <Footer></Footer> -->
     <button @click="crawlingData()">크롤링가즈아</button>
     <div id="movieList">{{temp}}</div>
     <Review v-if="selectPage === 2"></Review>
+    <Admin v-if="selectPage === -1"></Admin>
   </div>
 </template>
 <script>
@@ -24,6 +24,7 @@ import axios from "axios";
 import Review from "@/components/Review";
 import ReviewWriter from "@/components/ReviewWriter";
 import CommentWriter from "@/components/CommentWriter";
+import Admin from "@/components/Admin";
 
 export default {
   name: "App",
@@ -42,6 +43,7 @@ export default {
     Review,
     ReviewWriter,
     CommentWriter,
+    Admin
   },
   methods: {
     childSelectPage(i) {

@@ -1,5 +1,5 @@
 <template>
-<div id="loginForm" style="display:none">
+<div id="loginForm">
   <form style="display:inline">
     <div><span>E-Mail</span><input type="text" placeholder="ID" id="loginID" v-model="email" required></div>
     <div><span>Password</span><input type="password" placeholder="Password" id="loginPW" v-model="password" required></div>

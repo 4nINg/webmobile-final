@@ -24,7 +24,8 @@ export default new Vuex.Store({
     accessToken: '',
     user: null,
     error: null,
-    loading: false
+    loading: false,
+    grade: 0
   },
   mutations: {
     setUser(state, payload) {
@@ -38,6 +39,9 @@ export default new Vuex.Store({
     },
     setAccessToken(state, payload){
         state.accessToken = payload
+    },
+    setGrade(state, payload){
+        state.grade = payload
     }
   },
   actions: {
@@ -47,17 +51,21 @@ export default new Vuex.Store({
         var currentUser;
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
             .then(firebaseUser => {
-                commit('setUser', { email: firebaseUser.user.email })
+                commit('setUser', { email: firebaseUser.user.email, username: firebaseUser.user.username })
                 commit('setLoading', false)
-                commit('setError', null),
+                commit('setError', null)
                 commit('setAccessToken', firebaseUser.user.uid)
+                commit('setGrade', 3)
+
                 currentUser = firebase.auth().currentUser;
 
                 currentUser.updateProfile({
                     displayName: payload.username
                 }).then(function() {
-                    // FirebaseService.createUserLog(currentUser.uid, currentUser.email)
+                    // FirebaseService.createUserInfo(currentUser.uid, currentUser.email)
                     alert("반갑습니다.\n" + currentUser.displayName + "님 회원가입되었습니다.");
+
+                    FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.username);
                 })
             })
             .catch(error => {
@@ -119,7 +127,7 @@ export default new Vuex.Store({
                 commit('setError', null)
                 commit('setAccessToken', firebaseUser.user.uid)
                 currentUser = firebase.auth().currentUser;
-                // FirebaseService.createUserLog(currentUser.uid)
+                // FirebaseService.createUserInfo(currentUser.uid)
                 // FirebaseService.mgrUserLog(currentUser.uid);
                 alert("반갑습니다.\n" + currentUser.displayName + currentUser.uid + "님 Facebook 아이디로 로그인되었습니다.");
             })
@@ -127,11 +135,9 @@ export default new Vuex.Store({
                 alert("에러: " + err.message);
             })
     },
-
     autoSignIn({ commit }, payload) {
         commit('setUser', { email: payload.email })
     },
-
     userSignOut({ commit }) {
         var currentUser = firebase.auth().currentUser;
         firebase.auth().signOut().then(() => {

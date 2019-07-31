@@ -6,8 +6,7 @@
       <i class="fas fa-home homeIcon logoHide"></i>
     </div>
     <div class="">
-      <span>
-        <router-link to="/admin">Admin</router-link>
+      <span @click="changeSelectPage(-1)">Admin
       </span>
     </div>
     <div class="sideNav">
@@ -17,8 +16,8 @@
       <span v-else @click="goToLogin()">
         <router-link to="/">Login</router-link>
       </span> -->
-      <span  v-if="this.$store.state.user" @click="changeSelectPage(4)">Login</span>
-      <span v-else @click="goToLogout()"></span>
+      <span v-if="this.$store.state.user !== null" @click="changeSelectPage(4)">Login</span>
+      <span v-else @click="goToLogout()">Logout</span>
       <span @click="changeSelectPage(3)">Preview</span>
       <span @click="changeSelectPage(2)">Review</span>
       <span @click="changeSelectPage(1)">Search</span>
@@ -31,14 +30,16 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+
+  },
   components: {},
   // mounted(){
   //   alert(this.$store.state.accessToken)
   // },
   methods: {
     goToLogin(){
-      document.querySelector('#loginForm').style.display = "block"
+      // document.querySelector('#loginForm').style.display = "block";
       this.changeSelectPage(4);
     },
     goToLogout(){

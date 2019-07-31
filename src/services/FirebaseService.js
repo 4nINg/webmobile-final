@@ -7,7 +7,7 @@ const INFO = "info";
 const REVIEW = "review";
 const USER = "user";
 // const BANNERS = "bannerImages";
-// const USERINFO = "userInfo";
+const USERINFO = "userInfo";
 
 // Setup Firebase
 const config = {
@@ -130,18 +130,22 @@ export default {
                 console.error("[Google Login Error]", error);
             });
     },
-    // create Email - password
-    createUserLog(uid, id) {
-        return firestore.collection(USERINFO).doc(uid).set({
+    createUserInfo(uid, id, username) { // 회원가입
+      alert("크리에이트 입장")
+         firestore.collection(USERINFO).doc(uid).set({
             uid,
             id,
+            username,
             login_time: firebase.firestore.FieldValue.serverTimestamp(),
-            logout_time: ''
-        }).finally(() => {
+            logout_time: '',
+            grade: 3
+        }).catch((error) => alert(error))
+        .finally(() => {
+          alert("크리에이트 완료")
             window.location.reload();
         })
     },
-    mgrUserLog(uid, id) {
+    mgrUserInfoLog(uid, id, username) {
         var userList = [];
         firestore.collection(USERINFO)
             .get()
@@ -167,9 +171,17 @@ export default {
                         window.location.reload();
                     });
                 } else {
-                    this.createUserLog(uid, id);
+                    this.createUserInfo(uid, id, username);
                 }
             })
+    },
+    mgrUserInfoGrade(uid, grade){
+      var userInfoRef = firestore.collection(USERINFO);
+      userInfoRef.doc(uid).update({
+        grade : grade
+      }).finally(()=>{
+        //재로드가 이루어져야함
+      })
     },
     changeLogoutTime(uid) {
         var userLogRef = firestore.collection(USERINFO).doc(uid).update({
