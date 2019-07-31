@@ -151,7 +151,7 @@ export default new Vuex.Store({
         commit('setUser', { email: payload.email })
     },
     userSignOut({ commit }) {
-        var currentUser = firebase.auth().currentUser;
+        // var currentUser = firebase.auth().currentUser;
         firebase.auth().signOut().then(() => {
             commit('setUser', null);
             commit('setAccessToken', "0");
