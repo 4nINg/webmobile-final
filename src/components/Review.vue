@@ -55,15 +55,7 @@
                 <button @click="deleteComment(reviewCommentUser[i-1].reviewId)">삭제</button>
               </div>
               <div class="commentWriterDiv">
-<<<<<<< HEAD
                 <CommentWriter :reviewId="reviewId" :comments="comments" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
-=======
-                <CommentWriter
-                  :reviewId="reviewId"
-                  :reviewCommentUser="reviewCommentUser"
-                  :reviewCommentContent="reviewCommentContent"
-                ></CommentWriter>
->>>>>>> jg
               </div>
             </div>
             <div>
@@ -143,11 +135,7 @@ export default {
     },
     showReview(i) {
       this.reviewId = this.displayReviews[i].id;
-<<<<<<< HEAD
       // console.log("dfdf : "+this.reviewId );
-=======
-      console.log("dfdf : " + this.reviewId);
->>>>>>> jg
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
@@ -170,13 +158,11 @@ export default {
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".comment").style.display = "none";
     },
-<<<<<<< HEAD
     deleteComment(reviewId) {
       // FirebaseService.deleteComment(reviewId);
-=======
+    },
     showReviewWrite() {
       document.querySelector(".reviewWriteModal").style.display = "block";
->>>>>>> jg
     }
   },
   watch: {}

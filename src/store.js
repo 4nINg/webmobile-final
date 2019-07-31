@@ -23,14 +23,9 @@ export default new Vuex.Store({
   state: {
     accessToken: "0",
     user: {
-<<<<<<< HEAD
         email: "",
-        userName: ""
-=======
-        email : "",
-        userName : "이지현",
+        userName: "",
         grade : 0
->>>>>>> ms
     },
     error: null,
     loading: false,
