@@ -1,7 +1,7 @@
 <template>
   <div class="reviewMainDiv">
     <div class="writeBtnDiv">
-      <span>
+      <span @click="showReviewWrite()">
         <i class="far fa-edit"></i>글쓰기
       </span>
     </div>
@@ -54,7 +54,11 @@
                 <p>{{reviewCommentContent[i-1]}}</p>
               </div>
               <div class="commentWriterDiv">
-                <CommentWriter :reviewId="reviewId" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
+                <CommentWriter
+                  :reviewId="reviewId"
+                  :reviewCommentUser="reviewCommentUser"
+                  :reviewCommentContent="reviewCommentContent"
+                ></CommentWriter>
               </div>
             </div>
             <div>
@@ -66,15 +70,23 @@
         </div>
       </div>
     </div>
+
+    <div class="reviewWriteModal">
+      <div class="reviewWriteModalContent">
+        <ReviewWriter></ReviewWriter>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import FirebaseService from "@/services/FirebaseService";
 import CommentWriter from "@/components/CommentWriter";
+import ReviewWriter from "@/components/ReviewWriter";
 
 export default {
-  components:{
-    CommentWriter,   
+  components: {
+    CommentWriter,
+    ReviewWriter
   },
   data() {
     return {
@@ -125,7 +137,7 @@ export default {
     },
     showReview(i) {
       this.reviewId = this.displayReviews[i].id;
-      console.log("dfdf : "+this.reviewId );
+      console.log("dfdf : " + this.reviewId);
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
@@ -147,6 +159,9 @@ export default {
     backToTheComment() {
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".comment").style.display = "none";
+    },
+    showReviewWrite() {
+      document.querySelector(".reviewWriteModal").style.display = "block";
     }
   },
   watch: {}
@@ -276,6 +291,18 @@ export default {
   background-color: rgb(255, 255, 255, 0.7);
 }
 
+.reviewWriteModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: rgb(255, 255, 255, 0.7);
+}
+
 .reviewModalContainer {
   display: flex;
   justify-content: center;
@@ -284,6 +311,16 @@ export default {
   margin: 10% auto;
   height: 65%;
   width: 45%;
+  position: relative;
+  border: 1px solid black;
+}
+
+.reviewWriteModalContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   position: relative;
   border: 1px solid black;
 }

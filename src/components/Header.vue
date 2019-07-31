@@ -11,12 +11,6 @@
       </span>
     </div>
     <div class="sideNav">
-      <!-- <span v-if="this.$store.state.user" @click="goToLogout()">
-        <router-link to="/">Logout</router-link>
-      </span>
-      <span v-else @click="goToLogin()">
-        <router-link to="/">Login</router-link>
-      </span>-->
       <span v-if="this.$store.state.user" @click="changeSelectPage(4)">Login</span>
       <span v-else @click="goToLogout()"></span>
       <span @click="changeSelectPage(3)">Preview</span>
@@ -33,9 +27,6 @@ export default {
   },
   mounted() {},
   components: {},
-  // mounted(){
-  //   alert(this.$store.state.accessToken)
-  // },
   methods: {
     goToLogin() {
       document.querySelector("#loginForm").style.display = "block";
@@ -96,7 +87,7 @@ export default {
   width: 40vw;
   position: absolute;
   top: 43%;
-  left: -18%;
+  left: -17%;
   transform: rotate(-90deg);
 }
 
@@ -117,8 +108,6 @@ a:link {
 
 .sideNav span:hover,
 .sideNav a:hover {
-  /* color: rgb(255, 98, 0); */
-  /* color: rgb(231, 76, 60); */
   color: red;
   transform: scale(1.3);
 }
