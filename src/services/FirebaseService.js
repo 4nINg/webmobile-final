@@ -2,6 +2,9 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import "firebase/auth";
+import "@firebase/messaging";
+import store from "../store.js"
+const INFO = "info";
 const REVIEW = "review";
 // const BANNERS = "bannerImages";
 const USERINFO = "userInfo";
@@ -20,9 +23,33 @@ const config = {
 firebase.initializeApp(config);
 const firestore = firebase.firestore();
 const firestorage = firebase.storage();
-// export const firebaseDatabase = firebase.database();
+const messaging = firebase.messaging();
+messaging.usePublicVapidKey("BICBJ4VJNXGOauHFGbcpv8uwalnfMAHwB3DN9HmlyBmPI0jxM8OZhnBcp12-IYNfTeGaAzPjRvxJ-fH-KsdNmLs");
+
+
+firebase.firestore().enablePersistence()
+  .catch(function(err) {
+    if(err.code == 'failed-precondition') {
+
+    }else if(err.code == 'unimplemented') {
+
+    }
+});
+
+Notification.requestPermission().then(function(Permission) {
+  if (Permission === 'granted') {
+    console.log('Alarm Permission');
+    return messaging.getToken();
+  }else {
+    console.log("No Permission");
+  }
+}).then( function(token) {
+  console.log("Alarm token : " ,token);
+});
+
 
 export default {
+
     getFireStore() {
         return firestore;
     },
