@@ -5,17 +5,10 @@
       <span class="mainLogo">빠영빠영.</span>
       <i class="fas fa-home homeIcon logoHide"></i>
     </div>
-    <div class="">
-      <span @click="changeSelectPage(-1)">Admin
-      </span>
+    <div class>
+      <span @click="changeSelectPage(-1)">Admin</span>
     </div>
     <div class="sideNav">
-      <!-- <span v-if="this.$store.state.user" @click="goToLogout()">
-        <router-link to="/">Logout</router-link>
-      </span>
-      <span v-else @click="goToLogin()">
-        <router-link to="/">Login</router-link>
-      </span> -->
       <span v-if="!checkLoginSession()" @click="changeSelectPage(4)" id="sideNavLogin">Login</span>
       <span v-else @click="goToLogout()" id="sideNavLogout">Logout</span>
       <span @click="changeSelectPage(3)">Preview</span>
@@ -30,27 +23,25 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-
-  },
+  mounted() {},
   components: {},
   methods: {
-    goToLogin(){
+    goToLogin() {
       // document.querySelector('#loginForm').style.display = "block";
       this.changeSelectPage(4);
     },
     goToLogout() {
       // this.changeSelectPage(4);
-      this.$store.dispatch("userSignOut")
+      this.$store.dispatch("userSignOut");
     },
     changeSelectPage(i) {
       this.$emit("inChildSelectPage", i);
     },
-    checkLoginSession(){
-      if(sessionStorage.getItem('accessToken') == "0"){
+    checkLoginSession() {
+      if (sessionStorage.getItem("accessToken") == "0") {
         // alert("없당 : ", sessionStorage.getItem('accessToken'), typeof sessionStorage.getItem('accessToken'))
         return false;
-      }else{
+      } else {
         // alert("있다 : ", sessionStorage.getItem('accessToken'), typeof sessionStorage.getItem('accessToken'))
         return true;
       }

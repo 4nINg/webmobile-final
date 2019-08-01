@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import FirebaseService from '../services/FirebaseService';
+import FirebaseService from "../services/FirebaseService";
 
 export default {
   name : "CommentWriter",
@@ -35,6 +35,36 @@ export default {
       }
     }
   }
+};
+</script>
+<style>
+.commentInputText {
+  width: 100%;
+  border: 1px solid rgb(0, 0, 0, 0.3);
+  border-radius: 0.3em;
+  padding: 0.5em;
 }
 
-</script>
+.commentInputText:focus {
+  outline: none;
+}
+
+.commentSubmitBtn {
+  cursor: pointer;
+  padding: 0.3em;
+  border: 1px solid rgb(0, 0, 0, 0.3);
+  margin-top: 3%;
+  border-radius: 0.3em;
+}
+
+.commentSubmitBtn:hover {
+  box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(0, 0, 0, 0.1);
+}
+
+.commentWirteMainDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+</style>

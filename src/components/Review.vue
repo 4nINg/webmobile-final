@@ -35,15 +35,32 @@
         <span class="closeReview" @click="closeReviewModal()">&times;</span>
         <div class="inModalreview">
           <div class="reviewModalTitle">
-            <h1>{{reviewTitle}}</h1>
+            <span class="reviewTitle">{{reviewTitle}}</span>
+            <input type="text" class="modifyReviewTitleInput" />
           </div>
           <div class="reviewModalContent">
-            <p>{{reviewContent}}</p>
+            <p class="reviewContent">{{reviewContent}}</p>
+            <textarea class="modifyReviewContentInput"></textarea>
           </div>
           <div class="showCommentDiv">
-            <span class="showCommentBtn" @click="showComment()">
-              <i class="far fa-comments"></i>댓글 보기
-            </span>
+            <div class="modifyReviewDiv">
+              <div>
+                <span @click="modifyReview()" class="modifyReview">수정</span>
+              </div>
+            </div>
+            <div class="completeModifyReviewDiv">
+              <div>
+                <span @click="completeModify()" class="completeModifyReview">수정 완료</span>
+              </div>
+            </div>
+            <div class="deleteReviewDiv">
+              <span @click="deleteReview()">삭제</span>
+            </div>
+            <div class="showCommentBtn">
+              <span @click="showComment()">
+                <i class="far fa-comments"></i>댓글 보기
+              </span>
+            </div>
           </div>
         </div>
         <div class="comment">
@@ -60,11 +77,18 @@
                 <CommentWriter :reviewId="reviewId" :comments="comments" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
               </div>
             </div>
-            <div>
-              <span class="showInModalreview" @click="backToTheComment()">
-                <i class="fas fa-undo"></i>글 보기
-              </span>
+            <div class="commentWriterDiv">
+              <CommentWriter
+                :reviewId="reviewId"
+                :comments="comments"
+                :reviewCommentUser="reviewCommentUser"
+                :reviewCommentContent="reviewCommentContent"
+              ></CommentWriter>
             </div>
+
+            <span class="showInModalreview" @click="backToTheComment()">
+              <i class="fas fa-undo"></i>글 보기
+            </span>
           </div>
         </div>
       </div>
@@ -72,7 +96,7 @@
 
     <div class="reviewWriteModal">
       <div class="reviewWriteModalContent">
-        <ReviewWriter></ReviewWriter>
+        <ReviewWriter @isSubmit="isSubmit"></ReviewWriter>
       </div>
     </div>
   </div>
@@ -97,13 +121,16 @@ export default {
       reviewContent: "",
       reviewCommentContent: [],
       reviewCommentUser: [],
-      comments: [],
+      comments: []
     };
   },
   mounted() {
     this.getReviewList();
   },
   methods: {
+    isSubmit() {
+      this.getReviewList();
+    },
     async getReviewList() {
       this.reviewList = await FirebaseService.getReviewList();
       this.showList();
@@ -142,7 +169,7 @@ export default {
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
         this.reviewCommentUser = this.displayReviews[i].userId;
-        this.reviewCommentContent = this.displayReviews[i].comment;
+        this.reviewCommentContent = this.displayReviews[i].comments;
       }
 
       document.querySelector(".comment").style.display = "none";
@@ -183,9 +210,66 @@ export default {
     },
     showReviewWrite() {
       document.querySelector(".reviewWriteModal").style.display = "block";
+    },
+    modifyComment(index) {
+      this.reviewCommentContent[index] = "이렇게수정되었습니다.";
+      ("파이어베이스 업데이트하겠다.");
+    },
+    modifyReview() {
+      var beforeModifyTitle = document.querySelector(".reviewTitle").innerText;
+      var beforeModifyContent = document.querySelector(".reviewContent")
+        .innerText;
+      document.querySelector(".reviewTitle").style.display = "none";
+      document.querySelector(".modifyReviewTitleInput").style.display = "block";
+      document.querySelector(
+        ".modifyReviewTitleInput"
+      ).value = beforeModifyTitle;
+      document.querySelector(".reviewContent").style.display = "none";
+      document.querySelector(".modifyReviewContentInput").style.display =
+        "block";
+      document.querySelector(
+        ".modifyReviewContentInput"
+      ).innerText = beforeModifyContent;
+      document.querySelector(".modifyReviewDiv").style.display = "none";
+      document.querySelector(".completeModifyReviewDiv").style.display =
+        "block";
+    },
+    completeModify() {
+      for (var i = 0; i < this.reviewList.length; ++i) {
+        if (this.reviewList[i].id === this.reviewId) {
+          this.reviewList[i].title = document.querySelector(
+            ".modifyReviewTitleInput"
+          ).value;
+          this.reviewList[i].body = document.querySelector(
+            ".modifyReviewContentInput"
+          ).value;
+          this.reviewTitle = this.reviewList[i].title;
+          this.reviewContent = this.reviewList[i].body;
+          break;
+        }
+      }
+      document.querySelector(".reviewTitle").style.display = "block";
+      document.querySelector(".modifyReviewTitleInput").style.display = "none";
+      document.querySelector(".reviewContent").style.display = "block";
+      document.querySelector(".modifyReviewContentInput").style.display =
+        "none";
+      document.querySelector(".modifyReviewDiv").style.display = "block";
+      document.querySelector(".completeModifyReviewDiv").style.display = "none";
+      FirebaseService.modifyReview(
+        this.reviewId,
+        this.reviewTitle,
+        this.reviewContent
+      );
+      this.getReviewList();
+    },
+    deleteReview() {
+      FirebaseService.deleteReview(this.reviewId);
+      document.querySelector(".comment").style.display = "none";
+      document.querySelector(".inModalreview").style.display = "none";
+      document.querySelector(".reviewModal").style.display = "none";
+      this.getReviewList();
     }
-  },
-  watch: {}
+  }
 };
 </script>
 <style>
@@ -197,7 +281,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-
+  display: ;
   /* position: relative; */
 }
 
@@ -309,7 +393,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .reviewWriteModal {
@@ -354,24 +438,55 @@ export default {
 .reviewModalTitle {
   width: 100%;
   margin-bottom: 5%;
+  padding-bottom: 3%;
   border-bottom: 1px solid black;
+  font-size: 1.2em;
+  font-weight: 600;
 }
 
 .reviewModalContent {
   width: 100%;
-  height: 80%;
+  height: 70%;
   margin-bottom: 5%;
   border-bottom: 1px solid black;
-  overflow-wrap: break-word;
+}
+
+.reviewModalContent p {
+  width: 100%;
+  height: 90%;
+  overflow: scroll;
 }
 
 .showCommentDiv {
-  float: right;
+  display: flex;
+  justify-content: space-between;
 }
 
-.showCommentBtn {
+.showCommentDiv > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  text-align: center;
+  width: 7em;
+  height: 2.5em;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 1em;
 }
+
+.showCommentDiv > div:hover {
+  box-shadow: 0.2em 0.2em 0.2em 0.2em rgb(0, 0, 0, 0.1);
+}
+
+.modifyReviewDiv > div,
+.completeModifyReviewDiv > div {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
 .closeReview {
   cursor: pointer;
   position: absolute;
@@ -384,12 +499,15 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 100%;
+  height: 80%;
   overflow: scroll;
 }
 
 .showInModalreview {
   cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 .comment {
@@ -401,10 +519,7 @@ export default {
 .commentContainer {
   width: 100%;
   height: 100%;
-}
-
-.showInModalreview {
-  float: right;
+  position: relative;
 }
 
 .vForDiv {
@@ -413,4 +528,22 @@ export default {
   border-bottom: 1px solid rgb(0, 0, 0, 0.1);
   width: 100%;
 }
+
+.modifyReviewTitleInput {
+  display: none;
+  width: 100%;
+  margin-bottom: 1%;
+  padding: 1.5% 1.5% 1.5% 1.5%;
+}
+
+.modifyReviewContentInput {
+  display: none;
+  width: 100%;
+  height: 90%;
+}
+
+.completeModifyReviewDiv {
+  display: none;
+}
 </style>
+ 
