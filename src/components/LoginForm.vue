@@ -6,7 +6,6 @@
   <button @click="signUp()">SignUp</button>
   <button @click="loginWithGoogle()">Google</button>
   <button @click="loginWithFacebook()">Facebook</button>
-  <SignUpForm></SignUpForm>
 </div>
 </template>
 <script>
@@ -28,22 +27,35 @@ export default {
       this.$store.dispatch("userSignIn", {
         email: this.email,
         password: this.password
+      })
+      .finally(()=>{
+        this.changeSelectPage(0);
+        // if(!this.$store.getters.isAdmin){
+        //   document.querySelector("#adminPageBtn").style.display = "none";
+        // }else{
+        //   document.querySelector("#adminPageBtn").style.display = "block";
+        // }
       });
-      // this.email = "";
-      // this.password = "";
-      // document.querySelector("#loginForm").style.display = "none";
-      // document.querySelector("#signUpForm").style.display = "none";
     },
     //google login
     loginWithGoogle() {
-      this.$store.dispatch("userSignInWithGoogle", {});
+      this.$store.dispatch("userSignInWithGoogle", {})
+      .finally(()=>{
+        this.changeSelectPage(0);
+      });
     },
     //facebook login
     loginWithFacebook() {
-      this.$store.dispatch("userSignInWithFacebook", {});
+      this.$store.dispatch("userSignInWithFacebook", {})
+      .finally(()=>{
+        this.changeSelectPage(0);
+      });
     },
     signUp(){
-      document.querySelector("#signUpForm").style.display = "block";
+      this.changeSelectPage(5);
+    },
+    changeSelectPage(i){
+      this.$emit("inLoginSelectPage", i);
     }
   },
   computed: {
