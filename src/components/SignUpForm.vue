@@ -1,12 +1,10 @@
 <template>
 <div id="signUpForm" style="display:none">
-  <form @submit.prevent="userSignUp">
     <div><span>E-Mail</span><input type="text" placeholder="ID" id="signUpID" v-model="email" required></div>
     <div><span>Password</span><input type="password" placeholder="Password" id="signUpPW" v-model="password" required></div>
     <div><span>Check Password</span><input type="password" placeholder="Check Password" id="signUpCheckPW" v-model="passwordCheck" :rules="[comparePasswords]" required></div>
     <div><span>Username</span><input type="text" placeholder="Username" id="signUpUsername" v-model="username" required></div>
-    <button type="submit">회원가입</button><button @click="userSignUpCancle()">취소</button>
-  </form>
+    <button @click="userSignUp()">회원가입</button><button @click="userSignUpCancle()">취소</button>
 </div>
 </template>
 <script>
@@ -44,7 +42,7 @@ export default {
         email: this.email,
         username: this.username,
         password: this.password
-      });
+      })
     },
     userSignUpCancle() { //회원가입 취소
       this.email = "";

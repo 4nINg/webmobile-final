@@ -12,6 +12,8 @@
         </span>
       </div>
     </div>
+<<<<<<< HEAD
+=======
     <!-- <LoginForm/>
     <SignUpForm/> -->
     <!-- <ImageBanner></ImageBanner>
@@ -22,34 +24,21 @@
     <ReviewWriter></ReviewWriter>
     <PreviewWriter></PreviewWriter>
     <ImgUploader></ImgUploader> -->
+>>>>>>> 5503c28a4c9469cf46e7f58692e219fe23104d3b
   </div>
 </template>
 
 <script>
-// import ImageBanner from "../components/ImageBanner";
-// import moviePoster from "../components/moviePoster";
-// import PreviewWriter from "../components/PreviewWriter";
-// import ReviewWriter from "../components/ReviewWriter";
-// import ImgUploader from "../components/ImgUploader";
-import Header from "@/components/Header";
-// import LoginForm from "../components/LoginForm";
-// import SignUpForm from "../components/SignUpForm";
-
 export default {
-  components: {
-    // ImageBanner,
-    // moviePoster,
-    // PreviewWriter,
-    // ReviewWriter,
-    // Header,
-    // LoginForm,
-    // SignUpForm,
-    // ImageBanner,
-    // moviePoster,
-    // PreviewWriter,
-    // ReviewWriter,
-    Header
-  }
+  components: {},
+  data() {
+    return {
+      date: [],
+      movieList: []
+    };
+  },
+  mounted() {},
+  methods: {}
 };
 </script>
 
@@ -66,25 +55,16 @@ export default {
   height: 80%;
   font-size: 2.3em;
   font-family: "Courgette", cursive;
-  /* font-family: "Kaushan Script", cursive; */
-  /* font-weight: 600; */
-  /* text-shadow: 30px 30px black; */
 }
 
 .firstSlogan {
   position: absolute;
   top: 30%;
-  /* left: 10%; */
 }
 
 .secondSlogan {
   position: absolute;
   bottom: 30%;
   right: 4%;
-}
-
-.colorSlogan {
-  /* color: rgb(255, 98, 0); */
-  /* color: red; */
 }
 </style>

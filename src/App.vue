@@ -5,11 +5,9 @@
     <MainPage v-if="selectPage === 0"></MainPage>
     <timeTable v-if="selectPage === 1"></timeTable>
     <LoginForm v-if="selectPage === 4"></LoginForm>
-    <LoginForm></LoginForm>
     <!-- <Footer></Footer> -->
-    <button @click="crawlingData()">크롤링가즈아</button>
-    <div id="movieList">{{temp}}</div>
     <Review v-if="selectPage === 2"></Review>
+    <Admin v-if="selectPage === -1"></Admin>
   </div>
 </template>
 <script>
@@ -20,10 +18,11 @@ import MainPage from "@/views/MainPage";
 import firebase from "firebase";
 import timeTable from "@/components/timeTable";
 import LoginForm from "@/components/LoginForm";
-import axios from "axios";
+// import axios from "axios";
 import Review from "@/components/Review";
 import ReviewWriter from "@/components/ReviewWriter";
 import CommentWriter from "@/components/CommentWriter";
+import Admin from "@/components/Admin";
 
 export default {
   name: "App",
@@ -42,26 +41,15 @@ export default {
     Review,
     ReviewWriter,
     CommentWriter,
+    Admin
   },
   methods: {
     childSelectPage(i) {
       this.selectPage = i;
-    },
-    crawlingData(){
-      var movieInfo;
-      axios.get("http://localhost:8888/megabox",{
-        headers : {
-          'Access-Control-Allow-Origin' : '*'
-        }
-      }).then((response)=>{
-        // console.log(data)
-        console.log(response.data.info)
-        this.temp = response.data.info;
-      });
-      // this.temp = data.data.info;
     }
   },
   mounted() {
+<<<<<<< HEAD
     //service worker register
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('firebase-messaging-sw.js')
@@ -71,6 +59,10 @@ export default {
         console.log('Service worker registration failed, error:', err);
       });
     }
+=======
+    //사이트 입장 시 세션에 따른 로그인 정보 초기화
+    this.$store.dispatch("initLoginInfo");
+>>>>>>> 59dbe770dff1fabf5f6ee509b3d4cbc149be8cb4
 
     var address = document.location.href;
     var logo = document.querySelector(".logo");
@@ -92,8 +84,14 @@ export default {
       if (this.selectPage === 1) {
         document.querySelector(".headerDiv").style.backgroundColor =
           "rgb(255, 255, 255, 0.7)";
-      } else if(this.selectPage === 4) {
-        document.querySelector('#loginForm').style.display = "block"
+      } else if (this.selectPage === 4) {
+        document.querySelector("#loginForm").style.display = "block";
+      } else if(this.selectPage === -1) {
+        if(this.$store.dispatch("checkIsAdmin")){
+          this.selectPage = -1;
+        }else{
+          this.selectPage = 0;
+        }
       } else {
         document.querySelector(".headerDiv").style.backgroundColor =
           "transparent";

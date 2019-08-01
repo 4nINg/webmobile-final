@@ -17,14 +17,18 @@ facebook_provider.setCustomParameters({
     display: "popup"
 });
 
-// const adminToken = "zIXgFiNwlngXjgPStvgJH8pm18H3"
+const adminToken = "zIXgFiNwlngXjgPStvgJH8pm18H3"
 
 export default new Vuex.Store({
   state: {
-    accessToken: '',
-    user: null,
+    accessToken: "0",
+    user: {
+        email: "",
+        username: "",
+        grade : 0
+    },
     error: null,
-    loading: false
+    loading: false,
   },
   mutations: {
     setUser(state, payload) {
@@ -38,6 +42,7 @@ export default new Vuex.Store({
     },
     setAccessToken(state, payload){
         state.accessToken = payload
+        sessionStorage.setItem("accessToken", payload)
     }
   },
   actions: {
@@ -47,16 +52,18 @@ export default new Vuex.Store({
         var currentUser;
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
             .then(firebaseUser => {
-                commit('setUser', { email: firebaseUser.user.email })
+                commit('setUser', { email: firebaseUser.user.email, username: firebaseUser.user.username, grade: 3 })
                 commit('setLoading', false)
-                commit('setError', null),
+                commit('setError', null)
                 commit('setAccessToken', firebaseUser.user.uid)
+
                 currentUser = firebase.auth().currentUser;
 
                 currentUser.updateProfile({
                     displayName: payload.username
                 }).then(function() {
-                    // FirebaseService.createUserLog(currentUser.uid, currentUser.email)
+                    //uid(식별자), email(사용자 계정), displayName(유저네임 - 닉네임)
+                    FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
                     alert("반갑습니다.\n" + currentUser.displayName + "님 회원가입되었습니다.");
                 })
             })
@@ -77,9 +84,11 @@ export default new Vuex.Store({
                 commit('setLoading', false)
                 commit('setError', null)
                 commit('setAccessToken', firebaseUser.user.uid)
+
                 currentUser = firebase.auth().currentUser;
-                // FirebaseService.mgrUserLog(currentUser.uid, currentUser.email)
-                alert("반갑습니다.\n" + currentUser.displayName + "님 로그인되었습니다.");
+                FirebaseService.mgrUserInfoLog(currentUser);
+                alert("반갑습니다.\n" + currentUser.displayName + "님 로그인되었습니다." + this.state.accessToken);
+                // window.location.reload();
             })
             .catch(error => {
                 commit('setError')
@@ -93,18 +102,19 @@ export default new Vuex.Store({
         var currentUser;
         commit('setLoading', true)
         firebase.auth().signInWithPopup(google_provider)
-            .then(firebaseUser => {
-                commit('setUser', { email: firebaseUser.user.email })
+            .then((result) => {
+                currentUser = result.user;
+                commit('setUser', { email: currentUser.email, username: currentUser.displayName })
                 commit('setLoading', false)
                 commit('setError', null)
-                commit('setAccessToken', firebaseUser.user.uid)
-                currentUser = firebase.auth().currentUser;
-                // FirebaseService.mgrUserLog(currentUser.uid);
-                console.log(currentUser);
+                commit('setAccessToken', currentUser.uid)
+                // FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.email)
+                FirebaseService.mgrUserInfoLog(currentUser);
                 alert("반갑습니다.\n" + currentUser.displayName + "님 Google 아이디로 로그인되었습니다.");
+                window.location.reload();
             })
             .catch(err => {
-                alert("에러: " + err.message);
+                alert("구글 로그인 에러: " + err.message);
             })
     },
     //facebook login
@@ -113,34 +123,58 @@ export default new Vuex.Store({
         var currentUser;
         commit('setLoading', true)
         firebase.auth().signInWithPopup(facebook_provider)
-            .then(firebaseUser => {
-                commit('setUser', { email: firebaseUser.user.email })
+            .then(result => {
+                currentUser = result.user;
+                commit('setUser', { email: currentUser.email, username: currentUser.displayName })
                 commit('setLoading', false)
                 commit('setError', null)
-                commit('setAccessToken', firebaseUser.user.uid)
-                currentUser = firebase.auth().currentUser;
-                // FirebaseService.createUserLog(currentUser.uid)
-                // FirebaseService.mgrUserLog(currentUser.uid);
-                alert("반갑습니다.\n" + currentUser.displayName + currentUser.uid + "님 Facebook 아이디로 로그인되었습니다.");
+                commit('setAccessToken', currentUser.uid)
+                // FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.email)
+                FirebaseService.mgrUserInfoLog(currentUser);
+                alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
+                window.location.reload();
             })
             .catch(err => {
-                alert("에러: " + err.message);
+                alert("페이스북 로그인 에러: " + err.message);
             })
     },
-
     autoSignIn({ commit }, payload) {
-        commit('setUser', { email: payload.email })
+        // console.log(payload)
+        commit('setUser', { email: payload.email, username: payload.displayName })
     },
-
     userSignOut({ commit }) {
-        var currentUser = firebase.auth().currentUser;
+        // var currentUser = firebase.auth().currentUser;
         firebase.auth().signOut().then(() => {
             commit('setUser', null);
-            commit('setAccessToken', null);
-            // FirebaseService.changeLogoutTime(currentUser.uid);
-        }).finally(()=>{
-          alert("로그아웃 완료");
+            commit('setAccessToken', "0");
+            alert("로그아웃 완료1 : " + this.state.accessToken);
+            FirebaseService.changeLogoutTime(this.state.accessToken);
+            alert("로그아웃 완료2")
         })
+    },
+    checkIsAdmin({commit}){ //Admin 페이지 접근 시 세션 확인
+      var check = false;
+      if(state.accessToken == adminToken && state.grade == 1){
+        check = true;
+      }else{
+        check = false;
+      }
+      return check;
+    },
+    initLoginInfo({commit}){ //사이트 입장 시 세션에 따른 로그인 정보 초기화
+      var info = FirebaseService.getUserInfoByUid(sessionStorage.getItem("accessToken")); //object로 들어옴
+      alert("initLoginInfo : " + info)
+      if(info == null){
+        commit('setUser', null);
+        commit('setAccessToken', "0");
+        commit('setLoading', false)
+        commit('setError', null)
+      }else{
+        commit('setUser', { email: info.id, name: info.name, grade: info.grade })
+        commit('setLoading', false)
+        commit('setError', null)
+        commit('setAccessToken', info.uid)
+      }
     }
   },
   getters: {

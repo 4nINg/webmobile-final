@@ -10,6 +10,7 @@ import firebase from "firebase";
 Vue.use(axios);
 Vue.use(cheerio);
 Vue.config.productionTip = false
+Vue.config.devtools = true
 Vue.prototype.$http = require('axios');
 
 new Vue({

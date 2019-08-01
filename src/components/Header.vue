@@ -6,8 +6,7 @@
       <i class="fas fa-home homeIcon logoHide"></i>
     </div>
     <div class="">
-      <span>
-        <router-link to="/admin">Admin</router-link>
+      <span @click="changeSelectPage(-1)">Admin
       </span>
     </div>
     <div class="sideNav">
@@ -17,8 +16,8 @@
       <span v-else @click="goToLogin()">
         <router-link to="/">Login</router-link>
       </span> -->
-      <span  v-if="this.$store.state.user" @click="changeSelectPage(4)">Login</span>
-      <span v-else @click="goToLogout()"></span>
+      <span v-if="!checkLoginSession()" @click="changeSelectPage(4)" id="sideNavLogin">Login</span>
+      <span v-else @click="goToLogout()" id="sideNavLogout">Logout</span>
       <span @click="changeSelectPage(3)">Preview</span>
       <span @click="changeSelectPage(2)">Review</span>
       <span @click="changeSelectPage(1)">Search</span>
@@ -31,22 +30,30 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+
+  },
   components: {},
-  // mounted(){
-  //   alert(this.$store.state.accessToken)
-  // },
   methods: {
     goToLogin(){
-      document.querySelector('#loginForm').style.display = "block"
+      // document.querySelector('#loginForm').style.display = "block";
       this.changeSelectPage(4);
     },
-    goToLogout(){
-      this.changeSelectPage(4);
-      this.$store.dispatch("userSignOut");
+    goToLogout() {
+      // this.changeSelectPage(4);
+      this.$store.dispatch("userSignOut")
     },
     changeSelectPage(i) {
       this.$emit("inChildSelectPage", i);
+    },
+    checkLoginSession(){
+      if(sessionStorage.getItem('accessToken') == "0"){
+        // alert("없당 : ", sessionStorage.getItem('accessToken'), typeof sessionStorage.getItem('accessToken'))
+        return false;
+      }else{
+        // alert("있다 : ", sessionStorage.getItem('accessToken'), typeof sessionStorage.getItem('accessToken'))
+        return true;
+      }
     }
   }
 };
@@ -96,7 +103,7 @@ export default {
   width: 40vw;
   position: absolute;
   top: 43%;
-  left: -18%;
+  left: -17%;
   transform: rotate(-90deg);
 }
 
@@ -117,8 +124,6 @@ a:link {
 
 .sideNav span:hover,
 .sideNav a:hover {
-  /* color: rgb(255, 98, 0); */
-  /* color: rgb(231, 76, 60); */
   color: red;
   transform: scale(1.3);
 }
