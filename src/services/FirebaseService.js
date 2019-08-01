@@ -144,7 +144,7 @@ export default {
             window.location.reload();
         })
     },
-    mgrUserInfoLog(uid, id, username) { //사용자 로그 관리
+    mgrUserInfoLog(currentUser) { //사용자 로그 관리
         var userList = [];
         firestore.collection(USERINFO)
             .get()
@@ -157,20 +157,20 @@ export default {
             .finally(() => {
                 var check = false;
                 for (var i = 0; i < userList.length; i++) {
-                    if (userList[i] == uid) {
+                    if (userList[i] == currentUser.uid) {
                         check = true;
                         break;
                     }
                 }
                 var userLogRef = firestore.collection(USERINFO);
                 if (check) {
-                    userLogRef.doc(uid).update({
+                    userLogRef.doc(currentUser.uid).update({
                         login_time: firebase.firestore.FieldValue.serverTimestamp()
                     }).finally(() => {
                         window.location.reload();
                     });
                 } else {
-                    this.createUserInfo(uid, id, username);
+                  this.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
                 }
             })
     },
@@ -183,10 +183,13 @@ export default {
       })
     },
     changeLogoutTime(uid) { //사용자 정보 중 로그아웃 시간 변경
+        alert(uid);
         firestore.collection(USERINFO).doc(uid).update({
             logout_time: firebase.firestore.FieldValue.serverTimestamp()
-        }).finally(() => {
-            window.location.href = "/";
+        })
+        .catch((err) => {alert("error : " + err)})
+        .finally(() => {
+            // window.location.reload();
         });
     },
     getUserInfoList() { //사용자 정보 리스트(list) get
@@ -209,7 +212,7 @@ export default {
     },
     getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
       if(uid == "0"){
-          return "0";
+          return null;
       }else{
         return firestore.collection(USERINFO).doc(uid)
         .get()

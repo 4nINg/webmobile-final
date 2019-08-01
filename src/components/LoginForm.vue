@@ -28,8 +28,6 @@ export default {
       this.$store.dispatch("userSignIn", {
         email: this.email,
         password: this.password
-      }).finally(()=>{
-        // window.location.reload();
       });
       // this.email = "";
       // this.password = "";
@@ -44,9 +42,7 @@ export default {
     },
     //facebook login
     loginWithFacebook() {
-      this.$store.dispatch("userSignInWithFacebook", {}).finally(()=>{
-        window.location.reload();
-      });
+      this.$store.dispatch("userSignInWithFacebook", {});
     },
     signUp(){
       document.querySelector("#signUpForm").style.display = "block";
