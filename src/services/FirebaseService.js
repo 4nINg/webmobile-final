@@ -38,7 +38,7 @@ export default {
                 return docSnapshots.docs.map(doc => {
                     let data = doc.data();
                     data.id = doc.id;
-                    data.created_at = new Date(data.created_at.toDate());
+                    // data.created_at = new Date(data.created_at.toDate());
                     return data;
                 });
             });
@@ -76,13 +76,13 @@ export default {
                 // alert("작성끝")
             });
     },
-    deleteReview(o) { //리뷰 삭제
-        firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
-            firestorage.ref().child('review/' + o.num).delete()
-            alert("삭제완료!")
-            window.location.reload();
-        });
-    },
+    // deleteReview(o) { //리뷰 삭제
+    //     firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
+    //         firestorage.ref().child('review/' + o.num).delete()
+    //         alert("삭제완료!")
+    //         window.location.reload();
+    //     });
+    // },
     // postComment(reviewId, userList, contentList) { //reviewId - review식별자 //댓글 작성
     //     firestore.collection(REVIEW).doc(reviewId).update({
     //         userId: userList,
@@ -92,8 +92,11 @@ export default {
     postComment(reviewId, comment) { //reviewId - review식별자 //댓글 작성
         firestore.collection(REVIEW).doc(reviewId).collection('comments').add(comment)
     },
-    deleteComment(reviewId) {
-        firestore.collection(REVIEW).doc(reviewId).delete()
+    deleteComment(reviewId, userList, contentList) {
+        firestore.collection(REVIEW).doc(reviewId).update({
+            userId: userList,
+            comments: contentList
+        })
         alert("삭제완료!")
         window.location.reload();
     },
@@ -129,20 +132,20 @@ export default {
     },
     createUserInfo(uid, id, username) { // 회원가입
         // alert("uid : " + uid + "id : " + "username : " + username);
-         firestore.collection(USERINFO).doc(uid).set({
-            uid,
-            id,
-            username,
-            login_time: firebase.firestore.FieldValue.serverTimestamp(),
-            logout_time: '',
-            grade: 3
-        })
-        .catch((error) => {
-          alert(error)
-        })
-        .finally(() => {
-            window.location.reload();
-        })
+        firestore.collection(USERINFO).doc(uid).set({
+                uid,
+                id,
+                username,
+                login_time: firebase.firestore.FieldValue.serverTimestamp(),
+                logout_time: '',
+                grade: 3
+            })
+            .catch((error) => {
+                alert(error)
+            })
+            .finally(() => {
+                window.location.reload();
+            })
     },
     mgrUserInfoLog(currentUser) { //사용자 로그 관리
         var userList = [];
@@ -170,27 +173,27 @@ export default {
                         window.location.reload();
                     });
                 } else {
-                  this.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
+                    this.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
                 }
             })
     },
-    mgrUserInfoGrade(uid, grade){ //사용자 등급 정보 관리
-      var userInfoRef = firestore.collection(USERINFO);
-      userInfoRef.doc(uid).update({
-        grade : grade
-      }).finally(()=>{
-        //재로드가 이루어져야함
-      })
+    mgrUserInfoGrade(uid, grade) { //사용자 등급 정보 관리
+        var userInfoRef = firestore.collection(USERINFO);
+        userInfoRef.doc(uid).update({
+            grade: grade
+        }).finally(() => {
+            //재로드가 이루어져야함
+        })
     },
     changeLogoutTime(uid) { //사용자 정보 중 로그아웃 시간 변경
         alert(uid);
         firestore.collection(USERINFO).doc(uid).update({
-            logout_time: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .catch((err) => {alert("error : " + err)})
-        .finally(() => {
-            // window.location.reload();
-        });
+                logout_time: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .catch((err) => { alert("error : " + err) })
+            .finally(() => {
+                // window.location.reload();
+            });
     },
     getUserInfoList() { //사용자 정보 리스트(list) get
         var userList = [];
@@ -210,15 +213,24 @@ export default {
             })
         return userList;
     },
-    getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
-      if(uid == "0"){
-          return null;
-      }else{
-        return firestore.collection(USERINFO).doc(uid)
-        .get()
-          .then((doc) => {
-          return doc.data()
-        })
-      }
+    getUserInfoByUid(uid) { // uid를 이용한 사용자 정보 get
+        if (uid == "0") {
+            return null;
+        } else {
+            return firestore.collection(USERINFO).doc(uid)
+                .get()
+                .then((doc) => {
+                    return doc.data()
+                })
+        }
+    },
+    deleteReview(reviewId) {
+        firestore.collection(REVIEW).doc(reviewId).delete();
+    },
+    modifyReview(reviewId, mtitle, mbody) {
+        firestore.collection(REVIEW).doc(reviewId).update({
+            title: mtitle,
+            body: mbody
+        });
     }
 }

@@ -384,6 +384,10 @@ export default {
         alert("날짜를 선택해주세요!");
         return;
       }
+      if (this.searchKeyword === null || this.searchKeyword === "") {
+        alert("검색어를 입력해주세요!");
+        return;
+      }
       this.searchMegabox();
       this.searchLotte();
       this.searchCgv();
@@ -600,7 +604,7 @@ export default {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: hidden; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
+  /* background-color: rgb(0, 0, 0); Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 

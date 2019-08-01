@@ -7,20 +7,10 @@
       </div>
       <div class="reviewWriteFormDiv">
         <div class="titleInputDiv">
-          <input
-            type="text"
-            placeholder="Please Enter The Title"
-            v-model="writerTitle"
-            class="titleInput"
-          />
+          <input type="text" placeholder="Please Enter The Title" class="titleInput" />
         </div>
         <div class="contentInputDiv">
-          <textarea
-            type="text"
-            placeholder="Please Enter The Content"
-            v-model="writerBody"
-            class="contentInput"
-          />
+          <textarea type="text" placeholder="Please Enter The Content" class="contentInput" />
         </div>
       </div>
       <div class="writerBtnDiv">
@@ -38,9 +28,11 @@ import FirebaseService from "../services/FirebaseService";
 export default {
   data() {
     return {
-      writerTitle: "",
-      writerBody: ""
+      isSubmit: false
     };
+  },
+  mounted() {
+    this.isSubmit = false;
   },
   methods: {
     checkForm: function() {
@@ -55,11 +47,21 @@ export default {
     },
     submit: function() {
       if (this.checkForm()) {
-        FirebaseService.postReview(this.writerTitle, this.writerBody, "test");
-        window.location.reload();
+        FirebaseService.postReview(
+          document.querySelector(".titleInput").value,
+          document.querySelector(".contentInput").value,
+          "test"
+        );
+        this.isSubmit = true;
+        this.$emit("isSubmit", this.isSubmit);
+
+        this.closeReviewWriteModal();
       }
     },
     closeReviewWriteModal() {
+      document.querySelector(".titleInput").value = "";
+      document.querySelector(".contentInput").value = "";
+      document.querySelector(".contentInput").innerText = "";
       document.querySelector(".reviewWriteModal").style.display = "none";
     }
   }
