@@ -58,7 +58,6 @@ export default {
             });
     },
     postReview(title, body, writer) { //리뷰 작성
-        // alert(title + " " + body + " " +writer)
         firestore.collection(REVIEW).add({
                 title: title,
                 writer: writer,
@@ -69,11 +68,8 @@ export default {
                 userId: []
             })
             .then(() => {
-                // alert("보내는중")
             }).catch((error) => {
                 alert(error)
-            }).finally(() => {
-                // alert("작성끝")
             });
     },
     deleteReview(o) { //리뷰 삭제
@@ -128,20 +124,16 @@ export default {
         });
     },
     createUserInfo(uid, id, username) { // 회원가입
-        // alert("uid : " + uid + "id : " + "username : " + username);
          firestore.collection(USERINFO).doc(uid).set({
-            uid,
-            id,
-            username,
+            uid : uid,
+            id : id,
+            username : username,
             login_time: firebase.firestore.FieldValue.serverTimestamp(),
             logout_time: '',
             grade: 3
         })
         .catch((error) => {
-          alert(error)
-        })
-        .finally(() => {
-            window.location.reload();
+          alert("회원가입 에러 : " + error)
         })
     },
     mgrUserInfoLog(currentUser) { //사용자 로그 관리
@@ -166,9 +158,7 @@ export default {
                 if (check) {
                     userLogRef.doc(currentUser.uid).update({
                         login_time: firebase.firestore.FieldValue.serverTimestamp()
-                    }).finally(() => {
-                        window.location.reload();
-                    });
+                    })
                 } else {
                   this.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
                 }
@@ -183,7 +173,6 @@ export default {
       })
     },
     changeLogoutTime(uid) { //사용자 정보 중 로그아웃 시간 변경
-        alert(uid);
         firestore.collection(USERINFO).doc(uid).update({
             logout_time: firebase.firestore.FieldValue.serverTimestamp()
         })
@@ -210,15 +199,15 @@ export default {
             })
         return userList;
     },
-    getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
-      if(uid == "0"){
-          return null;
-      }else{
-        return firestore.collection(USERINFO).doc(uid)
-        .get()
-          .then((doc) => {
-          return doc.data()
-        })
-      }
-    }
+    // getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
+    //   if(uid == "0" || uid == undefined){
+    //       return null;
+    //   }else{
+    //     return firestore.collection(USERINFO).doc(uid)
+    //               .get()
+    //               .then((doc) => {
+    //               return doc.data()
+    //             })
+    //   }
+    // }
 }

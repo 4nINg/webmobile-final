@@ -1,5 +1,5 @@
 <template>
-<div id="signUpForm" style="display:none">
+<div id="signUpForm">
     <div><span>E-Mail</span><input type="text" placeholder="ID" id="signUpID" v-model="email" required></div>
     <div><span>Password</span><input type="password" placeholder="Password" id="signUpPW" v-model="password" required></div>
     <div><span>Check Password</span><input type="password" placeholder="Check Password" id="signUpCheckPW" v-model="passwordCheck" :rules="[comparePasswords]" required></div>
@@ -34,6 +34,9 @@ export default {
     }
   },
   methods: {
+    props:[
+      'changeSelectPage'
+    ],
     userSignUp() { //회원가입
       if (this.comparePasswords !== true) {
         return;
@@ -42,6 +45,8 @@ export default {
         email: this.email,
         username: this.username,
         password: this.password
+      }).finally(()=>{
+        this.changeSelectPage(0);
       })
     },
     userSignUpCancle() { //회원가입 취소
@@ -49,7 +54,10 @@ export default {
       this.password = "";
       this.passwordCheck = "";
       this.username = "";
-      document.querySelector("#signUpForm").style.display = "none";
+      this.changeSelectPage(4);
+    },
+    changeSelectPage(i){
+      this.$emit("inSignUpSelectPage", i);
     }
   },
   watch: {
@@ -66,3 +74,14 @@ export default {
   }
 }
 </script>
+<style>
+
+#signUpForm{
+  margin-left: 30%;
+  margin-top: 30%;
+}
+#signUpForm button{
+  margin-right:5px;
+}
+
+</style>
