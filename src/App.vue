@@ -49,7 +49,7 @@ export default {
     }
   },
   mounted() {
-<<<<<<< HEAD
+
     //service worker register
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('firebase-messaging-sw.js')
@@ -59,10 +59,10 @@ export default {
         console.log('Service worker registration failed, error:', err);
       });
     }
-=======
+
     //사이트 입장 시 세션에 따른 로그인 정보 초기화
     this.$store.dispatch("initLoginInfo");
->>>>>>> 59dbe770dff1fabf5f6ee509b3d4cbc149be8cb4
+
 
     var address = document.location.href;
     var logo = document.querySelector(".logo");

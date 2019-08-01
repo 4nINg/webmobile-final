@@ -2,12 +2,9 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import "firebase/auth";
-<<<<<<< HEAD
 import "@firebase/messaging";
 import store from "../store.js"
 const INFO = "info";
-=======
->>>>>>> 59dbe770dff1fabf5f6ee509b3d4cbc149be8cb4
 const REVIEW = "review";
 // const BANNERS = "bannerImages";
 const USERINFO = "userInfo";
