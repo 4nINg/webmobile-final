@@ -40,10 +40,8 @@ export default {
       this.changeSelectPage(4);
     },
     goToLogout() {
-      this.changeSelectPage(4);
-      this.$store.dispatch("userSignOut").finally(()=>{
-        window.location.reload();
-      });;
+      // this.changeSelectPage(4);
+      this.$store.dispatch("userSignOut")
     },
     changeSelectPage(i) {
       this.$emit("inChildSelectPage", i);

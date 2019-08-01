@@ -24,7 +24,7 @@ export default new Vuex.Store({
     accessToken: "0",
     user: {
         email: "",
-        userName: "",
+        username: "",
         grade : 0
     },
     error: null,
@@ -62,11 +62,9 @@ export default new Vuex.Store({
                 currentUser.updateProfile({
                     displayName: payload.username
                 }).then(function() {
-                    // FirebaseService.createUserInfo(currentUser.uid, currentUser.email)
-                    alert("반갑습니다.\n" + currentUser.displayName + "님 회원가입되었습니다.");
-
                     //uid(식별자), email(사용자 계정), displayName(유저네임 - 닉네임)
                     FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
+                    alert("반갑습니다.\n" + currentUser.displayName + "님 회원가입되었습니다.");
                 })
             })
             .catch(error => {
@@ -88,43 +86,35 @@ export default new Vuex.Store({
                 commit('setAccessToken', firebaseUser.user.uid)
 
                 currentUser = firebase.auth().currentUser;
-                // FirebaseService.mgrUserLog(currentUser.uid, currentUser.email)
-                alert("반갑습니다.\n" + currentUser.displayName + "님 로그인되었습니다.");
+                FirebaseService.mgrUserInfoLog(currentUser);
+                alert("반갑습니다.\n" + currentUser.displayName + "님 로그인되었습니다." + this.state.accessToken);
+                // window.location.reload();
             })
             .catch(error => {
                 commit('setError')
                 alert(error.message)
                 commit('setLoading', false)
             })
-            .finally(()=>{
-              window.location.reload();
-            })
     },
     //google login
     userSignInWithGoogle({ commit }, payload) {
-      alert("구글 로그인 입장")
         var temp = '';
         var currentUser;
         commit('setLoading', true)
-        alert("함수 시작")
         firebase.auth().signInWithPopup(google_provider)
-            .then(firebaseUser => {
-                alert("구글 로그인 중 1")
-                commit('setUser', { email: firebaseUser.user.email })
+            .then((result) => {
+                currentUser = result.user;
+                commit('setUser', { email: currentUser.email, username: currentUser.displayName })
                 commit('setLoading', false)
                 commit('setError', null)
-                commit('setAccessToken', firebaseUser.user.uid)
-                currentUser = firebase.auth().currentUser;
+                commit('setAccessToken', currentUser.uid)
                 // FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.email)
-                // FirebaseService.mgrUserLog(currentUser.uid);
-                console.log(currentUser);
+                FirebaseService.mgrUserInfoLog(currentUser);
                 alert("반갑습니다.\n" + currentUser.displayName + "님 Google 아이디로 로그인되었습니다.");
+                window.location.reload();
             })
             .catch(err => {
-                alert("에러: " + err.message);
-            })
-            .finally(()=>{
-              alert("구글 로그인 끝")
+                alert("구글 로그인 에러: " + err.message);
             })
     },
     //facebook login
@@ -133,37 +123,38 @@ export default new Vuex.Store({
         var currentUser;
         commit('setLoading', true)
         firebase.auth().signInWithPopup(facebook_provider)
-            .then(firebaseUser => {
-                commit('setUser', { email: firebaseUser.user.email })
+            .then(result => {
+                currentUser = result.user;
+                commit('setUser', { email: currentUser.email, username: currentUser.displayName })
                 commit('setLoading', false)
                 commit('setError', null)
-                commit('setAccessToken', firebaseUser.user.uid)
-                currentUser = firebase.auth().currentUser;
+                commit('setAccessToken', currentUser.uid)
                 // FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.email)
-                // FirebaseService.mgrUserLog(currentUser.uid);
-                alert("반갑습니다.\n" + currentUser.displayName + currentUser.uid + "님 Facebook 아이디로 로그인되었습니다.");
+                FirebaseService.mgrUserInfoLog(currentUser);
+                alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
+                window.location.reload();
             })
             .catch(err => {
-                alert("에러: " + err.message);
+                alert("페이스북 로그인 에러: " + err.message);
             })
     },
     autoSignIn({ commit }, payload) {
         // console.log(payload)
-        commit('setUser', { email: payload.email, userName: payload.displayName })
+        commit('setUser', { email: payload.email, username: payload.displayName })
     },
     userSignOut({ commit }) {
         // var currentUser = firebase.auth().currentUser;
         firebase.auth().signOut().then(() => {
             commit('setUser', null);
             commit('setAccessToken', "0");
-            // FirebaseService.changeLogoutTime(currentUser.uid);
-        }).finally(()=>{
-          alert("로그아웃 완료");
+            alert("로그아웃 완료1 : " + this.state.accessToken);
+            FirebaseService.changeLogoutTime(this.state.accessToken);
+            alert("로그아웃 완료2")
         })
     },
     checkIsAdmin({commit}){ //Admin 페이지 접근 시 세션 확인
       var check = false;
-      if(state.accessToken == adminToken){
+      if(state.accessToken == adminToken && state.grade == 1){
         check = true;
       }else{
         check = false;
@@ -171,9 +162,9 @@ export default new Vuex.Store({
       return check;
     },
     initLoginInfo({commit}){ //사이트 입장 시 세션에 따른 로그인 정보 초기화
-      var info = FirebaseService.getUserInfoByUid(sessionStorage.getItem("accessToken"));
-
-      if(info == "0"){
+      var info = FirebaseService.getUserInfoByUid(sessionStorage.getItem("accessToken")); //object로 들어옴
+      alert("initLoginInfo : " + info)
+      if(info == null){
         commit('setUser', null);
         commit('setAccessToken', "0");
         commit('setLoading', false)
