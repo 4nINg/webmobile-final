@@ -52,7 +52,9 @@
               <div v-for="i in reviewCommentUser.length" :key="i" class="vForDiv">
                 <h3>{{reviewCommentUser[i-1]}}</h3>
                 <p>{{reviewCommentContent[i-1]}}</p>
-                <button @click="deleteComment(reviewCommentUser[i-1].reviewId)">삭제</button>
+                <span @click="modifyComment(i-1)">수정</span>
+                <span @click="completeModifyComment(i-1)">수정 완료</span>
+                <span @click="deleteComment(i-1)">삭제</span>
               </div>
               <div class="commentWriterDiv">
                 <CommentWriter :reviewId="reviewId" :comments="comments" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
@@ -158,8 +160,26 @@ export default {
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".comment").style.display = "none";
     },
-    deleteComment(reviewId) {
-      // FirebaseService.deleteComment(reviewId);
+    modifyComment(index) {
+  
+    },
+    completeModifyComment(index) {
+
+    },
+    deleteComment(index) {
+      var tempCommentUserId = [];
+      var tempCommentContent = [];
+      for (var i = 0; i < this.reviewCommentUser.length; ++i) {
+        if (i !== index) {
+          tempCommentUserId.push(this.reviewCommentUser[i]);
+          tempCommentContent.push(this.reviewCommentContent[i]);
+        }
+      }
+      FirebaseService.deleteComment(
+        this.reviewId,
+        tempCommentUserId,
+        tempCommentContent
+      );
     },
     showReviewWrite() {
       document.querySelector(".reviewWriteModal").style.display = "block";

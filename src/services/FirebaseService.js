@@ -83,17 +83,17 @@ export default {
             window.location.reload();
         });
     },
-    // postComment(reviewId, userList, contentList) { //reviewId - review식별자 //댓글 작성
-    //     firestore.collection(REVIEW).doc(reviewId).update({
-    //         userId: userList,
-    //         comment: contentList
-    //     })
-    // },
-    postComment(reviewId, comment) { //reviewId - review식별자 //댓글 작성
-        firestore.collection(REVIEW).doc(reviewId).collection('comments').add(comment)
+    postComment(reviewId, userList, contentList) { //reviewId - review식별자 //댓글 작성
+        firestore.collection(REVIEW).doc(reviewId).update({
+            userId: userList,
+            comment: contentList
+        })
     },
-    deleteComment(reviewId) {
-        firestore.collection(REVIEW).doc(reviewId).delete()
+    deleteComment(reviewId, userList, contentList) {
+        firestore.collection(REVIEW).doc(reviewId).update({
+            userId: userList,
+            comments: contentList
+        })
         alert("삭제완료!")
         window.location.reload();
     },

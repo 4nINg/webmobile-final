@@ -36,9 +36,7 @@ export default {
     },
     //google login
     loginWithGoogle() {
-      this.$store.dispatch("userSignInWithGoogle", {}).finally(()=>{
-        window.location.reload();
-      });
+      this.$store.dispatch("userSignInWithGoogle", {});
     },
     //facebook login
     loginWithFacebook() {
