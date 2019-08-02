@@ -22,6 +22,9 @@ new Vue({
           if (firebaseUser) {
               store.dispatch('autoSignIn', firebaseUser)
           }
+          // else{
+          //     alert("비로그인상태")
+          // }
       })
     }
 }).$mount("#app");

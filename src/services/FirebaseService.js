@@ -2,6 +2,9 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import "firebase/auth";
+import "@firebase/messaging";
+import store from "../store.js"
+const INFO = "info";
 const REVIEW = "review";
 // const BANNERS = "bannerImages";
 const USERINFO = "userInfo";
@@ -20,9 +23,33 @@ const config = {
 firebase.initializeApp(config);
 const firestore = firebase.firestore();
 const firestorage = firebase.storage();
-// export const firebaseDatabase = firebase.database();
+const messaging = firebase.messaging();
+messaging.usePublicVapidKey("BICBJ4VJNXGOauHFGbcpv8uwalnfMAHwB3DN9HmlyBmPI0jxM8OZhnBcp12-IYNfTeGaAzPjRvxJ-fH-KsdNmLs");
+
+
+firebase.firestore().enablePersistence()
+  .catch(function(err) {
+    if(err.code == 'failed-precondition') {
+
+    }else if(err.code == 'unimplemented') {
+
+    }
+});
+
+Notification.requestPermission().then(function(Permission) {
+  if (Permission === 'granted') {
+    console.log('Alarm Permission');
+    return messaging.getToken();
+  }else {
+    console.log("No Permission");
+  }
+}).then( function(token) {
+  console.log("Alarm token : " ,token);
+});
+
 
 export default {
+
     getFireStore() {
         return firestore;
     },
@@ -58,7 +85,6 @@ export default {
             });
     },
     postReview(title, body, writer) { //리뷰 작성
-        // alert(title + " " + body + " " +writer)
         firestore.collection(REVIEW).add({
                 title: title,
                 writer: writer,
@@ -69,28 +95,22 @@ export default {
                 userId: []
             })
             .then(() => {
-                // alert("보내는중")
             }).catch((error) => {
                 alert(error)
-            }).finally(() => {
-                // alert("작성끝")
             });
     },
-    // deleteReview(o) { //리뷰 삭제
-    //     firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
-    //         firestorage.ref().child('review/' + o.num).delete()
-    //         alert("삭제완료!")
-    //         window.location.reload();
-    //     });
-    // },
-    // postComment(reviewId, userList, contentList) { //reviewId - review식별자 //댓글 작성
-    //     firestore.collection(REVIEW).doc(reviewId).update({
-    //         userId: userList,
-    //         comment: contentList
-    //     })
-    // },
-    postComment(reviewId, comment) { //reviewId - review식별자 //댓글 작성
-        firestore.collection(REVIEW).doc(reviewId).collection('comments').add(comment)
+    deleteReview(o) { //리뷰 삭제
+        firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
+            firestorage.ref().child('review/' + o.num).delete()
+            alert("삭제완료!")
+            window.location.reload();
+        });
+    },
+    postComment(reviewId, userList, contentList) { //reviewId - review식별자 //댓글 작성
+        firestore.collection(REVIEW).doc(reviewId).update({
+            userId: userList,
+            comment: contentList
+        })
     },
     deleteComment(reviewId, userList, contentList) {
         firestore.collection(REVIEW).doc(reviewId).update({
@@ -131,21 +151,17 @@ export default {
         });
     },
     createUserInfo(uid, id, username) { // 회원가입
-        // alert("uid : " + uid + "id : " + "username : " + username);
-        firestore.collection(USERINFO).doc(uid).set({
-                uid,
-                id,
-                username,
-                login_time: firebase.firestore.FieldValue.serverTimestamp(),
-                logout_time: '',
-                grade: 3
-            })
-            .catch((error) => {
-                alert(error)
-            })
-            .finally(() => {
-                window.location.reload();
-            })
+         firestore.collection(USERINFO).doc(uid).set({
+            uid : uid,
+            id : id,
+            username : username,
+            login_time: firebase.firestore.FieldValue.serverTimestamp(),
+            logout_time: '',
+            grade: 3
+        })
+        .catch((error) => {
+          alert("회원가입 에러 : " + error)
+        })
     },
     mgrUserInfoLog(currentUser) { //사용자 로그 관리
         var userList = [];
@@ -169,9 +185,7 @@ export default {
                 if (check) {
                     userLogRef.doc(currentUser.uid).update({
                         login_time: firebase.firestore.FieldValue.serverTimestamp()
-                    }).finally(() => {
-                        window.location.reload();
-                    });
+                    })
                 } else {
                     this.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
                 }
@@ -186,7 +200,6 @@ export default {
         })
     },
     changeLogoutTime(uid) { //사용자 정보 중 로그아웃 시간 변경
-        alert(uid);
         firestore.collection(USERINFO).doc(uid).update({
                 logout_time: firebase.firestore.FieldValue.serverTimestamp()
             })
@@ -213,17 +226,6 @@ export default {
             })
         return userList;
     },
-    getUserInfoByUid(uid) { // uid를 이용한 사용자 정보 get
-        if (uid == "0") {
-            return null;
-        } else {
-            return firestore.collection(USERINFO).doc(uid)
-                .get()
-                .then((doc) => {
-                    return doc.data()
-                })
-        }
-    },
     deleteReview(reviewId) {
         firestore.collection(REVIEW).doc(reviewId).delete();
     },
@@ -234,3 +236,15 @@ export default {
         });
     }
 }
+    // getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
+    //   if(uid == "0" || uid == undefined){
+    //       return null;
+    //   }else{
+    //     return firestore.collection(USERINFO).doc(uid)
+    //               .get()
+    //               .then((doc) => {
+    //               return doc.data()
+    //             })
+    //   }
+    // }
+

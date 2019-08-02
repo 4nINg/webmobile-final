@@ -69,7 +69,12 @@
               <div v-for="i in reviewCommentUser.length" :key="i" class="vForDiv">
                 <h3>{{reviewCommentUser[i-1]}}</h3>
                 <p>{{reviewCommentContent[i-1]}}</p>
-                <button @click="deleteComment(i-1)">삭제</button>
+                <span @click="modifyComment(i-1)">수정</span>
+                <span @click="completeModifyComment(i-1)">수정 완료</span>
+                <span @click="deleteComment(i-1)">삭제</span>
+              </div>
+              <div class="commentWriterDiv">
+                <CommentWriter :reviewId="reviewId" :comments="comments" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
               </div>
             </div>
             <div class="commentWriterDiv">
@@ -181,6 +186,12 @@ export default {
     backToTheComment() {
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".comment").style.display = "none";
+    },
+    modifyComment(index) {
+  
+    },
+    completeModifyComment(index) {
+
     },
     deleteComment(index) {
       var tempCommentUserId = [];
