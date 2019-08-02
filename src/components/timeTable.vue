@@ -680,7 +680,6 @@ export default {
 .selectedDay {
   background-color: rgb(255, 98, 0);
 }
-<<<<<<< HEAD
 
 .megaboxInner,
 .lotteInner,
@@ -706,6 +705,3 @@ export default {
   font-size: 1.2em;
 }
 </style>
-=======
-</style>
->>>>>>> 5503c28a4c9469cf46e7f58692e219fe23104d3b
