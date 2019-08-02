@@ -43,21 +43,21 @@
             <textarea class="modifyReviewContentInput"></textarea>
           </div>
           <div class="showCommentDiv">
-            <div class="modifyReviewDiv">
-              <div>
-                <span @click="modifyReview()" class="modifyReview">수정</span>
+            <div class="modifyReviewDiv" @click="modifyReview()">
+              <div class="modifyBtninner">
+                <span class="modifyReview">수정</span>
               </div>
             </div>
-            <div class="completeModifyReviewDiv">
-              <div>
-                <span @click="completeModify()" class="completeModifyReview">수정 완료</span>
+            <div class="completeModifyReviewDiv" @click="completeModify()">
+              <div class="modifyCompleteInner">
+                <span class="completeModifyReview">수정 완료</span>
               </div>
             </div>
-            <div class="deleteReviewDiv">
-              <span @click="deleteReview()">삭제</span>
+            <div class="deleteReviewDiv" @click="deleteReview()">
+              <span>삭제</span>
             </div>
-            <div class="showCommentBtn">
-              <span @click="showComment()">
+            <div class="showCommentBtn" @click="showComment()">
+              <span>
                 <i class="far fa-comments"></i>댓글 보기
               </span>
             </div>
@@ -68,13 +68,21 @@
             <div class="commentInnerDiv">
               <div v-for="i in reviewCommentUser.length" :key="i" class="vForDiv">
                 <h3>{{reviewCommentUser[i-1]}}</h3>
-                <p>{{reviewCommentContent[i-1]}}</p>
-                <span @click="modifyComment(i-1)">수정</span>
-                <span @click="completeModifyComment(i-1)">수정 완료</span>
-                <span @click="deleteComment(i-1)">삭제</span>
-              </div>
-              <div class="commentWriterDiv">
-                <CommentWriter :reviewId="reviewId" :comments="comments" :reviewCommentUser="reviewCommentUser" :reviewCommentContent="reviewCommentContent"></CommentWriter>
+                <p class="reviewCommentContentP">{{reviewCommentContent[i-1]}}</p>
+                <input type="text" class="modifyCommentInput" />
+                <div class="modifyCommentwDiv">
+                  <div>
+                    <span @click="modifyComment(i-1)" class="completeModifyComment">수정</span>
+                  </div>
+                </div>
+                <div class="completeModifyCommentDiv">
+                  <div>
+                    <span @click="completeModifyComment(i-1)" class="completeModifyComment">수정 완료</span>
+                  </div>
+                </div>
+                <div class="deleteCommentDiv"> 
+                  <span @click="deleteComment(i-1)">삭제</span>             
+                </div>
               </div>
             </div>
             <div class="commentWriterDiv">
@@ -169,7 +177,7 @@ export default {
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
         this.reviewCommentUser = this.displayReviews[i].userId;
-        this.reviewCommentContent = this.displayReviews[i].comments;
+        this.reviewCommentContent = this.displayReviews[i].comment;
       }
 
       document.querySelector(".comment").style.display = "none";
@@ -186,12 +194,6 @@ export default {
     backToTheComment() {
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".comment").style.display = "none";
-    },
-    modifyComment(index) {
-  
-    },
-    completeModifyComment(index) {
-
     },
     deleteComment(index) {
       var tempCommentUserId = [];
@@ -212,8 +214,50 @@ export default {
       document.querySelector(".reviewWriteModal").style.display = "block";
     },
     modifyComment(index) {
-      this.reviewCommentContent[index] = "이렇게수정되었습니다.";
-      ("파이어베이스 업데이트하겠다.");
+      // console.log(document.querySelector(".modifyCommentwDiv"));
+      var beforeModifyComment = this.reviewCommentContent[index];
+      var modifyCommentwDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
+      var deleteCommentDiv = document.querySelectorAll(".deleteCommentDiv"); // 삭제버튼
+      var completeModifyCommentDiv = document.querySelectorAll(".completeModifyCommentDiv")// 수정완료버튼
+      var modifyCommentInput = document.querySelectorAll(".modifyCommentInput");
+      var reviewCommentContentP = document.querySelectorAll(".reviewCommentContentP");
+      document.querySelector(".commentWriterDiv").style.display = "none"; // 댓글작성 창
+
+      for(var i=0; i<reviewCommentContentP.length; ++i){
+        if(i === index){
+          reviewCommentContentP[i].style.display = "none"; // 원래 내용 없앰
+          modifyCommentInput[i].style.display = "block"; // 수정창 보임
+          modifyCommentwDiv[i].style.display = "none"; // 수정버튼 없앰
+          deleteCommentDiv[i].style.display = "none"; // 삭제버튼 없앰
+          completeModifyCommentDiv[i].style.display = "block"; //수정완료버튼 보임
+          modifyCommentInput[i].value = beforeModifyComment;
+          break;
+        }
+      }
+    },
+    completeModifyComment(index) {
+      // reviewCommentContent: [],
+      var modifyCommentwDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
+      var deleteCommentDiv = document.querySelectorAll(".deleteCommentDiv"); // 삭제버튼
+      var completeModifyCommentDiv = document.querySelectorAll(".completeModifyCommentDiv")// 수정완료버튼
+      var modifyCommentInput = document.querySelectorAll(".modifyCommentInput");
+      var reviewCommentContentP = document.querySelectorAll(".reviewCommentContentP");
+      document.querySelector(".commentWriterDiv").style.display = "block"; // 댓글작성 창
+
+      for(var i =0; i<this.reviewCommentContent.length; ++i){
+        if(index === i){
+          this.reviewCommentContent[i] = modifyCommentInput[i].value;
+          reviewCommentContentP[i].innerText = modifyCommentInput[i].value;
+          reviewCommentContentP[i].style.display = "block"; // 원래 내용 없앰
+          modifyCommentInput[i].style.display = "none"; // 수정창 보임
+          modifyCommentwDiv[i].style.display = "block"; // 수정버튼 없앰
+          deleteCommentDiv[i].style.display = "block"; // 삭제버튼 없앰
+          completeModifyCommentDiv[i].style.display = "none"; //수정완료버튼 보임
+          break;
+        }
+      }
+
+      FirebaseService.modifyComment(this.reviewId, this.reviewCommentContent);
     },
     modifyReview() {
       var beforeModifyTitle = document.querySelector(".reviewTitle").innerText;
@@ -462,24 +506,12 @@ export default {
   justify-content: space-between;
 }
 
-.showCommentDiv > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  text-align: center;
-  width: 7em;
-  height: 2.5em;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 1em;
-}
-
 .showCommentDiv > div:hover {
   box-shadow: 0.2em 0.2em 0.2em 0.2em rgb(0, 0, 0, 0.1);
 }
 
-.modifyReviewDiv > div,
-.completeModifyReviewDiv > div {
+.modifyBtninner,
+.modifyCompleteInner {
   display: flex;
   width: 100%;
   height: 100%;
@@ -542,8 +574,31 @@ export default {
   height: 90%;
 }
 
+.modifyReviewDiv,
+.completeModifyReviewDiv,
+.deleteReviewDiv,
+.showCommentBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  width: 7em;
+  height: 2.5em;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 1em;
+}
+
 .completeModifyReviewDiv {
   display: none;
+}
+
+.modifyCommentInput, .completeModifyCommentDiv{
+  display: none;
+}
+
+.modifyCommentwDiv, .deleteCommentDiv, .completeModifyCommentDiv{
+  cursor: pointer;
 }
 </style>
  

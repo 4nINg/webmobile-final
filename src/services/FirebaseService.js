@@ -66,6 +66,7 @@ export default {
                     let data = doc.data();
                     data.id = doc.id;
                     // data.created_at = new Date(data.created_at.toDate());
+                    console.log(data);
                     return data;
                 });
             });
@@ -112,12 +113,16 @@ export default {
             comment: contentList
         })
     },
+    modifyComment(reviewId, contentList){ //modify review's commentContent
+        firestore.collection(REVIEW).doc(reviewId).update({
+            comment: contentList
+        })
+    },
     deleteComment(reviewId, userList, contentList) {
         firestore.collection(REVIEW).doc(reviewId).update({
             userId: userList,
             comments: contentList
         })
-        alert("삭제완료!")
         window.location.reload();
     },
     getPreview() { //시사회정보 상세보기

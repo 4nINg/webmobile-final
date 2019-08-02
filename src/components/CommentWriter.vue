@@ -1,6 +1,6 @@
 <template>
 <div>
-      <input type="text" placeholder="댓글을 입력해주세요." v-model="commentBody" style="width:100%; height:100px;">
+      <input type="text" placeholder="댓글을 입력해주세요." v-model="commentBody" style="width:100%; height:1.3em;">
       <button @click="trans()">submit</button>
 </div>
 </template>
