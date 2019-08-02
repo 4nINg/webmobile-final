@@ -88,7 +88,6 @@
             <div class="commentWriterDiv">
               <CommentWriter
                 :reviewId="reviewId"
-                :comments="comments"
                 :reviewCommentUser="reviewCommentUser"
                 :reviewCommentContent="reviewCommentContent"
               ></CommentWriter>
@@ -128,8 +127,7 @@ export default {
       reviewTitle: "",
       reviewContent: "",
       reviewCommentContent: [],
-      reviewCommentUser: [],
-      comments: []
+      reviewCommentUser: []
     };
   },
   mounted() {
@@ -176,8 +174,13 @@ export default {
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
-        this.reviewCommentUser = this.displayReviews[i].userId;
-        this.reviewCommentContent = this.displayReviews[i].comment;
+        if(this.displayReviews[i].userId.length === 0){
+          this.reviewCommentUser = [];
+          this.reviewCommentContent = [];
+        }else{
+          this.reviewCommentUser = this.displayReviews[i].userId;
+          this.reviewCommentContent = this.displayReviews[i].comment;
+        }
       }
 
       document.querySelector(".comment").style.display = "none";
@@ -188,6 +191,7 @@ export default {
       document.querySelector(".reviewModal").style.display = "none";
     },
     showComment() {
+      alert("리뷰  : "+this.reviewCommentContent)
       document.querySelector(".inModalreview").style.display = "none";
       document.querySelector(".comment").style.display = "block";
     },

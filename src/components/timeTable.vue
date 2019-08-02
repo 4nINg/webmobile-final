@@ -704,4 +704,5 @@ export default {
   margin-right: 1em;
   font-size: 1.2em;
 }
+
 </style>

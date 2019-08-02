@@ -2,6 +2,10 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import "firebase/auth";
+import "firebase/functions";
+import * as admin from 'firebase-admin';
+
+
 import "@firebase/messaging";
 import store from "../store.js"
 const INFO = "info";
@@ -21,9 +25,19 @@ const config = {
 };
 
 firebase.initializeApp(config);
+
+var serviceAccount = require("../../webmobile-final-c2c78-firebase-adminsdk-pqts2-229bb83353.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://webmobile-final-c2c78.firebaseio.com"
+});
+
 const firestore = firebase.firestore();
 const firestorage = firebase.storage();
 const messaging = firebase.messaging();
+const functions = firebase.functions();
+
 messaging.usePublicVapidKey("BICBJ4VJNXGOauHFGbcpv8uwalnfMAHwB3DN9HmlyBmPI0jxM8OZhnBcp12-IYNfTeGaAzPjRvxJ-fH-KsdNmLs");
 
 
@@ -121,7 +135,7 @@ export default {
     deleteComment(reviewId, userList, contentList) {
         firestore.collection(REVIEW).doc(reviewId).update({
             userId: userList,
-            comments: contentList
+            comment: contentList
         })
         window.location.reload();
     },
@@ -239,17 +253,24 @@ export default {
             title: mtitle,
             body: mbody
         });
+    },
+    //사용자 정보 불러오기
+    getUserInfo(user) {
+      console.log("getUserInfo 입장");
+      const getUser = functions.httpsCallable('getUser');
+      return getUser(user).then(result => {
+        return result;
+      });
+    },
+    //사용자 등급 설정
+    setUserGrade(uid, grade) {
+      admin.auth().setCustomUserClaims(uid, {
+          grade: grade
+        })
+        .then((data) => {
+          console.log("setUserGrade 결과 : " + data);
+        }).catch((err) => {
+          console.log("setUserGrade 에러 : " + err);
+        })
     }
 }
-    // getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
-    //   if(uid == "0" || uid == undefined){
-    //       return null;
-    //   }else{
-    //     return firestore.collection(USERINFO).doc(uid)
-    //               .get()
-    //               .then((doc) => {
-    //               return doc.data()
-    //             })
-    //   }
-    // }
-

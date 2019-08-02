@@ -58,9 +58,15 @@ export default new Vuex.Store({
                     currentUser.updateProfile({
                         displayName: payload.username
                     }).then(function() {
-                        //uid(식별자), email(사용자 계정), displayName(유저네임 - 닉네임)
-                        FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
-                        alert("반갑습니다.\n" + currentUser.displayName + "님 회원가입되었습니다.");
+                      FirebaseService.setUserGrade(currentUser.uid, 3).finally(()=>{
+                          //uid(식별자), email(사용자 계정), displayName(유저네임 - 닉네임)
+                          FirebaseService.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
+                          alert("반갑습니다.\n" + currentUser.displayName + "님 회원가입되었습니다.");
+                          window.location.reload();
+                      })
+                        // if(state.user.username == null || state.user.username == "undefined"){
+                        //   state.user.username = payload.displayName;
+                        // }
                     })
                 })
             .catch(error => {
@@ -138,11 +144,11 @@ export default new Vuex.Store({
 
     },
     autoSignIn({ commit }, payload) {
-        // console.log(payload)
         commit('setUser', { email: payload.email, username: payload.displayName })
         commit('setLoading', false)
         commit('setError', null)
         commit('setAccessToken', payload.uid)
+        console.log("autoSignIn 페이로드 => email : " + payload.email + " username : " + payload.displayName + " token : " + payload.uid)
     },
     userSignOut({ commit }) {
         // var currentUser = firebase.auth().currentUser;

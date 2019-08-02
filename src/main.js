@@ -6,6 +6,7 @@ import './registerServiceWorker'
 import axios from "axios";
 import cheerio from "cheerio";
 import firebase from "firebase";
+import FirebaseService from "./services/FirebaseService";
 
 Vue.use(axios);
 Vue.use(cheerio);
@@ -19,6 +20,8 @@ new Vue({
     render: h => h(App),
     created(){
       firebase.auth().onAuthStateChanged((firebaseUser) => {
+        // console.log("user => " + this.$store.state.user);
+        // console.log(FirebaseService.getUserInfo(firebaseUser));
           if (firebaseUser) {
               store.dispatch('autoSignIn', firebaseUser)
           }
