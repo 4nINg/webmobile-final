@@ -12,19 +12,6 @@
         </span>
       </div>
     </div>
-<<<<<<< HEAD
-=======
-    <!-- <LoginForm/>
-    <SignUpForm/> -->
-    <!-- <ImageBanner></ImageBanner>
-    <moviePoster></moviePoster>
-
-
-    
-    <ReviewWriter></ReviewWriter>
-    <PreviewWriter></PreviewWriter>
-    <ImgUploader></ImgUploader> -->
->>>>>>> 5503c28a4c9469cf46e7f58692e219fe23104d3b
   </div>
 </template>
 

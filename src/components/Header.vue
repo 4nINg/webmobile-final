@@ -52,6 +52,13 @@ export default {
           i = 0;
           alert("관리자만 접근 가능합니다.")
       }
+      // if(this.$store.state.user == null){
+      //   alert("유저 없음")
+      // }else if(this.$store.state.user.username == null){
+      //   alert("유저네임 없음")
+      // }else{
+      //   alert("유저네임 확인용 : " + this.$store.state.user.username);
+      // }
       this.$emit("inChildSelectPage", i);
     },
     checkLoginSession(){

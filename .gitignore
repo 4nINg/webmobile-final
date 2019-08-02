@@ -1,7 +1,10 @@
 .DS_Store
 node_modules
 /dist
-cmd.exe
+cmd
+Crawler
+apache-tomcat-*
+Servers
 
 # local env files
 .env.local

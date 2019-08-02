@@ -83,8 +83,11 @@ export default {
 <style>
 
 #loginForm{
-  margin-left: 30%;
-  margin-top: 30%;
+  /* margin-left: 30%;
+  margin-top: 30%; */
+  position: relative;
+  top:25%;
+  left:40%;
 }
 #loginForm button{
   margin-right:5px;

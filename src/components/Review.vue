@@ -188,7 +188,7 @@ export default {
       document.querySelector(".comment").style.display = "none";
     },
     modifyComment(index) {
-  
+
     },
     completeModifyComment(index) {
 
@@ -546,4 +546,3 @@ export default {
   display: none;
 }
 </style>
- 
