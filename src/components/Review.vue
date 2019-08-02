@@ -43,21 +43,21 @@
             <textarea class="modifyReviewContentInput"></textarea>
           </div>
           <div class="showCommentDiv">
-            <div class="modifyReviewDiv">
-              <div>
-                <span @click="modifyReview()" class="modifyReview">수정</span>
+            <div class="modifyReviewDiv" @click="modifyReview()">
+              <div class="modifyBtninner">
+                <span class="modifyReview">수정</span>
               </div>
             </div>
-            <div class="completeModifyReviewDiv">
-              <div>
-                <span @click="completeModify()" class="completeModifyReview">수정 완료</span>
+            <div class="completeModifyReviewDiv" @click="completeModify()">
+              <div class="modifyCompleteInner">
+                <span class="completeModifyReview">수정 완료</span>
               </div>
             </div>
-            <div class="deleteReviewDiv">
-              <span @click="deleteReview()">삭제</span>
+            <div class="deleteReviewDiv" @click="deleteReview()">
+              <span>삭제</span>
             </div>
-            <div class="showCommentBtn">
-              <span @click="showComment()">
+            <div class="showCommentBtn" @click="showComment()">
+              <span>
                 <i class="far fa-comments"></i>댓글 보기
               </span>
             </div>
@@ -451,24 +451,12 @@ export default {
   justify-content: space-between;
 }
 
-.showCommentDiv > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  text-align: center;
-  width: 7em;
-  height: 2.5em;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 1em;
-}
-
 .showCommentDiv > div:hover {
   box-shadow: 0.2em 0.2em 0.2em 0.2em rgb(0, 0, 0, 0.1);
 }
 
-.modifyReviewDiv > div,
-.completeModifyReviewDiv > div {
+.modifyBtninner,
+.modifyCompleteInner {
   display: flex;
   width: 100%;
   height: 100%;
@@ -529,6 +517,21 @@ export default {
   display: none;
   width: 100%;
   height: 90%;
+}
+
+.modifyReviewDiv,
+.completeModifyReviewDiv,
+.deleteReviewDiv,
+.showCommentBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  width: 7em;
+  height: 2.5em;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 1em;
 }
 
 .completeModifyReviewDiv {
