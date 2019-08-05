@@ -9,6 +9,9 @@
         <i class="fas fa-search searchBtn"></i>
       </span>
     </div>
+    <div class="searchResultKeyword">
+      <span>{{searchResultKeyword}}</span>
+    </div>
     <div class="tableDiv">
       <div class="partDiv">
         <img src="@/assets/cgv.png" />
@@ -126,7 +129,8 @@ export default {
       cgvList: [],
       cgvResult: null,
       searchKeyword: null,
-      totalMovieList: []
+      totalMovieList: [],
+      searchResultKeyword: ""
     };
   },
   mounted() {
@@ -391,6 +395,12 @@ export default {
       this.searchMegabox();
       this.searchLotte();
       this.searchCgv();
+      for (var i = 0; i < this.totalMovieList.length; ++i) {
+        if (this.totalMovieList[i].includes(this.searchKeyword)) {
+          this.searchResultKeyword = this.totalMovieList[i];
+          break;
+        }
+      }
     },
     searchLotte() {
       var lotteDiv = document.querySelector(".lotteDiv");
@@ -432,13 +442,13 @@ export default {
       this.megaboxResult = null;
       var result = [];
       var bfsplit = null;
+
       for (var i = 0; i < this.megaboxDate.length - 1; ++i) {
         if (this.megaboxDate[i] == this.selectDay) {
           bfsplit = this.megaboxList[i];
           break;
         }
       }
-
       var afsplit = bfsplit.split(",");
       var temp = null;
       var final = null;
@@ -705,4 +715,13 @@ export default {
   font-size: 1.2em;
 }
 
+.searchResultKeyword {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.3em;
+}
 </style>

@@ -176,10 +176,10 @@ export default {
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
-        if(this.displayReviews[i].userId.length === 0){
+        if (this.displayReviews[i].userId.length === 0) {
           this.reviewCommentUser = [];
           this.reviewCommentContent = [];
-        }else{
+        } else {
           this.reviewCommentUser = this.displayReviews[i].userId;
           this.reviewCommentContent = this.displayReviews[i].comment;
         }
@@ -193,7 +193,7 @@ export default {
       document.querySelector(".reviewModal").style.display = "none";
     },
     showComment() {
-      alert("리뷰  : "+this.reviewCommentContent)
+      alert("리뷰  : " + this.reviewCommentContent);
       document.querySelector(".inModalreview").style.display = "none";
       document.querySelector(".comment").style.display = "block";
     },
@@ -224,13 +224,17 @@ export default {
       var beforeModifyComment = this.reviewCommentContent[index];
       var modifyCommentwDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
       var deleteCommentDiv = document.querySelectorAll(".deleteCommentDiv"); // 삭제버튼
-      var completeModifyCommentDiv = document.querySelectorAll(".completeModifyCommentDiv")// 수정완료버튼
+      var completeModifyCommentDiv = document.querySelectorAll(
+        ".completeModifyCommentDiv"
+      ); // 수정완료버튼
       var modifyCommentInput = document.querySelectorAll(".modifyCommentInput");
-      var reviewCommentContentP = document.querySelectorAll(".reviewCommentContentP");
+      var reviewCommentContentP = document.querySelectorAll(
+        ".reviewCommentContentP"
+      );
       document.querySelector(".commentWriterDiv").style.display = "none"; // 댓글작성 창
 
-      for(var i=0; i<reviewCommentContentP.length; ++i){
-        if(i === index){
+      for (var i = 0; i < reviewCommentContentP.length; ++i) {
+        if (i === index) {
           reviewCommentContentP[i].style.display = "none"; // 원래 내용 없앰
           modifyCommentInput[i].style.display = "block"; // 수정창 보임
           modifyCommentwDiv[i].style.display = "none"; // 수정버튼 없앰
@@ -245,13 +249,17 @@ export default {
       // reviewCommentContent: [],
       var modifyCommentwDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
       var deleteCommentDiv = document.querySelectorAll(".deleteCommentDiv"); // 삭제버튼
-      var completeModifyCommentDiv = document.querySelectorAll(".completeModifyCommentDiv")// 수정완료버튼
+      var completeModifyCommentDiv = document.querySelectorAll(
+        ".completeModifyCommentDiv"
+      ); // 수정완료버튼
       var modifyCommentInput = document.querySelectorAll(".modifyCommentInput");
-      var reviewCommentContentP = document.querySelectorAll(".reviewCommentContentP");
+      var reviewCommentContentP = document.querySelectorAll(
+        ".reviewCommentContentP"
+      );
       document.querySelector(".commentWriterDiv").style.display = "block"; // 댓글작성 창
 
-      for(var i =0; i<this.reviewCommentContent.length; ++i){
-        if(index === i){
+      for (var i = 0; i < this.reviewCommentContent.length; ++i) {
+        if (index === i) {
           this.reviewCommentContent[i] = modifyCommentInput[i].value;
           reviewCommentContentP[i].innerText = modifyCommentInput[i].value;
           reviewCommentContentP[i].style.display = "block"; // 원래 내용 없앰
@@ -327,11 +335,10 @@ export default {
   width: 90%;
   height: 81vh;
   margin-left: 10%;
-  margin-right: 10%;
+  /* margin-right: 10%; */
   display: flex;
   justify-content: space-around;
   align-items: center;
-  display: ;
   /* position: relative; */
 }
 
@@ -616,11 +623,14 @@ export default {
   display: none;
 }
 
-.modifyCommentInput, .completeModifyCommentDiv{
+.modifyCommentInput,
+.completeModifyCommentDiv {
   display: none;
 }
 
-.modifyCommentwDiv, .deleteCommentDiv, .completeModifyCommentDiv{
+.modifyCommentwDiv,
+.deleteCommentDiv,
+.completeModifyCommentDiv {
   cursor: pointer;
 }
 

@@ -96,7 +96,7 @@ export default {
   width: 85%;
   height: 90%;
   /* margin: 7% auto; */
-  border: 1px solid rgb(0, 0, 0, 0.1);
+  /* border: 1px solid rgb(0, 0, 0, 0.1); */
 }
 
 .titleInputDiv {

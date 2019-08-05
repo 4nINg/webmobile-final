@@ -6,7 +6,7 @@
     <timeTable v-if="selectPage === 1"></timeTable>
     <LoginForm v-if="selectPage === 4" @inLoginSelectPage="loginSelectPage"></LoginForm>
     <SignUpForm v-if="selectPage === 5" @inSignUpSelectPage="signUpSelectPage"></SignUpForm>
-    <!-- <Footer></Footer> -->
+    <Preview v-if="selectPage === 3"></Preview>
     <Review v-if="selectPage === 2"></Review>
     <Admin v-if="selectPage === -1"></Admin>
   </div>
@@ -25,6 +25,7 @@ import ReviewWriter from "@/components/ReviewWriter";
 import CommentWriter from "@/components/CommentWriter";
 import Admin from "@/components/Admin";
 import SignUpForm from "@/components/SignUpForm";
+import Preview from "@/components/Preview";
 
 export default {
   name: "App",
@@ -44,34 +45,35 @@ export default {
     ReviewWriter,
     CommentWriter,
     Admin,
-    SignUpForm
+    SignUpForm,
+    Preview
   },
   methods: {
     childSelectPage(i) {
       this.selectPage = i;
     },
-    loginSelectPage(i){
+    loginSelectPage(i) {
       this.selectPage = i;
     },
-    signUpSelectPage(i){
+    signUpSelectPage(i) {
       this.selectPage = i;
     }
   },
   mounted() {
-
     //service worker register
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('firebase-messaging-sw.js')
-      .then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
-      }).catch(function(err) {
-        console.log('Service worker registration failed, error:', err);
-      });
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("firebase-messaging-sw.js")
+        .then(function(registration) {
+          console.log("Registration successful, scope is:", registration.scope);
+        })
+        .catch(function(err) {
+          console.log("Service worker registration failed, error:", err);
+        });
     }
 
     //사이트 입장 시 세션에 따른 로그인 정보 초기화
     this.$store.dispatch("initLoginInfo");
-
 
     var address = document.location.href;
     var logo = document.querySelector(".logo");
@@ -86,7 +88,6 @@ export default {
       mainLogo.classList.add("logoHide");
       homeIcon.classList.remove("logoHide");
     }
-
   },
   watch: {
     selectPage: function() {
