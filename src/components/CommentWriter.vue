@@ -1,7 +1,7 @@
 <template>
-<div>
-      <input type="text" placeholder="댓글을 입력해주세요." v-model="commentBody" style="width:100%; height:1.3em;">
-      <button @click="trans()">submit</button>
+<div class="commentWirteMainDiv">
+      <input class="commentInputText" type="text" placeholder="댓글을 입력해주세요." v-model="commentBody">
+      <span @click="trans()" class="commentSubmitBtn">submit</span>
 </div>
 </template>
 
@@ -53,8 +53,8 @@ export default {
   cursor: pointer;
   padding: 0.3em;
   border: 1px solid rgb(0, 0, 0, 0.3);
-  margin-top: 3%;
   border-radius: 0.3em;
+  margin-left: 2%;
 }
 
 .commentSubmitBtn:hover {
@@ -63,8 +63,7 @@ export default {
 
 .commentWirteMainDiv {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 </style>

@@ -70,18 +70,20 @@
                 <h3>{{reviewCommentUser[i-1]}}</h3>
                 <p class="reviewCommentContentP">{{reviewCommentContent[i-1]}}</p>
                 <input type="text" class="modifyCommentInput" />
-                <div class="modifyCommentwDiv">
-                  <div>
-                    <span @click="modifyComment(i-1)" class="completeModifyComment">수정</span>
+                <div class="commentBtnContainerDiv">
+                  <div class="modifyCommentwDiv"  @click="modifyComment(i-1)">
+                    <div class="modifyCommentBtninner">
+                      <span class="modifyComment">수정</span>
+                    </div>
                   </div>
-                </div>
-                <div class="completeModifyCommentDiv">
-                  <div>
-                    <span @click="completeModifyComment(i-1)" class="completeModifyComment">수정 완료</span>
+                  <div class="completeModifyCommentDiv" @click="completeModifyComment(i-1)">
+                    <div class="modifyCompleteCommentInner">
+                      <span class="completeModifyComment">수정 완료</span>
+                    </div>
                   </div>
-                </div>
-                <div class="deleteCommentDiv"> 
-                  <span @click="deleteComment(i-1)">삭제</span>             
+                  <div class="deleteCommentDiv" @click="deleteComment(i-1)"> 
+                    <span>삭제</span>             
+                  </div>
                 </div>
               </div>
             </div>
@@ -514,6 +516,8 @@ export default {
   box-shadow: 0.2em 0.2em 0.2em 0.2em rgb(0, 0, 0, 0.1);
 }
 
+.modifyCompleteCommentInner,
+.modifyCommentBtninner,
 .modifyBtninner,
 .modifyCompleteInner {
   display: flex;
@@ -578,6 +582,7 @@ export default {
   height: 90%;
 }
 
+
 .modifyReviewDiv,
 .completeModifyReviewDiv,
 .deleteReviewDiv,
@@ -593,6 +598,20 @@ export default {
   border-radius: 1em;
 }
 
+.completeModifyCommentDiv,
+.deleteCommentDiv,
+.modifyCommentwDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  width: 5em;
+  height: 1.5em;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 1em;
+}
+
 .completeModifyReviewDiv {
   display: none;
 }
@@ -603,6 +622,13 @@ export default {
 
 .modifyCommentwDiv, .deleteCommentDiv, .completeModifyCommentDiv{
   cursor: pointer;
+}
+
+.commentBtnContainerDiv{
+  margin-top: 2%;
+  display: flex;
+  justify-content: flex-end;
+
 }
 </style>
  
