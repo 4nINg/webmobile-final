@@ -10,7 +10,6 @@ import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,20 +83,20 @@ public class HomeController {
          
          Elements tr = element.select("tr");
          for(int j=0; j<tr.size(); ++j) {
-        	 title = tr.get(j).select("th").select("a").text();
-        	 result += title+"/";
-        	 time = tr.get(j).select("td").text().replace(" | ", "|");
-        	 result += time;
-        	 if(j != tr.size()-1) {
-        		 result += ",";
-        	 }
+            title = tr.get(j).select("th").select("a").text();
+            result += title+"/";
+            time = tr.get(j).select("td").text().replace(" | ", "|");
+            result += time;
+            if(j != tr.size()-1) {
+               result += ",";
+            }
          }
          
          if(title.equals("") && time.equals("")){
             result += "@";
          }
-         if(i != 6) {        	 
-        	 result += "&";
+         if(i != 6) {            
+            result += "&";
          }
       }
       System.out.println("mega   "+result);
@@ -141,19 +140,19 @@ public class HomeController {
          
          Elements tr = element.select("tr");
          for(int j=0; j<tr.size(); ++j) {
-        	 title = tr.get(j).select("th").select("a").text();
-        	 result += title+"/";
-        	 time = tr.get(j).select("td").text().replace(" | ", "|");
-        	 result += time;
-        	 if(j != tr.size()-1) {
-        		 result += ",";
-        	 }
+            title = tr.get(j).select("th").select("a").text();
+            result += title+"/";
+            time = tr.get(j).select("td").text().replace(" | ", "|");
+            result += time;
+            if(j != tr.size()-1) {
+               result += ",";
+            }
          }
          if(title.equals("") && time.equals("")){
             result += "@";
          }
-         if(i != 6) {        	 
-        	 result += "&";
+         if(i != 6) {            
+            result += "&";
          }
       }
       System.out.println("lotte   "+result);
@@ -198,10 +197,10 @@ public class HomeController {
          
          Elements col = element.select(".col-times");
          for(int k=0; k<col.size(); ++k) {
-        	 title = col.get(k).select(".info-movie").select("a").select("strong").text();
-        	 result += title+"/";
-        	 time = col.get(k).select("li").select("em").text();
-        	 temp = time.split(" ");
+            title = col.get(k).select(".info-movie").select("a").select("strong").text();
+            result += title+"/";
+            time = col.get(k).select("li").select("em").text();
+            temp = time.split(" ");
              Arrays.sort(temp);
              for(int j=0; j<temp.length; ++j){
                 result += temp[j];
@@ -209,15 +208,15 @@ public class HomeController {
                    result += "|";
                 }
              }
-        	 if(k != col.size()-1) {
-        		 result += ",";
-        	 }
+            if(k != col.size()-1) {
+               result += ",";
+            }
          }
          if(title.equals("") && time.equals("")){
             result += "@";
          }
-         if(i != 6) {        	 
-        	 result += "&";
+         if(i != 6) {            
+            result += "&";
          }
       }
       System.out.println("cgv    "+result);
