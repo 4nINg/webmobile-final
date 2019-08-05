@@ -61,19 +61,17 @@ export default {
   },
   mounted() {
     //service worker register
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("firebase-messaging-sw.js")
-        .then(function(registration) {
-          console.log("Registration successful, scope is:", registration.scope);
-        })
-        .catch(function(err) {
-          console.log("Service worker registration failed, error:", err);
-        });
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      .then(function(reg) {
+        console.log('Registration successful, scope is:', reg);
+      }).catch(function(err) {
+        console.log('Service worker registration failed, error:', err);
+      });
     }
 
 
-    var address = document.location.href;
+    var address = document.location.href;y
     var logo = document.querySelector(".logo");
     var mainLogo = document.querySelector(".mainLogo");
     var homeIcon = document.querySelector(".homeIcon");

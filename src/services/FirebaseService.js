@@ -7,10 +7,14 @@ import * as admin from 'firebase-admin';
 
 
 import "@firebase/messaging";
+
+
 import store from "../store.js"
 const INFO = "info";
 const REVIEW = "review";
 const USERINFO = "userInfo";
+// cloud firestore
+
 
 // Setup Firebase
 const config = {
@@ -39,16 +43,6 @@ const functions = firebase.functions();
 
 messaging.usePublicVapidKey("BICBJ4VJNXGOauHFGbcpv8uwalnfMAHwB3DN9HmlyBmPI0jxM8OZhnBcp12-IYNfTeGaAzPjRvxJ-fH-KsdNmLs");
 
-
-firebase.firestore().enablePersistence()
-  .catch(function(err) {
-    if(err.code == 'failed-precondition') {
-
-    }else if(err.code == 'unimplemented') {
-
-    }
-});
-
 Notification.requestPermission().then(function(Permission) {
   if (Permission === 'granted') {
     console.log('Alarm Permission');
@@ -57,9 +51,39 @@ Notification.requestPermission().then(function(Permission) {
     console.log("No Permission");
   }
 }).then( function(token) {
-  console.log("Alarm token : " ,token);
+  console.log("Alarm token : " + token);
+  firestore.collection('BrowserToken').doc(token).set({
+    token : token,
+    email : "",
+    name : "",
+    alarmPermission : true
+  })
+  .then(function() {
+    console.log("Token 저장 성공");
+
+  })
+}).catch( function(err) {
+  console.log("Error ", err);
 });
 
+firebase.firestore().enablePersistence()
+  .catch(function(err) {
+    if(err.code == 'failed-precondition') {
+    }else if(err.code == 'unimplemented') {
+    }
+});
+
+//온라인 상태에서 메세지 받는 처리 방식
+firebase.messaging().onMessage((payload) => {
+  console.log(payload);
+  var options = {
+    body : payload.data.body,
+    icon : "https://ifh.cc/g/lUitx.png"
+  };
+
+  var notification = new Notification(payload.data.title, options);
+  console.log('Message received. ', payload);
+});
 
 export default {
 
@@ -259,3 +283,14 @@ export default {
         })
     }
 }
+    // getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
+    //   if(uid == "0" || uid == undefined){
+    //       return null;
+    //   }else{
+    //     return firestore.collection(USERINFO).doc(uid)
+    //               .get()
+    //               .then((doc) => {
+    //               return doc.data()
+    //             })
+    //   }
+    // }
