@@ -58,12 +58,11 @@ export default {
     }
   },
   mounted() {
-
     //service worker register
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('firebase-messaging-sw.js')
-      .then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      .then(function(reg) {
+        console.log('Registration successful, scope is:', reg);
       }).catch(function(err) {
         console.log('Service worker registration failed, error:', err);
       });
