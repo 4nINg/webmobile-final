@@ -55,8 +55,8 @@ export default {
       return this.$store.state.loading;
     }
   },
+  props: ["changeSelectPage"],
   methods: {
-    props: ["changeSelectPage"],
     userSignUp() {
       //회원가입
       if (this.comparePasswords !== true) {
