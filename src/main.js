@@ -20,14 +20,28 @@ new Vue({
     render: h => h(App),
     created(){
       firebase.auth().onAuthStateChanged((firebaseUser) => {
-        // console.log("user => " + this.$store.state.user);
-        // console.log(FirebaseService.getUserInfo(firebaseUser));
-          if (firebaseUser) {
-              store.dispatch('autoSignIn', firebaseUser)
-          }
-          // else{
-          //     alert("비로그인상태")
-          // }
+            // FirebaseService.getUserList();
+            if (firebaseUser) {
+                var user;
+                firebaseUser.getIdTokenResult().then(idTokenResult => {
+                    user = {
+                        uid : firebaseUser.uid,
+                        email : firebaseUser.email == null? "등록된 email 없음" : firebaseUser.email,
+                        username : firebaseUser.displayName,
+                        grade : idTokenResult.claims.grade == null || idTokenResult.claims.grade == "undefined"?
+                                3 : idTokenResult.claims.grade
+                    }
+                    store.dispatch('autoSignIn', user)
+                    if(idTokenResult.claims.grade == 1){
+                      document.querySelector("#adminPageBtn").style.display = "block";
+                    }else{
+                      document.querySelector("#adminPageBtn").style.display = "none";
+                    }
+                })
+            }else{
+                console.log("비로그인 상태")
+                document.querySelector("#adminPageBtn").style.display = "none";
+            }
       })
     }
 }).$mount("#app");

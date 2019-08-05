@@ -72,8 +72,6 @@ export default {
         });
     }
 
-    //사이트 입장 시 세션에 따른 로그인 정보 초기화
-    this.$store.dispatch("initLoginInfo");
 
     var address = document.location.href;
     var logo = document.querySelector(".logo");

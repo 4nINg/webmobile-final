@@ -10,7 +10,6 @@ import "@firebase/messaging";
 import store from "../store.js"
 const INFO = "info";
 const REVIEW = "review";
-// const BANNERS = "bannerImages";
 const USERINFO = "userInfo";
 
 // Setup Firebase
@@ -210,23 +209,6 @@ export default {
                 }
             })
     },
-    mgrUserInfoGrade(uid, grade) { //사용자 등급 정보 관리
-        var userInfoRef = firestore.collection(USERINFO);
-        userInfoRef.doc(uid).update({
-            grade: grade
-        }).finally(() => {
-            //재로드가 이루어져야함
-        })
-    },
-    changeLogoutTime(uid) { //사용자 정보 중 로그아웃 시간 변경
-        firestore.collection(USERINFO).doc(uid).update({
-                logout_time: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .catch((err) => { alert("error : " + err) })
-            .finally(() => {
-                // window.location.reload();
-            });
-    },
     getUserInfoList() { //사용자 정보 리스트(list) get
         var userList = [];
         firestore.collection(USERINFO)
@@ -255,22 +237,25 @@ export default {
         });
     },
     //사용자 정보 불러오기
-    getUserInfo(user) {
-      console.log("getUserInfo 입장");
-      const getUser = functions.httpsCallable('getUser');
-      return getUser(user).then(result => {
-        return result;
-      });
+    getUser(uid) {
+      const getUserFunc = functions.httpsCallable('getUser');
+      getUserFunc(uid).then((result) => {
+          // console.log(result)
+          // console.log(result.data)
+          return result.data;
+      }).catch(err => console.log(err));
     },
     //사용자 등급 설정
     setUserGrade(uid, grade) {
-      admin.auth().setCustomUserClaims(uid, {
-          grade: grade
+        const setUserGradeFunc = functions.httpsCallable('setUserGrade');
+        setUserGradeFunc({
+            uid : uid,
+            grade : grade
+        }).then(()=>{
+          console.log("수정완료!")
         })
-        .then((data) => {
-          console.log("setUserGrade 결과 : " + data);
-        }).catch((err) => {
-          console.log("setUserGrade 에러 : " + err);
+        .catch(err => {
+            console.log("setUserGrade Error => " + err);
         })
     }
 }

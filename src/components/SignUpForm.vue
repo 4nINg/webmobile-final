@@ -54,9 +54,7 @@ export default {
     }
   },
   methods: {
-    props: ["changeSelectPage"],
-    userSignUp() {
-      //회원가입
+    userSignUp() { //회원가입
       if (this.comparePasswords !== true) {
         return;
       }
