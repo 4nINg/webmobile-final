@@ -10,12 +10,6 @@
       </span>
     </div>
     <div class="sideNav">
-      <!-- <span v-if="this.$store.state.user" @click="goToLogout()">
-        <router-link to="/">Logout</router-link>
-      </span>
-      <span v-else @click="goToLogin()">
-        <router-link to="/">Login</router-link>
-      </span> -->
       <span v-if="checkLoginSession()" @click="goToLogout()" id="sideNavLogout">Logout</span>
       <span v-else @click="changeSelectPage(4)" id="sideNavLogin">Login</span>
       <span @click="changeSelectPage(3)">Preview</span>
@@ -33,44 +27,25 @@ export default {
     };
   },
   mounted() {
+
   },
   components: {},
   methods: {
     goToLogin() {
-      // document.querySelector('#loginForm').style.display = "block";
       this.changeSelectPage(4);
     },
     goToLogout() {
-      // this.changeSelectPage(4);
       this.$store.dispatch("userSignOut")
       .finally(()=>{
         this.changeSelectPage(0);
       })
     },
     changeSelectPage(i) {
-      if(i === -1 && !this.$store.getters.isAdmin){
-          i = 0;
-          alert("관리자만 접근 가능합니다.")
-      }
-      // if(this.$store.state.user == null){
-      //   alert("유저 없음")
-      // }else if(this.$store.state.user.username == null){
-      //   alert("유저네임 없음")
-      // }else{
-      //   alert("유저네임 확인용 : " + this.$store.state.user.username);
-      // }
       this.$emit("inChildSelectPage", i);
     },
     checkLoginSession(){
       var check = this.$store.getters.isAuthenticated;
       return check;
-      // if(sessionStorage.getItem('accessToken') == "0" || sessionStorage.getItem('accessToken') == "undefined"){
-      //   // alert("없당 : ", sessionStorage.getItem('accessToken'), typeof sessionStorage.getItem('accessToken'))
-      //   return false;
-      // }else{
-      //   // alert("있다 : ", sessionStorage.getItem('accessToken'), typeof sessionStorage.getItem('accessToken'))
-      //   return true;
-      // }
     }
   }
 };
@@ -146,6 +121,10 @@ a:link {
 }
 
 .logoHide {
+  display: none;
+}
+
+#adminPageBtn{
   display: none;
 }
 </style>
