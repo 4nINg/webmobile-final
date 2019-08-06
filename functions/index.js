@@ -54,3 +54,37 @@ const messaging = admin.messaging();
       });
       return true;
     });
+
+    exports.getUserList = functions.https.onCall(() => {
+      return admin.auth().listUsers().then((listUsersResult) => {
+        return listUsersResult;
+      })
+      .catch(err => {
+        return err;
+      })
+    })
+
+    //등급(grade) 부여 or 변경
+    exports.setUserGrade = functions.https.onCall((data) => {
+      return admin.auth().setCustomUserClaims(data.uid, {grade : data.grade})
+                  .catch((err) => {
+                    return err
+                  })
+    });
+
+    exports.getUser = functions.https.onCall((data) => {
+      //get user
+      return admin.auth().getUser(data)
+      .then((result) => {
+        return result.toJSON();
+      }).catch(err => {
+        return err;
+      });
+    });
+
+    exports.deleteUser = functions.https.onCall((data) => {
+      return admin.auth().deleteUser(data)
+      .catch(err => {
+        return err;
+      })
+    })

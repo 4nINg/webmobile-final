@@ -103,7 +103,6 @@ export default {
                     let data = doc.data();
                     data.id = doc.id;
                     // data.created_at = new Date(data.created_at.toDate());
-                    console.log(data);
                     return data;
                 });
             });
@@ -281,6 +280,16 @@ export default {
         .catch(err => {
             console.log("setUserGrade Error => " + err);
         })
+    },
+    //사용자 삭제
+    async deleteUser(uid){
+      const deleteUserFunc = functions.httpsCallable('deleteUser');
+      await deleteUserFunc(uid).then(()=>{
+        alert("삭제완료!")
+      })
+      .catch(err => {
+        console.log("deleteUser Error => " + err);
+      })
     }
 }
     // getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
