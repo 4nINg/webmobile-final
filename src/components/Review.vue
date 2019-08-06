@@ -56,7 +56,7 @@
             <div class="deleteReviewDiv" @click="deleteReview()">
               <span>삭제</span>
             </div>
-            <div class="showCommentBtn" @click="showComment()">
+            <div class="showCommentBtn" @click="showReviewComment()">
               <span>
                 <i class="far fa-comments"></i>댓글 보기
               </span>
@@ -71,18 +71,18 @@
                 <p class="reviewCommentContentP">{{reviewCommentContent[i-1]}}</p>
                 <input type="text" class="modifyCommentInput" />
                 <div class="commentBtnContainerDiv">
-                  <div class="modifyCommentwDiv"  @click="modifyComment(i-1)">
+                  <div class="modifyCommentwDiv" @click="modifyReviewComment(i-1)">
                     <div class="modifyCommentBtninner">
                       <span class="modifyComment">수정</span>
                     </div>
                   </div>
-                  <div class="completeModifyCommentDiv" @click="completeModifyComment(i-1)">
+                  <div class="completeModifyCommentDiv" @click="completeModifyReviewComment(i-1)">
                     <div class="modifyCompleteCommentInner">
                       <span class="completeModifyComment">수정 완료</span>
                     </div>
                   </div>
-                  <div class="deleteCommentDiv" @click="deleteComment(i-1)"> 
-                    <span>삭제</span>             
+                  <div class="deleteCommentDiv" @click="deleteReviewComment(i-1)">
+                    <span>삭제</span>
                   </div>
                 </div>
               </div>
@@ -95,7 +95,7 @@
               ></CommentWriter>
             </div>
 
-            <span class="showInModalreview" @click="backToTheComment()">
+            <span class="showInModalreview" @click="backToTheReviewContent()">
               <i class="fas fa-undo"></i>글 보기
             </span>
           </div>
@@ -129,7 +129,8 @@ export default {
       reviewTitle: "",
       reviewContent: "",
       reviewCommentContent: [],
-      reviewCommentUser: []
+      reviewCommentUser: [],
+      displayedReview: 0
     };
   },
   mounted() {
@@ -171,8 +172,8 @@ export default {
       this.reShowList();
     },
     showReview(i) {
+      this.displayedReview = i + this.showIdx;
       this.reviewId = this.displayReviews[i].id;
-      // console.log("dfdf : "+this.reviewId );
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
       if (this.displayReviews[i].userid !== null) {
@@ -192,16 +193,15 @@ export default {
     closeReviewModal() {
       document.querySelector(".reviewModal").style.display = "none";
     },
-    showComment() {
-      alert("리뷰  : " + this.reviewCommentContent);
+    showReviewComment() {
       document.querySelector(".inModalreview").style.display = "none";
       document.querySelector(".comment").style.display = "block";
     },
-    backToTheComment() {
+    backToTheReviewContent() {
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".comment").style.display = "none";
     },
-    deleteComment(index) {
+    deleteReviewComment(index) {
       var tempCommentUserId = [];
       var tempCommentContent = [];
       for (var i = 0; i < this.reviewCommentUser.length; ++i) {
@@ -210,17 +210,19 @@ export default {
           tempCommentContent.push(this.reviewCommentContent[i]);
         }
       }
-      FirebaseService.deleteComment(
+      var tempReview = FirebaseService.deleteReviewComment(
         this.reviewId,
         tempCommentUserId,
         tempCommentContent
       );
+      this.getReviewList();
+      this.reviewCommentContent = tempCommentContent;
+      this.reviewCommentUser = tempCommentUserId;
     },
     showReviewWrite() {
       document.querySelector(".reviewWriteModal").style.display = "block";
     },
-    modifyComment(index) {
-      // console.log(document.querySelector(".modifyCommentwDiv"));
+    modifyReviewComment(index) {
       var beforeModifyComment = this.reviewCommentContent[index];
       var modifyCommentwDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
       var deleteCommentDiv = document.querySelectorAll(".deleteCommentDiv"); // 삭제버튼
@@ -245,8 +247,7 @@ export default {
         }
       }
     },
-    completeModifyComment(index) {
-      // reviewCommentContent: [],
+    completeModifyReviewComment(index) {
       var modifyCommentwDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
       var deleteCommentDiv = document.querySelectorAll(".deleteCommentDiv"); // 삭제버튼
       var completeModifyCommentDiv = document.querySelectorAll(
@@ -271,7 +272,10 @@ export default {
         }
       }
 
-      FirebaseService.modifyComment(this.reviewId, this.reviewCommentContent);
+      FirebaseService.modifyReviewComment(
+        this.reviewId,
+        this.reviewCommentContent
+      );
     },
     modifyReview() {
       var beforeModifyTitle = document.querySelector(".reviewTitle").innerText;
@@ -335,11 +339,9 @@ export default {
   width: 90%;
   height: 81vh;
   margin-left: 10%;
-  /* margin-right: 10%; */
   display: flex;
   justify-content: space-around;
   align-items: center;
-  /* position: relative; */
 }
 
 .reviewMainDiv > span {
@@ -436,7 +438,6 @@ export default {
 }
 .leftArrow,
 .rightArrow {
-  /* position: absolute; */
   cursor: pointer;
   top: 50%;
 }
@@ -589,7 +590,6 @@ export default {
   height: 90%;
 }
 
-
 .modifyReviewDiv,
 .completeModifyReviewDiv,
 .deleteReviewDiv,
@@ -634,11 +634,10 @@ export default {
   cursor: pointer;
 }
 
-.commentBtnContainerDiv{
+.commentBtnContainerDiv {
   margin-top: 2%;
   display: flex;
   justify-content: flex-end;
-
 }
 </style>
  

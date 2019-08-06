@@ -8,12 +8,6 @@
       <span @click="changeSelectPage(-1)" id="adminPageBtn">Admin</span>
     </div>
     <div class="sideNav">
-      <!-- <span v-if="this.$store.state.user" @click="goToLogout()">
-        <router-link to="/">Logout</router-link>
-      </span>
-      <span v-else @click="goToLogin()">
-        <router-link to="/">Login</router-link>
-      </span>-->
       <span v-if="checkLoginSession()" @click="goToLogout()" id="sideNavLogout">Logout</span>
       <span v-else @click="changeSelectPage(4)" id="sideNavLogin">Login</span>
       <span @click="changeSelectPage(3)">Preview</span>
@@ -30,17 +24,14 @@ export default {
       isLogin: false
     };
   },
-  mounted() {
-
-  },
+  mounted() {},
   components: {},
   methods: {
     goToLogin() {
       this.changeSelectPage(4);
     },
     goToLogout() {
-      this.$store.dispatch("userSignOut")
-      .finally(()=>{
+      this.$store.dispatch("userSignOut").finally(() => {
         this.changeSelectPage(0);
       });
     },
@@ -128,7 +119,7 @@ a:link {
   display: none;
 }
 
-#adminPageBtn{
+#adminPageBtn {
   display: none;
 }
 </style>
