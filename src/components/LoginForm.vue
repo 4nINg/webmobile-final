@@ -7,15 +7,9 @@
       <h1 class="loginFormTitle">Login</h1>
       <div class="loginFormInputArray">
         <p>Email</p>
-<<<<<<< HEAD
-        <input type="text" placeholder="Email" v-model="email" />
-        <p>Password</p>
-        <input type="password" placeholder="Password" v-model="password" />
-=======
         <input type="text" placeholder="Email" v-model = "email" />
         <p>Password</p>
         <input type="password" placeholder="Password" v-model = "password"/>
->>>>>>> sm
       </div>
       <div class="loginFormButton">
         <span @click="userSignIn()">Login</span>
