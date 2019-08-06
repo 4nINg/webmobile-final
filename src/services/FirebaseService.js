@@ -5,9 +5,7 @@ import "firebase/auth";
 import "firebase/functions";
 import * as admin from 'firebase-admin';
 
-
 import "@firebase/messaging";
-
 
 import store from "../store.js"
 const INFO = "info";
@@ -52,16 +50,18 @@ Notification.requestPermission().then(function(Permission) {
   }
 }).then( function(token) {
   console.log("Alarm token : " + token);
-  firestore.collection('BrowserToken').doc(token).set({
-    token : token,
-    email : "",
-    name : "",
-    alarmPermission : true
-  })
-  .then(function() {
-    console.log("Token 저장 성공");
-
-  })
+  //토큰 값이 있을때
+  if(token) {
+    firestore.collection('BrowserToken').doc(token).set({
+      token : token,
+      email : "",
+      name : "",
+      alarmPermission : true
+    })
+    .then(function() {
+      console.log("Token 저장 성공");
+    })
+  }
 }).catch( function(err) {
   console.log("Error ", err);
 });
@@ -103,7 +103,6 @@ export default {
                     let data = doc.data();
                     data.id = doc.id;
                     // data.created_at = new Date(data.created_at.toDate());
-                    console.log(data);
                     return data;
                 });
             });
