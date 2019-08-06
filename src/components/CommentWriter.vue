@@ -19,7 +19,11 @@ export default {
     return {
       // reviewId: this.reviewId,
       commentBody: '',
+      isSubmit: false
     };
+  },
+  mounted() {
+    this.isSubmit = false;
   },
   methods: {
     trans: function() {
