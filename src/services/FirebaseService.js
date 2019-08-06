@@ -5,9 +5,7 @@ import "firebase/auth";
 import "firebase/functions";
 import * as admin from 'firebase-admin';
 
-
 import "@firebase/messaging";
-
 
 import store from "../store.js"
 const INFO = "info";
@@ -45,26 +43,28 @@ const functions = firebase.functions();
 messaging.usePublicVapidKey("BICBJ4VJNXGOauHFGbcpv8uwalnfMAHwB3DN9HmlyBmPI0jxM8OZhnBcp12-IYNfTeGaAzPjRvxJ-fH-KsdNmLs");
 
 Notification.requestPermission().then(function(Permission) {
-    if (Permission === 'granted') {
-        console.log('Alarm Permission');
-        return messaging.getToken();
-    } else {
-        console.log("No Permission");
-    }
-}).then(function(token) {
-    console.log("Alarm token : " + token);
+  if (Permission === 'granted') {
+    console.log('Alarm Permission');
+    return messaging.getToken();
+  }else {
+    console.log("No Permission");
+  }
+}).then( function(token) {
+  console.log("Alarm token : " + token);
+  //토큰 값이 있을때
+  if(token) {
     firestore.collection('BrowserToken').doc(token).set({
-            token: token,
-            email: "",
-            name: "",
-            alarmPermission: true
-        })
-        .then(function() {
-            console.log("Token 저장 성공");
-
-        })
-}).catch(function(err) {
-    console.log("Error ", err);
+      token : token,
+      email : "",
+      name : "",
+      alarmPermission : true
+    })
+    .then(function() {
+      console.log("Token 저장 성공");
+    })
+  }
+}).catch( function(err) {
+  console.log("Error ", err);
 });
 
 firebase.firestore().enablePersistence()
