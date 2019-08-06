@@ -401,6 +401,16 @@ export default {
           break;
         }
       }
+      axios
+        .get(
+          "https://api.themoviedb.org/3/search/movie?api_key=584467f43959cb7bd6c03220e9d02eb7&language=ko&query=" +
+            this.searchKeyword +
+            "&page=1&include_adult=true&region=kr&year=2019&primary_release_year=2019"
+        )
+        .then(response => {
+          var searchResult = response.data;
+          console.log(searchResult);
+        });
     },
     searchLotte() {
       var lotteDiv = document.querySelector(".lotteDiv");

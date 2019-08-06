@@ -9,7 +9,7 @@
       <i class="fas fa-chevron-left"></i>
     </span>
     <div class="PreviewDiv">
-      <div class="preview" v-for="i in displayPreview" :key="i">
+      <div class="preview" v-for="i in displayPreview.length" :key="i">
         <div class="hoverDiv" @click="showReview(i-1)">
           <div class="hoverInnerDiv">
             <span>
@@ -40,7 +40,6 @@
   </div>
 </template>
 <script>
-// import previewModal from "@/components/previewModal";
 import PreviewWriter from "@/components/PreviewWriter";
 export default {
   data() {
@@ -57,7 +56,6 @@ export default {
     }
   },
   components: {
-    // previewModal,
     PreviewWriter
   }
 };

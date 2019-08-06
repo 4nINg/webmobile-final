@@ -101,8 +101,22 @@ export default {
             this.imageUrl = downloadURL;
           });
         });
-        FirebaseService.postPreview(this.writerTitle, this.writerBody, "test");
-        // FirebaseService.postPreview(this.writerTitle, this.writerBody, this.imageUrl, this.imageName, this.$store.state.Username)
+        // FirebaseService.postPreview(this.writerTitle, this.writerBody, "test");
+        // alert(
+        //   "라이터! " +
+        //     this.writerTitle +
+        //     this.writerBody +
+        //     this.imageName +
+        //     this.imageUrl +
+        //     this.$store.state.user.username
+        // );
+        FirebaseService.postPreview(
+          this.writerTitle,
+          this.writerBody,
+          this.$store.state.user.username,
+          this.imageUrl,
+          this.imageName
+        );
       }
     }
   }
@@ -171,7 +185,7 @@ export default {
 
 .previewWriteBtn {
   cursor: pointer;
-  font-size: 1.5em;
+  font-size: 1.3em;
   text-transform: uppercase;
   border: 1px solid rgb(0, 0, 0, 0.7);
   padding: 0.3em;

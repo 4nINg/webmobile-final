@@ -1,25 +1,20 @@
 <template>
-<div class="commentWirteMainDiv">
-      <input class="commentInputText" type="text" placeholder="댓글을 입력해주세요." v-model="commentBody">
-      <span @click="trans()" class="commentSubmitBtn">submit</span>
-</div>
+  <div class="commentWirteMainDiv">
+    <input class="commentInputText" type="text" placeholder="댓글을 입력해주세요." v-model="commentBody" />
+    <span @click="trans()" class="commentSubmitBtn">submit</span>
+  </div>
 </template>
 
 <script>
 import FirebaseService from "../services/FirebaseService";
 
 export default {
-  name : "CommentWriter",
-  props:
-      ["reviewId", "reviewCommentUser", "reviewCommentContent"]
-  ,
-  components: {
-  },
+  name: "CommentWriter",
+  props: ["reviewId", "reviewCommentUser", "reviewCommentContent"],
+  components: {},
   data() {
     return {
-      // reviewId: this.reviewId,
-      commentBody: '',
-      isSubmit: false
+      commentBody: ""
     };
   },
   mounted() {
@@ -27,15 +22,18 @@ export default {
   },
   methods: {
     trans: function() {
-       if(this.commentBody !== '') {
-        //   alert(this.$store.state.user.username);
-          console.log("확인 : "+this.reviewId, this.reviewCommentUser, this.reviewCommentContent)
-          this.reviewCommentUser.push(this.$store.state.user.username);
-          this.reviewCommentContent.push(this.commentBody);
-          FirebaseService.postComment(this.reviewId, this.reviewCommentUser, this.reviewCommentContent);
-          alert("작성완료!");
-      }else{
-          alert("댓글을 입력하세요.");
+      if (this.commentBody !== "") {
+        this.reviewCommentUser.push(this.$store.state.user.username);
+        this.reviewCommentContent.push(this.commentBody);
+        this.commentBody = "";
+        document.querySelector(".commentInputText").value = "";
+        FirebaseService.postReviewComment(
+          this.reviewId,
+          this.reviewCommentUser,
+          this.reviewCommentContent
+        );
+      } else {
+        alert("댓글을 입력하세요.");
       }
     }
   }

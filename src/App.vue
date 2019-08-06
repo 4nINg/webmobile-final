@@ -60,29 +60,15 @@ export default {
     }
   },
   mounted() {
-    //service worker register
     if (navigator.serviceWorker) {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js')
-      .then(function(reg) {
-        console.log('Registration successful, scope is:', reg);
-      }).catch(function(err) {
-        console.log('Service worker registration failed, error:', err);
-      });
-    }
-
-
-    var address = document.location.href;y
-    var logo = document.querySelector(".logo");
-    var mainLogo = document.querySelector(".mainLogo");
-    var homeIcon = document.querySelector(".homeIcon");
-    if (address === "http://localhost:8080/") {
-      logo.classList.remove("logoHide");
-      mainLogo.classList.remove("logoHide");
-      homeIcon.classList.add("logoHide");
-    } else {
-      logo.classList.add("logoHide");
-      mainLogo.classList.add("logoHide");
-      homeIcon.classList.remove("logoHide");
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then(function(reg) {
+          console.log("Registration successful, scope is:", reg);
+        })
+        .catch(function(err) {
+          console.log("Service worker registration failed, error:", err);
+        });
     }
   },
   watch: {
