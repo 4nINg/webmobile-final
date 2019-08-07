@@ -1,5 +1,3 @@
-//import firebase from 'firebase'
-
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
@@ -13,21 +11,15 @@ const messaging = admin.messaging();
     .onCreate((snap, context) => {
       let registerToken = [];
       let bodycomment = snap.data().body;
-      // var currentUser = firebase.auth().currentUser;
-      // console.log(currentUser.displayName);
-      // if(currentUser.displayName === null) {
-      //   console.log("null name");
-      //   return true;
-      // };
 
-      db.collection("BrowserToken")
+      console.log(firebase.auth().currentUser.email.split("@")[0]);
+      db.collection("connectedUsers/" + firebase.auth().currentUser.email.split("@")[0])
       .get()
       .then(snapshot => {
 
           snapshot.forEach(doc => {
             if(doc.data().token) {
               registerToken.push(doc.data().token);
-              console.log(doc.data().token);
             }
             return true;
           });
@@ -40,7 +32,6 @@ const messaging = admin.messaging();
             tokens : registerToken
           };
           messaging.sendMulticast(message).then(response => {
-           console.log("success send message");
            return response;
           })
           .catch(err => {
@@ -54,3 +45,37 @@ const messaging = admin.messaging();
       });
       return true;
     });
+
+    exports.getUserList = functions.https.onCall(() => {
+      return admin.auth().listUsers().then((listUsersResult) => {
+        return listUsersResult;
+      })
+      .catch(err => {
+        return err;
+      })
+    })
+
+    //등급(grade) 부여 or 변경
+    exports.setUserGrade = functions.https.onCall((data) => {
+      return admin.auth().setCustomUserClaims(data.uid, {grade : data.grade})
+                  .catch((err) => {
+                    return err
+                  })
+    });
+
+    exports.getUser = functions.https.onCall((data) => {
+      //get user
+      return admin.auth().getUser(data)
+      .then((result) => {
+        return result.toJSON();
+      }).catch(err => {
+        return err;
+      });
+    });
+
+    exports.deleteUser = functions.https.onCall((data) => {
+      return admin.auth().deleteUser(data)
+      .catch(err => {
+        return err;
+      })
+    })

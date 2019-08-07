@@ -5,9 +5,7 @@ import "firebase/auth";
 import "firebase/functions";
 import * as admin from 'firebase-admin';
 
-
 import "@firebase/messaging";
-
 
 import store from "../store.js"
 const INFO = "info";
@@ -45,26 +43,28 @@ const functions = firebase.functions();
 messaging.usePublicVapidKey("BICBJ4VJNXGOauHFGbcpv8uwalnfMAHwB3DN9HmlyBmPI0jxM8OZhnBcp12-IYNfTeGaAzPjRvxJ-fH-KsdNmLs");
 
 Notification.requestPermission().then(function(Permission) {
-    if (Permission === 'granted') {
-        console.log('Alarm Permission');
-        return messaging.getToken();
-    } else {
-        console.log("No Permission");
-    }
-}).then(function(token) {
-    console.log("Alarm token : " + token);
+  if (Permission === 'granted') {
+    console.log('Alarm Permission');
+    return messaging.getToken();
+  }else {
+    console.log("No Permission");
+  }
+}).then( function(token) {
+  console.log("Alarm token : " + token);
+  //토큰 값이 있을때
+  if(token) {
     firestore.collection('BrowserToken').doc(token).set({
-            token: token,
-            email: "",
-            name: "",
-            alarmPermission: true
-        })
-        .then(function() {
-            console.log("Token 저장 성공");
-
-        })
-}).catch(function(err) {
-    console.log("Error ", err);
+      token : token,
+      email : "",
+      name : "",
+      alarmPermission : true
+    })
+    .then(function() {
+      console.log("Token 저장 성공");
+    })
+  }
+}).catch( function(err) {
+  console.log("Error ", err);
 });
 
 firebase.firestore().enablePersistence()
@@ -101,10 +101,28 @@ export default {
                 return docSnapshots.docs.map(doc => {
                     let data = doc.data();
                     data.id = doc.id;
+<<<<<<< HEAD
+=======
+                    // data.created_at = new Date(data.created_at.toDate());
+>>>>>>> 472d165cb3279a247eac25ae2c62a1670bb31bf6
                     return data;
                 });
             });
     },
+    // getReview() { //리뷰 상세보기
+    //     const reviewCollection = firestore.collection(REVIEW);
+    //     return reviewCollection
+    //         .orderBy("created_at", "desc")
+    //         .get()
+    //         .then(docSnapshots => {
+    //             return docSnapshots.docs.map(doc => {
+    //                 let data = doc.data();
+    //                 data.id = doc.id;
+    //                 data.created_at = new Date(data.created_at.toDate());
+    //                 return data;
+    //             });
+    //         });
+    // },
     postReview(title, body, writer) { //리뷰 작성
         firestore.collection(REVIEW).add({
                 title: title,
@@ -253,14 +271,24 @@ export default {
     setUserGrade(uid, grade) {
         const setUserGradeFunc = functions.httpsCallable('setUserGrade');
         setUserGradeFunc({
-                uid: uid,
-                grade: grade
-            }).then(() => {
-                console.log("수정완료!")
-            })
-            .catch(err => {
-                console.log("setUserGrade Error => " + err);
-            })
+            uid : uid,
+            grade : grade
+        }).then(()=>{
+          console.log("수정완료!")
+        })
+        .catch(err => {
+            console.log("setUserGrade Error => " + err);
+        })
+    },
+    //사용자 삭제
+    async deleteUser(uid){
+      const deleteUserFunc = functions.httpsCallable('deleteUser');
+      await deleteUserFunc(uid).then(()=>{
+        alert("삭제완료!")
+      })
+      .catch(err => {
+        console.log("deleteUser Error => " + err);
+      })
     }
 }
 // getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get

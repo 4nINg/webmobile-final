@@ -17,6 +17,9 @@ export default {
       commentBody: ""
     };
   },
+  mounted() {
+    this.isSubmit = false;
+  },
   methods: {
     trans: function() {
       if (this.commentBody !== "") {

@@ -60,7 +60,15 @@ export default {
     userSignUp() {
       //회원가입
       if (this.comparePasswords !== true) {
+        alert("비밀번호를 다시 확인하세요.")
         return;
+      }
+      if(this.username == ""){
+        alert("username을 입력하세요.")
+        return;
+      }
+      if(this.email == ""){
+        alert("email을 입력하세요.")
       }
       this.$store
         .dispatch("userSignUp", {
