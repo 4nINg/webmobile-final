@@ -9,22 +9,17 @@
         <i class="fas fa-search searchBtn"></i>
       </span>
     </div>
-    <div class="searchResultKeyword">
-      <span>{{searchResultKeyword}}</span>
+    <div class="searchResult">
+      <div class="searchResultImg"></div>
+      <div class="searchResultContent">
+        <div class="searchResultTitle">{{searchMovieTitle}}</div>
+        <div class="searchResultOverview">{{searchMovieOverview}}</div>
+      </div>
     </div>
     <div class="tableDiv">
-      <div class="partDiv">
-        <img src="@/assets/cgv.png" />
-        <div class="partInnerDiv cgvDiv"></div>
-      </div>
-      <div class="partDiv">
-        <img src="@/assets/megabox.png" />
-        <div class="partInnerDiv megaboxDiv"></div>
-      </div>
-      <div class="partDiv">
-        <img src="@/assets/lotte.png" />
-        <div class="partInnerDiv lotteDiv"></div>
-      </div>
+      <div class="partDiv cgvDiv"></div>
+      <div class="partDiv megaboxDiv"></div>
+      <div class="partDiv lotteDiv"></div>
     </div>
     <div id="myModal" class="modal">
       <div class="modal-content">
@@ -130,7 +125,9 @@ export default {
       cgvResult: null,
       searchKeyword: null,
       totalMovieList: [],
-      searchResultKeyword: ""
+      searchMovieTitle: "",
+      searchMovieImgUrl: "",
+      searchMovieOverview: ""
     };
   },
   mounted() {
@@ -401,15 +398,26 @@ export default {
           break;
         }
       }
-      axios
+      this.movieDetail();
+    },
+    async movieDetail() {
+      var self = this;
+      var searchResult = null;
+      await axios
         .get(
           "https://api.themoviedb.org/3/search/movie?api_key=584467f43959cb7bd6c03220e9d02eb7&language=ko&query=" +
-            this.searchKeyword +
+            self.searchKeyword +
             "&page=1&include_adult=true&region=kr&year=2019&primary_release_year=2019"
         )
         .then(response => {
-          var searchResult = response.data;
-          console.log(searchResult);
+          searchResult = response.data;
+          console.log(searchResult.results[0].title);
+
+          document.querySelector(".searchResultImg").style.backgroundImage =
+            "url(https://image.tmdb.org/t/p/w200" +
+            searchResult.results[0].poster_path;
+          self.searchMovieTitle = searchResult.results[0].title;
+          self.searchMovieOverview = searchResult.results[0].overview;
         });
     },
     searchLotte() {
@@ -525,7 +533,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 81vh;
+  height: 80vh;
+  width: 88%;
+  margin-left: 10%;
+  margin-right: 2%;
   background-color: rgb(255, 255, 255, 0.7);
 }
 
@@ -569,31 +580,18 @@ export default {
 
 .tableDiv {
   display: flex;
-  justify-content: space-evenly;
-  height: 70vh;
-  margin-left: 1%;
+  justify-content: space-around;
+  height: 29vh;
+  width: 100%;
+  /* margin-left: 1%; */
 }
 .partDiv {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 25%;
-}
-
-.partInnerDiv {
-  width: 100%;
-  height: 25em;
   border: 1px solid rgb(0, 0, 0, 0.1);
   overflow: auto;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.partDiv img {
-  width: 30%;
-  background-size: cover;
-  margin-bottom: 3%;
 }
 
 ::-webkit-scrollbar-track {
@@ -725,13 +723,99 @@ export default {
   font-size: 1.2em;
 }
 
-.searchResultKeyword {
+.cgvDiv,
+.megaboxDiv,
+.lotteDiv {
+  position: relative;
+}
+
+.megaboxDiv::after {
   width: 100%;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  background-image: url("../assets/megabox.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-origin: content-box;
+  background-size: 100%;
+  opacity: 0.5 !important;
+}
+
+.lotteDiv::after {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  background-image: url("../assets/lotte.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-origin: content-box;
+  background-size: 100%;
+  opacity: 0.5 !important;
+}
+
+.cgvDiv::after {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  background-image: url("../assets/cgv.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-origin: content-box;
+  background-size: 100%;
+  opacity: 0.5 !important;
+}
+
+.searchResult {
+  width: 91.7%;
+  height: 38vh;
+  margin-bottom: 1%;
+  display: flex;
+  justify-content: center;
+}
+
+.searchResultContent {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-right: 9.3%;
+}
+
+.searchResultImg {
+  width: 20%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin-left: 10%;
+}
+
+.searchResultTitle {
+  width: 100%;
+  height: 30%;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.3em;
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.searchResultOverview {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
 }
 </style>
