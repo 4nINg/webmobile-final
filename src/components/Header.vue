@@ -6,14 +6,10 @@
     </div>
     <div class>
       <span @click="changeSelectPage(-1)" id="adminPageBtn">Admin</span>
+      <div id = "SubscribeBtn" @click="subscribeAlarm()"><span>알림받습니다</span></div>
+      <div id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;"><span>알림취소합시다</span></div>
     </div>
     <div class="sideNav">
-      <!-- <span v-if="this.$store.state.user" @click="goToLogout()">
-        <router-link to="/">Logout</router-link>
-      </span>
-      <span v-else @click="goToLogin()">
-        <router-link to="/">Login</router-link>
-      </span>-->
       <span v-if="checkLoginSession()" @click="goToLogout()" id="sideNavLogout">Logout</span>
       <span v-else @click="changeSelectPage(4)" id="sideNavLogin">Login</span>
       <span @click="changeSelectPage(3)">Preview</span>
@@ -23,6 +19,8 @@
   </div>
 </template>
 <script>
+import firebase from 'firebase';
+
 export default {
   props: ["selectPage"],
   data() {
@@ -30,27 +28,62 @@ export default {
       isLogin: false
     };
   },
-  mounted() {
-
-  },
+  mounted() {},
   components: {},
   methods: {
     goToLogin() {
       this.changeSelectPage(4);
     },
     goToLogout() {
-      this.$store.dispatch("userSignOut")
-      .finally(()=>{
+      this.$store.dispatch("userSignOut").finally(() => {
         this.changeSelectPage(0);
       });
     },
     changeSelectPage(i) {
+      if(i == 3 && (this.$store.state.user == null || this.$store.state.user.grade == 3)){
+        alert("일반회원 이상만 접근 가능합니다.");
+        return;
+      }
       this.$emit("inChildSelectPage", i);
     },
     checkLoginSession() {
       var check = this.$store.getters.isAuthenticated;
       return check;
+    },
+
+    showHideDiv(divId, show) {
+      const div = document.querySelector('#' + divId);
+      if(show) {
+        div.style = 'display: visible';
+      }else {
+        div.style = 'display: none';
+      }
+    },
+
+    // 구독취소버튼활성화
+    subscribeAlarm() {
+      const messaging = firebase.messaging();
+
+      messaging.getToken().then((currentToken) => {
+        messaging.deleteToken(currentToken).then(() => {
+          console.log('Token deleted.');
+
+        })
+      })
+      document.querySelector('#SubscribeBtn').style = 'display:none';
+      document.querySelector('#SubscribeCancel').style = 'display:visible';
+
+    },
+
+    //구독버튼 활성화
+    subscribeAlarmCancel() {
+      document.querySelector('#SubscribeBtn').style = 'display:visible';
+      document.querySelector('#SubscribeCancel').style = 'display:none';
+
     }
+
+
+
   }
 };
 </script>
@@ -128,7 +161,7 @@ a:link {
   display: none;
 }
 
-#adminPageBtn{
+#adminPageBtn {
   display: none;
 }
 </style>

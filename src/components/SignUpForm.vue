@@ -9,7 +9,7 @@
         <p>Email</p>
         <input type="text" placeholder="Email" id="signUpID" v-model="email" required />
         <p>Username</p>
-        <input type="text" placeholder="Username" id="signUpUsername" v-model="username" required />
+        <input type="text" placeholder="Username" id="signUpUsername" v-model="username" maxlength="10" required />
         <p>Password</p>
         <input type="password" placeholder="Password" id="signUpPW" v-model="password" required />
         <p>Password Confirm</p>
@@ -57,11 +57,23 @@ export default {
   },
   props: ["changeSelectPage"],
   methods: {
+    //회원가입
     userSignUp() {
-      //회원가입
-      if (this.comparePasswords !== true) {
+      if(this.email == ""){
+        alert("email을 입력하세요.")
+      }
+      if(this.username == ""){
+        alert("username을 입력하세요.")
+        return;
+      }else if(this.username.length >= 11){
+        alert("username은 10자 이내로 가능합니다.")
         return;
       }
+      if (this.comparePasswords !== true) {
+        alert("비밀번호를 다시 확인하세요.")
+        return;
+      }
+
       this.$store
         .dispatch("userSignUp", {
           email: this.email,
@@ -110,7 +122,7 @@ export default {
 }
 .signupbox {
   width: 30%;
-  height: 76%;
+  height: 60%;
   /* margin-bottom: 3%; */
   background-color: rgb(255, 255, 255, 0.8);
   margin-left: 30%;
@@ -162,7 +174,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 0.8em;
+  /* margin-top: 0.8em; */
+  margin-bottom:auto;
   width: 80%;
   border: none;
   outline: none;

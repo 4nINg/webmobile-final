@@ -10,12 +10,12 @@
           type="text"
           class="previewTitleInput"
           placeholder="Please Enter The Title"
-          v-model="writerTitle"
+          v-model="writeTitle"
         />
         <textarea
           class="previewTitleContent"
           placeholder="Please Enter The Content"
-          v-model="writerBody"
+          v-model="writeBody"
         />
         <ImgUploader ref="uploader" class="imgUploader"></ImgUploader>
       </div>
@@ -37,20 +37,24 @@ export default {
   },
   data() {
     return {
-      writerTitle: "",
-      writerBody: "",
+      writeTitle: "",
+      writeBody: "",
       imageUrl: "",
       imageFile: "",
       imageName: "",
-      imageList: []
+      imageList: [],
+      isSubmit: false
     };
+  },
+  mounted() {
+    this.isSubmit = false;
   },
   methods: {
     closePreview() {
       document.querySelector(".previewTitleInput").value = "";
-      this.writerTitle = "";
+      this.writeTitle = "";
       document.querySelector(".previewTitleContent").value = "";
-      this.writerBody = "";
+      this.writeBody = "";
       document.querySelector(".inImgUploaderInput").value = "";
       var inImgUploaderFile = document.querySelector(".inImgUploaderFile");
       if (inImgUploaderFile !== null) {
@@ -62,10 +66,10 @@ export default {
       this.imageList = await FirebaseService.getPreviewImages();
     },
     checkForm: function() {
-      if (this.writerTitle == "") {
+      if (this.writeTitle == "") {
         alert("제목을 입력하세요.");
         return false;
-      } else if (this.writerBody == "") {
+      } else if (this.writeBody == "") {
         alert("내용을 입력하세요.");
         return false;
       } else if (this.imageName == "") {
@@ -101,8 +105,16 @@ export default {
             this.imageUrl = downloadURL;
           });
         });
-        FirebaseService.postPreview(this.writerTitle, this.writerBody, "test");
-        // FirebaseService.postPreview(this.writerTitle, this.writerBody, this.imageUrl, this.imageName, this.$store.state.Username)
+        FirebaseService.postPreview(
+          this.writeTitle,
+          this.$store.state.user.uid,
+          this.$store.state.user.username,
+          this.writeBody,
+          this.imageUrl,
+          this.imageName
+        );
+        document.querySelector(".previewWriteModal").style.display = "none";
+        this.$emit("isSubmit", this.isSubmit);
       }
     }
   }
@@ -171,7 +183,7 @@ export default {
 
 .previewWriteBtn {
   cursor: pointer;
-  font-size: 1.5em;
+  font-size: 1.3em;
   text-transform: uppercase;
   border: 1px solid rgb(0, 0, 0, 0.7);
   padding: 0.3em;

@@ -7,9 +7,15 @@
       <h1 class="loginFormTitle">Login</h1>
       <div class="loginFormInputArray">
         <p>Email</p>
+<<<<<<< HEAD
         <input type="text" placeholder="Email" v-model="email" />
         <p>Password</p>
         <input type="password" placeholder="Password" v-model="password" />
+=======
+        <input type="text" placeholder="Email" v-model = "email" />
+        <p>Password</p>
+        <input type="password" placeholder="Password" v-model = "password"/>
+>>>>>>> c51fd4ede533c03a33839b956927c6506d180a58
       </div>
       <div class="loginFormButton">
         <span @click="userSignIn()">Login</span>
@@ -92,13 +98,11 @@ export default {
 </script>
 <style>
 .loginMainDiv {
-  /* position: relative; */
   width: 90%;
   height: 81%;
   margin-left: 10%;
   display: flex;
   align-items: center;
-  /* margin-top: 0 !important; */
 }
 .loginbox {
   width: 30%;
@@ -107,27 +111,20 @@ export default {
   background-color: rgb(255, 255, 255, 0.8);
   margin-left: 30%;
   box-sizing: border-box;
-  /* border-box: 테두리 기준으로 크기 정함. */
   font-family: sans-serif;
-  /* border: 1px solid black; */
   box-shadow: 1px 1px 1px 1px rgb(212, 212, 212);
   letter-spacing: 0.05em;
   position: relative;
 }
 .avatar {
-  /* width: 20%;
-  height: 20%; */
   font-size: 5em;
   color: rgb(0, 0, 0, 0.5);
   border-radius: 30%;
-  /* position: absolute; */
   margin-top: -6%;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: rgb(255, 255, 255, 0.6); */
-  /* background-color: black; */
   position: absolute;
   top: -5%;
 }
@@ -181,7 +178,6 @@ export default {
   font-size: 0.8em;
   font-weight: bold;
   box-shadow: 1px 1px 1px 1px rgb(119, 119, 119);
-  /* text-transform: uppercase; */
 }
 .fa-google {
   color: rgb(207, 61, 48);

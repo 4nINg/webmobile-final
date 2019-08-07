@@ -60,7 +60,6 @@ export default {
     }
   },
   mounted() {
-    //service worker register
     if (navigator.serviceWorker) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js')
       .then(function(reg) {
@@ -70,20 +69,6 @@ export default {
       });
     }
 
-
-    var address = document.location.href;y
-    var logo = document.querySelector(".logo");
-    var mainLogo = document.querySelector(".mainLogo");
-    var homeIcon = document.querySelector(".homeIcon");
-    if (address === "http://localhost:8080/") {
-      logo.classList.remove("logoHide");
-      mainLogo.classList.remove("logoHide");
-      homeIcon.classList.add("logoHide");
-    } else {
-      logo.classList.add("logoHide");
-      mainLogo.classList.add("logoHide");
-      homeIcon.classList.remove("logoHide");
-    }
   },
   watch: {
     selectPage: function() {

@@ -43,6 +43,7 @@ export default new Vuex.Store({
           commit('setUser', { email: payload.email, username: payload.username, grade: 3, uid: firebaseUser.uid });
           commit('setLoading', false);
           commit('setError', null);
+
           firebase.auth().currentUser.updateProfile({
             displayName: payload.username
           }).then(function(){
@@ -65,11 +66,27 @@ export default new Vuex.Store({
     },
     // 로그아웃
     userSignOut({ commit }) {
+        const messaging = firebase.messaging();
+        var currentUser = firebase.auth().currentUser;
         commit('setLoading', true);
         firebase.auth().signOut().then(() => {
             commit('setUser', null);
             commit('setLoading', false);
             alert("로그아웃 완료!");
+            return messaging.getToken();
+        })
+        .then(function(token) {
+          //실시간 데이터 베이스, 현재 토큰값과 비교후 삭제.
+          firebase.database()
+          .ref('connectedUsers/')
+          .once('value', function(snapshot) {
+            snapshot.forEach(function(data) {
+              if(data.val().uToken === token){
+                firebase.database().ref('connectedUsers/' + currentUser.email.split("@")[0]).remove();
+              }
+            })
+
+          })
         })
 
     },
@@ -78,6 +95,7 @@ export default new Vuex.Store({
         commit('setLoading', true);
         firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
             .then(firebaseUser => {
+
                 firebaseUser.user.getIdTokenResult().then(idTokenResult => {
                     commit('setUser', {
                         uid : firebaseUser.user.uid,
@@ -88,6 +106,15 @@ export default new Vuex.Store({
                     commit('setLoading', false);
                     alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
                 })
+
+                const messaging = firebase.messaging();
+                return messaging.getToken();
+            })
+            .then(function(token) {
+              //realtime database에 로그인된 사용자 Web Token값 넣기
+              firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+                uToken : token
+              });
             })
             .catch(error => {
                 commit('setError', true);
@@ -111,6 +138,13 @@ export default new Vuex.Store({
                 })
 
                 alert("반갑습니다.\n" + currentUser.displayName + "님 Google 아이디로 로그인되었습니다.");
+                const messaging = firebase.messaging();
+                return messaging.getToken();
+            })
+            .then(function(token) {
+              firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+                uToken : token
+              });
             })
             .catch(err => {
                 commit('setError', true);
@@ -137,6 +171,13 @@ export default new Vuex.Store({
 
 
                 alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
+                const messaging = firebase.messaging();
+                return messaging.getToken();
+            })
+            .then(function(token) {
+              firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+                uToken : token
+              });
             })
             .catch(err => {
                 commit('setError', true);

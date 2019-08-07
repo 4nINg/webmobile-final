@@ -1,12 +1,15 @@
 <template>
   <UserInfoTable id="userInfoTable"></UserInfoTable>
+  <!-- <SiteInfoTable></SiteInfoTable> -->
 </template>
 <script>
 import UserInfoTable from "./UserInfoTable"
+// import SiteInfoTable from "./SiteInfoTable"
 export default{
   name: "Admin",
   components:{
-    UserInfoTable
+    UserInfoTable,
+    // SiteInfoTable
   },
   data(){
     return {
