@@ -118,7 +118,7 @@ import ReviewWriter from "@/components/ReviewWriter";
 export default {
   components: {
     CommentWriter,
-    ReviewWriter
+    ReviewWriter,
   },
   data() {
     return {

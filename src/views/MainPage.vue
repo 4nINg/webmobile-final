@@ -10,14 +10,16 @@
           but a
           <span class="colorSlogan">comedy</span> in long-shot.
         </span>
-      </div>
+      </div>    
     </div>
   </div>
 </template>
 
+
 <script>
 export default {
-  components: {},
+  components: {
+  },
   data() {
     return {
       date: [],
