@@ -36,6 +36,10 @@ export default {
       });
     },
     changeSelectPage(i) {
+      if(i == 3 && (this.$store.state.user == null || this.$store.state.user.grade == 3)){
+        alert("일반회원 이상만 접근 가능합니다.");
+        return;
+      }
       this.$emit("inChildSelectPage", i);
     },
     checkLoginSession() {

@@ -69,7 +69,7 @@ export default {
       });
     }
 
-    
+
   },
   watch: {
     selectPage: function() {

@@ -12,10 +12,8 @@ import FirebaseService from "../services/FirebaseService";
 
 export default {
   name: "CommentWriter",
-  props: ["reviewId", "reviewCommentUser", "reviewCommentContent"],
-  components: {
-    
-  },
+  props: ["reviewId", "reviewCommentUsername", "reviewCommentContent", "reviewCommentUserUid"],
+  components: {},
   data() {
     return {
       commentBody: ""
@@ -27,15 +25,19 @@ export default {
   methods: {
     trans: function() {
       if (this.commentBody !== "") {
-        this.reviewCommentUser.push(this.$store.state.user.username);
+        this.reviewCommentUsername.push(this.$store.state.user.username);
         this.reviewCommentContent.push(this.commentBody);
+        this.reviewCommentUserUid.push(this.$store.state.user.uid);
         this.commentBody = "";
         document.querySelector(".commentInputText").value = "";
         FirebaseService.postReviewComment(
           this.reviewId,
-          this.reviewCommentUser,
-          this.reviewCommentContent
+          this.reviewCommentUsername,
+          this.reviewCommentContent,
+          this.reviewCommentUserUid
         );
+        this.isSubmit = true;
+        this.$emit("isSubmit", this.isSubmit);
       } else {
         alert("댓글을 입력하세요.");
       }
