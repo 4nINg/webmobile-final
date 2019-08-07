@@ -49,20 +49,18 @@ Notification.requestPermission().then(function(Permission) {
   }else {
     console.log("No Permission");
   }
-}).then( function(token) {
-  console.log("Alarm token : " + token);
-  //토큰 값이 있을때
-  if(token) {
-    firestore.collection('BrowserToken').doc(token).set({
-      token : token,
-      email : "",
-      name : "",
-      alarmPermission : true
-    })
-    .then(function() {
-      console.log("Token 저장 성공");
-    })
-  }
+  })
+  .then( function(token) {
+    console.log("Alarm token : " + token);
+    if(token) {
+      firestore.collection('registeredToken').doc(token).set({
+        token : token,
+        alarmPermission : true
+      })
+      .then(function() {
+        console.log("Token 저장 성공");
+      })
+    }
 }).catch( function(err) {
   console.log("Error ", err);
 });
@@ -81,8 +79,9 @@ firebase.messaging().onMessage((payload) => {
     };
 
     var notification = new Notification(payload.data.title, options);
-    console.log('Message received. ', payload);
+    console.log("online received.");
 });
+
 
 export default {
 
