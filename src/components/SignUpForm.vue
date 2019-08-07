@@ -118,7 +118,7 @@ export default {
 }
 .signupbox {
   width: 30%;
-  height: 76%;
+  height: 60%;
   /* margin-bottom: 3%; */
   background-color: rgb(255, 255, 255, 0.8);
   margin-left: 30%;
@@ -170,7 +170,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 0.8em;
+  /* margin-top: 0.8em; */
+  margin-bottom:auto;
   width: 80%;
   border: none;
   outline: none;
