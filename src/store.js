@@ -77,10 +77,11 @@ export default new Vuex.Store({
         })
         .then(function(token) {
           //실시간 데이터 베이스, 현재 토큰값과 비교후 삭제.
-          firebase.database().ref('connectedUsers/')
+          firebase.database()
+          .ref('connectedUsers/')
           .once('value', function(snapshot) {
             snapshot.forEach(function(data) {
-              if(data.val() === token){
+              if(data.val().uToken === token){
                 firebase.database().ref('connectedUsers/' + currentUser.email.split("@")[0]).remove();
               }
             })

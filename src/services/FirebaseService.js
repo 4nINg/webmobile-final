@@ -81,8 +81,9 @@ firebase.messaging().onMessage((payload) => {
     };
 
     var notification = new Notification(payload.data.title, options);
-    console.log('Message received. ', payload);
+    console.log("online received.");
 });
+
 
 export default {
 

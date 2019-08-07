@@ -6,6 +6,8 @@
     </div>
     <div class>
       <span @click="changeSelectPage(-1)" id="adminPageBtn">Admin</span>
+      <div id = "SubscribeBtn" @click="subscribeAlarm()"><span>알림받습니다</span></div>
+      <div id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;"><span>알림취소합시다</span></div>
     </div>
     <div class="sideNav">
       <span v-if="checkLoginSession()" @click="goToLogout()" id="sideNavLogout">Logout</span>
@@ -17,6 +19,8 @@
   </div>
 </template>
 <script>
+import firebase from 'firebase';
+
 export default {
   props: ["selectPage"],
   data() {
@@ -45,7 +49,41 @@ export default {
     checkLoginSession() {
       var check = this.$store.getters.isAuthenticated;
       return check;
+    },
+
+    showHideDiv(divId, show) {
+      const div = document.querySelector('#' + divId);
+      if(show) {
+        div.style = 'display: visible';
+      }else {
+        div.style = 'display: none';
+      }
+    },
+
+    // 구독취소버튼활성화
+    subscribeAlarm() {
+      const messaging = firebase.messaging();
+
+      messaging.getToken().then((currentToken) => {
+        messaging.deleteToken(currentToken).then(() => {
+          console.log('Token deleted.');
+
+        })
+      })
+      document.querySelector('#SubscribeBtn').style = 'display:none';
+      document.querySelector('#SubscribeCancel').style = 'display:visible';
+
+    },
+
+    //구독버튼 활성화
+    subscribeAlarmCancel() {
+      document.querySelector('#SubscribeBtn').style = 'display:visible';
+      document.querySelector('#SubscribeCancel').style = 'display:none';
+
     }
+
+
+
   }
 };
 </script>
