@@ -50,7 +50,8 @@ export default {
         FirebaseService.postReview(
           document.querySelector(".titleInput").value,
           document.querySelector(".contentInput").value,
-          "test"
+          this.$store.state.user.username,
+          this.$store.state.user.uid
         );
         this.isSubmit = true;
         this.$emit("isSubmit", this.isSubmit);

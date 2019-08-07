@@ -106,49 +106,39 @@ export default {
                 });
             });
     },
-    // getReview() { //리뷰 상세보기
-    //     const reviewCollection = firestore.collection(REVIEW);
-    //     return reviewCollection
-    //         .orderBy("created_at", "desc")
-    //         .get()
-    //         .then(docSnapshots => {
-    //             return docSnapshots.docs.map(doc => {
-    //                 let data = doc.data();
-    //                 data.id = doc.id;
-    //                 data.created_at = new Date(data.created_at.toDate());
-    //                 return data;
-    //             });
-    //         });
-    // },
-    postReview(title, body, writer) { //리뷰 작성
+    postReview(title, body, writer, writerUid) { //리뷰 작성
         firestore.collection(REVIEW).add({
                 title: title,
+                writerUid : writerUid,
                 writer: writer,
                 body: body,
                 created_at: firebase.firestore.FieldValue.serverTimestamp(),
                 id: "",
-                comment: [],
-                userId: []
+                commentContent: [],
+                commentUsername: [],
+                commentUserUid: []
             })
             .then(() => {}).catch((error) => {
                 alert(error)
             });
     },
-    postReviewComment(reviewId, userList, contentList) { //reviewId - review식별자 //댓글 작성
+    postReviewComment(reviewId, commentUsername, commentContent, commentUserUid) { //reviewId - review식별자 //댓글 작성
         firestore.collection(REVIEW).doc(reviewId).update({
-            userId: userList,
-            comment: contentList
+            commentUsername: commentUsername,
+            commentContent: commentContent,
+            commentUserUid: commentUserUid
         })
     },
-    modifyReviewComment(reviewId, contentList) { //modify review's commentContent
+    modifyReviewComment(reviewId, commentContent) { //modify review's commentContent
         firestore.collection(REVIEW).doc(reviewId).update({
-            comment: contentList
+            commentContent: commentContent
         })
     },
-    deleteReviewComment(reviewId, userList, contentList) {
+    deleteReviewComment(reviewId, commentUsername, commentContent, commentUserUid) {
         firestore.collection(REVIEW).doc(reviewId).update({
-                userId: userList,
-                comment: contentList
+                commentUsername: commentUsername,
+                commentContent: commentContent,
+                commentUserUid: commentUserUid
             })
             // return firestore.collection(REVIEW).doc(reviewId).get().then(DS => {
             //     return DS.data();
@@ -185,65 +175,6 @@ export default {
             firestorage.ref().child('review/' + o.num).delete()
             window.location.reload();
         });
-    },
-    createUserInfo(uid, id, username) { // 회원가입
-        firestore.collection(USERINFO).doc(uid).set({
-                uid: uid,
-                id: id,
-                username: username,
-                login_time: firebase.firestore.FieldValue.serverTimestamp(),
-                logout_time: '',
-                grade: 3
-            })
-            .catch((error) => {
-                alert("회원가입 에러 : " + error)
-            })
-    },
-    mgrUserInfoLog(currentUser) { //사용자 로그 관리
-        var userList = [];
-        firestore.collection(USERINFO)
-            .get()
-            .then((docSnapshots) => {
-                return docSnapshots.docs.map((doc) => {
-                    let data = doc.id
-                    userList.push(data)
-                })
-            })
-            .finally(() => {
-                var check = false;
-                for (var i = 0; i < userList.length; i++) {
-                    if (userList[i] == currentUser.uid) {
-                        check = true;
-                        break;
-                    }
-                }
-                var userLogRef = firestore.collection(USERINFO);
-                if (check) {
-                    userLogRef.doc(currentUser.uid).update({
-                        login_time: firebase.firestore.FieldValue.serverTimestamp()
-                    })
-                } else {
-                    this.createUserInfo(currentUser.uid, currentUser.email, currentUser.displayName);
-                }
-            })
-    },
-    getUserInfoList() { //사용자 정보 리스트(list) get
-        var userList = [];
-        firestore.collection(USERINFO)
-            .get()
-            .then((docSnapshots) => {
-                return docSnapshots.docs.map((doc) => {
-                    let data = doc.data()
-                    if (data.login_time !== "") {
-                        data.login_time = new Date(data.login_time.toDate());
-                    }
-                    if (data.logout_time !== "") {
-                        data.logout_time = new Date(data.logout_time.toDate());
-                    }
-                    userList.push(data)
-                })
-            })
-        return userList;
     },
     deleteReview(reviewId) {
         firestore.collection(REVIEW).doc(reviewId).delete();
@@ -285,16 +216,26 @@ export default {
       .catch(err => {
         console.log("deleteUser Error => " + err);
       })
+    },
+    // review 개수
+    getNumOfReview(){
+      return firestore.collection(REVIEW).get().then((snap)=>{
+        console.log(snap)
+        return snap.size;
+      })
+    },
+    // preview 개수
+    getNumOfPreview(){
+      return firestore.collection(PREVIEW).get().then((snap)=>{
+        console.log(snap)
+        return snap.size;
+      })
+    },
+    // user 개수
+    getNumOfUser(){
+    },
+    getUserList(){
+        const getUserListFunc = functions.httpsCallable('getUserList');
+        console.log(getUserListFunc());
     }
 }
-// getUserInfoByUid(uid){ // uid를 이용한 사용자 정보 get
-//   if(uid == "0" || uid == undefined){
-//       return null;
-//   }else{
-//     return firestore.collection(USERINFO).doc(uid)
-//               .get()
-//               .then((doc) => {
-//               return doc.data()
-//             })
-//   }
-// }

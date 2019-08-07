@@ -1,9 +1,11 @@
 <template>
   <div class="reviewMainDiv">
+    <!-- 글쓰기! -->
     <div class="writeBtnDiv">
-      <span @click="showReviewWrite()">
+      <span @click="showReviewWrite()" v-if="this.$store.state.user !== null">
         <i class="far fa-edit"></i>글쓰기
       </span>
+      <span v-else style="cursor:default !important;">&nbsp;</span>
     </div>
     <span class="leftArrow" v-show="showIdx !== 0" @click="preList()">
       <i class="fas fa-chevron-left"></i>
@@ -43,7 +45,8 @@
             <textarea class="modifyReviewContentInput"></textarea>
           </div>
           <div class="showCommentDiv">
-            <div class="modifyReviewDiv" @click="modifyReview()">
+            <!--  리뷰 수정 -->
+            <div class="modifyReviewDiv" @click="modifyReview()" v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1)">
               <div class="modifyBtninner">
                 <span class="modifyReview">수정</span>
               </div>
@@ -53,7 +56,8 @@
                 <span class="completeModifyReview">수정 완료</span>
               </div>
             </div>
-            <div class="deleteReviewDiv" @click="deleteReview()">
+            <!-- 리뷰 삭제 -->
+            <div class="deleteReviewDiv" @click="deleteReview()"  v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1)">
               <span>삭제</span>
             </div>
             <div class="showCommentBtn" @click="showReviewComment()">
@@ -66,11 +70,12 @@
         <div class="comment">
           <div class="commentContainer">
             <div class="commentInnerDiv">
-              <div v-for="i in reviewCommentUser.length" :key="i" class="vForDiv">
-                <h3>{{reviewCommentUser[i-1]}}</h3>
+              <div v-for="i in reviewCommentUsername.length" :key="i" class="vForDiv">
+                <h3>{{reviewCommentUsername[i-1]}}</h3>
                 <p class="reviewCommentContentP">{{reviewCommentContent[i-1]}}</p>
                 <input type="text" class="modifyCommentInput" />
                 <div class="commentBtnContainerDiv">
+                  <!--  댓글 수정 -->
                   <div class="modifyCommentwDiv" @click="modifyReviewComment(i-1)">
                     <div class="modifyCommentBtninner">
                       <span class="modifyComment">수정</span>
@@ -81,17 +86,22 @@
                       <span class="completeModifyComment">수정 완료</span>
                     </div>
                   </div>
+                  <!--  댓글 삭제 -->
                   <div class="deleteCommentDiv" @click="deleteReviewComment(i-1)">
                     <span>삭제</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="commentWriterDiv">
+
+            <!-- 댓글 작성 -->
+            <div class="commentWriterDiv" v-if="this.$store.state.user !== null">
               <CommentWriter
                 :reviewId="reviewId"
-                :reviewCommentUser="reviewCommentUser"
+                :reviewCommentUsername="reviewCommentUsername"
                 :reviewCommentContent="reviewCommentContent"
+                :reviewCommentUserUid="reviewCommentUserUid"
+                @isSubmit="isSubmit"
               ></CommentWriter>
             </div>
 
@@ -125,11 +135,13 @@ export default {
       reviewList: [],
       displayReviews: [],
       showIdx: 0,
-      reviewId: "",
-      reviewTitle: "",
-      reviewContent: "",
-      reviewCommentContent: [],
-      reviewCommentUser: [],
+      reviewWriterUid: "", //리뷰 작성자 uid
+      reviewId: "", //리뷰 식별자
+      reviewTitle: "", //리뷰 제목
+      reviewContent: "", //리뷰 내용
+      reviewCommentContent: [], //리뷰 댓글 내용
+      reviewCommentUsername: [], //리뷰 댓글 작성자
+      reviewCommentUserUid: [], //리뷰 댓글 작성자 uid
       displayedReview: 0
     };
   },
@@ -146,7 +158,14 @@ export default {
     },
     showList() {
       this.displayReviews = [];
-      for (var i = this.showIdx; i < this.showIdx + 6; ++i) {
+      for (
+        var i = this.showIdx;
+        i <
+        (this.showIdx + 6 > this.reviewList.length
+          ? this.reviewList.length
+          : this.showIdx + 6);
+        ++i
+      ) {
         this.displayReviews.push(this.reviewList[i]);
       }
     },
@@ -173,16 +192,19 @@ export default {
     },
     showReview(i) {
       this.displayedReview = i + this.showIdx;
+      this.reviewWriterUid = this.displayReviews[i].writerUid;
       this.reviewId = this.displayReviews[i].id;
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
-      if (this.displayReviews[i].userid !== null) {
-        if (this.displayReviews[i].userId.length === 0) {
-          this.reviewCommentUser = [];
+      if (this.displayReviews[i].commentUsername !== null) {
+        if (this.displayReviews[i].commentUsername.length === 0) {
+          this.reviewCommentUsername = [];
           this.reviewCommentContent = [];
+          this.reviewCommentUserUid = [];
         } else {
-          this.reviewCommentUser = this.displayReviews[i].userId;
-          this.reviewCommentContent = this.displayReviews[i].comment;
+          this.reviewCommentUsername = this.displayReviews[i].commentUsername;
+          this.reviewCommentContent = this.displayReviews[i].commentContent;
+          this.reviewCommentUserUid = this.displayReviews[i].commentUserUid;
         }
       }
 
@@ -202,22 +224,26 @@ export default {
       document.querySelector(".comment").style.display = "none";
     },
     deleteReviewComment(index) {
-      var tempCommentUserId = [];
+      var tempCommentUsername = [];
       var tempCommentContent = [];
-      for (var i = 0; i < this.reviewCommentUser.length; ++i) {
+      var tempCommentUserUid = [];
+      for (var i = 0; i < this.reviewCommentUsername.length; ++i) {
         if (i !== index) {
-          tempCommentUserId.push(this.reviewCommentUser[i]);
+          tempCommentUsername.push(this.reviewCommentUsername[i]);
           tempCommentContent.push(this.reviewCommentContent[i]);
+          tempCommentUserUid.push(this.reviewCommentUserUid[i]);
         }
       }
       var tempReview = FirebaseService.deleteReviewComment(
         this.reviewId,
-        tempCommentUserId,
-        tempCommentContent
+        tempCommentUsername,
+        tempCommentContent,
+        tempCommentUserUid
       );
       this.getReviewList();
       this.reviewCommentContent = tempCommentContent;
-      this.reviewCommentUser = tempCommentUserId;
+      this.reviewCommentUsername = tempCommentUsername;
+      this.reviewCommentUserUid = tempCommentUserUid;
     },
     showReviewWrite() {
       document.querySelector(".reviewWriteModal").style.display = "block";
@@ -640,4 +666,3 @@ export default {
   justify-content: flex-end;
 }
 </style>
- 

@@ -79,3 +79,12 @@ const messaging = admin.messaging();
         return err;
       })
     })
+
+    // exports.getNumOfUser =  functions.https.onCall(() => {
+    //   return admin.auth().listUsers().then((listUsersResult) => {
+    //     return listUsersResult;
+    //   })
+    //   .catch(err => {
+    //     return err;
+    //   })
+    // })
