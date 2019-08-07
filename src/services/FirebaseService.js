@@ -101,8 +101,6 @@ export default {
                 return docSnapshots.docs.map(doc => {
                     let data = doc.data();
                     data.id = doc.id;
-                    // data.created_at = new Date(data.created_at.toDate());
-                    // console.log(data);
                     return data;
                 });
             });
@@ -141,8 +139,8 @@ export default {
             //     return DS.data();
             // });
     },
-    getPreview() { //시사회정보 상세보기
-        const reviewCollection = firestore.collection(REVIEW);
+    getPreviewList() { //시사회정보 상세보기
+        const reviewCollection = firestore.collection(PREVIEW);
         return reviewCollection
             .orderBy("created_at", "desc")
             .get()
@@ -150,20 +148,21 @@ export default {
                 return docSnapshots.docs.map(doc => {
                     let data = doc.data();
                     data.id = doc.id;
-                    data.created_at = new Date(data.created_at.toDate());
                     return data;
                 });
             });
     },
-    postPreview(title, body, writer, imgUrl, imgName) { //시사회정보 작성
+    postPreview(title, uid, writer, body, imgUrl, imgName) { //시사회정보 작성
         firestore.collection(PREVIEW).add({
             title: title,
+            writerUid: uid,
             writer: writer,
             body: body,
             imgUrl: imgUrl,
             imgName: imgName,
-            comment: [],
-            userList: [],
+            commentContent: [],
+            commentUserName: [],
+            commentUserUid: [],
             created_at: firebase.firestore.FieldValue.serverTimestamp()
         });
     },

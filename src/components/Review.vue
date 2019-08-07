@@ -19,9 +19,9 @@
         </div>
         <div class="reviewContentDiv">
           <div>
-            <h2>{{displayReviews[i-1].title}}</h2>
-            <h3>{{displayReviews[i-1].body}}</h3>
-            <span>{{displayReviews[i-1].writer}}</span>
+            <h2 class="ellipsisReviewTitle">{{displayReviews[i-1].title}}</h2>
+            <h3 class="ellipsisReviewContent">{{displayReviews[i-1].body}}</h3>
+            <span class="ellipsisReviewWriter">{{displayReviews[i-1].writer}}</span>
           </div>
         </div>
       </div>
@@ -224,7 +224,7 @@ export default {
     },
     modifyReviewComment(index) {
       var beforeModifyComment = this.reviewCommentContent[index];
-      var modifyCommentwDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
+      var modifyCommentDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
       var deleteCommentDiv = document.querySelectorAll(".deleteCommentDiv"); // 삭제버튼
       var completeModifyCommentDiv = document.querySelectorAll(
         ".completeModifyCommentDiv"
@@ -239,7 +239,7 @@ export default {
         if (i === index) {
           reviewCommentContentP[i].style.display = "none"; // 원래 내용 없앰
           modifyCommentInput[i].style.display = "block"; // 수정창 보임
-          modifyCommentwDiv[i].style.display = "none"; // 수정버튼 없앰
+          modifyCommentDiv[i].style.display = "none"; // 수정버튼 없앰
           deleteCommentDiv[i].style.display = "none"; // 삭제버튼 없앰
           completeModifyCommentDiv[i].style.display = "block"; //수정완료버튼 보임
           modifyCommentInput[i].value = beforeModifyComment;
@@ -431,7 +431,12 @@ export default {
 }
 
 .reviewContentDiv div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: space-between;
   width: 80%;
+  height: 80%;
   overflow: hidden;
   margin-left: 10%;
   margin-right: 10%;
@@ -471,9 +476,10 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #fefefe;
-  margin: 10% auto;
-  height: 65%;
-  width: 45%;
+  height: 80%;
+  width: 60%;
+  margin-left: 20%;
+  margin-top: 5%;
   position: relative;
   border: 1px solid black;
 }
@@ -502,6 +508,10 @@ export default {
   font-weight: 600;
 }
 
+.reviewModalContainer {
+  overflow: auto;
+}
+
 .reviewModalContent {
   width: 100%;
   height: 70%;
@@ -518,6 +528,7 @@ export default {
 .showCommentDiv {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5%;
 }
 
 .showCommentDiv > div:hover {
@@ -638,6 +649,26 @@ export default {
   margin-top: 2%;
   display: flex;
   justify-content: flex-end;
+}
+
+.ellipsisReviewContent {
+  height: 40%;
+}
+
+.ellipsisReviewTitle,
+.ellipsisReviewContent,
+.ellipsisReviewWriter {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsisReviewWriter {
+  text-align: right;
+}
+
+.ellipsisReviewTitle {
+  margin-bottom: 5%;
 }
 </style>
  
