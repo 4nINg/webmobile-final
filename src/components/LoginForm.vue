@@ -38,31 +38,32 @@ export default {
   },
   methods: {
     userSignIn() {
-      this.$store
-        .dispatch("userSignIn", {
-          email: this.email,
-          password: this.password
-        })
-        .finally(() => {
-          this.changeSelectPage(0);
-          // if(!this.$store.getters.isAdmin){
-          //   document.querySelector("#adminPageBtn").style.display = "none";
-          // }else{
-          //   document.querySelector("#adminPageBtn").style.display = "block";
-          // }
-        });
+      this.$store.dispatch("userSignIn", {
+        email: this.email,
+        password: this.password
+      });
+      // .finally(() => {
+      //   this.changeSelectPage(0);
+      //   // if(!this.$store.getters.isAdmin){
+      //   //   document.querySelector("#adminPageBtn").style.display = "none";
+      //   // }else{
+      //   //   document.querySelector("#adminPageBtn").style.display = "block";
+      //   // }
+      // });
     },
     //google login
     loginWithGoogle() {
-      this.$store.dispatch("userSignInWithGoogle", {}).finally(() => {
-        this.changeSelectPage(0);
-      });
+      this.$store.dispatch("userSignInWithGoogle", {});
+      // .finally(() => {
+      //   this.changeSelectPage(0);
+      // });
     },
     //facebook login
     loginWithFacebook() {
-      this.$store.dispatch("userSignInWithFacebook", {}).finally(() => {
-        this.changeSelectPage(0);
-      });
+      this.$store.dispatch("userSignInWithFacebook", {});
+      // .finally(() => {
+      //   this.changeSelectPage(0);
+      // });
     },
     signUp() {
       this.changeSelectPage(5);
@@ -103,7 +104,6 @@ export default {
 }
 .loginbox {
   width: 30%;
-  height: 70%;
   margin-bottom: 3%;
   background-color: rgb(255, 255, 255, 0.8);
   margin-left: 30%;
@@ -114,7 +114,7 @@ export default {
   position: relative;
 }
 .avatar {
-  font-size: 5em;
+  font-size: 6vmax;
   color: rgb(0, 0, 0, 0.5);
   border-radius: 30%;
   margin-top: -6%;
@@ -156,7 +156,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 4%;
+  margin-bottom: 10%;
 }
 
 .loginFormButton span {
