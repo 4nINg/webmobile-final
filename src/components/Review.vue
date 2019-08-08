@@ -46,7 +46,11 @@
           </div>
           <div class="showCommentDiv">
             <!--  리뷰 수정 -->
-            <div class="modifyReviewDiv" @click="modifyReview()" v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1)">
+            <div
+              class="modifyReviewDiv"
+              @click="modifyReview()"
+              v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1)"
+            >
               <div class="modifyBtninner">
                 <span class="modifyReview">수정</span>
               </div>
@@ -57,7 +61,11 @@
               </div>
             </div>
             <!-- 리뷰 삭제 -->
-            <div class="deleteReviewDiv" @click="deleteReview()"  v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1)">
+            <div
+              class="deleteReviewDiv"
+              @click="deleteReview()"
+              v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1)"
+            >
               <span>삭제</span>
             </div>
             <div class="showCommentBtn" @click="showReviewComment()">
@@ -128,7 +136,7 @@ import ReviewWriter from "@/components/ReviewWriter";
 export default {
   components: {
     CommentWriter,
-    ReviewWriter,
+    ReviewWriter
   },
   data() {
     return {
@@ -196,17 +204,17 @@ export default {
       this.reviewId = this.displayReviews[i].id;
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
-      if (this.displayReviews[i].commentUsername !== null) {
-        if (this.displayReviews[i].commentUsername.length === 0) {
-          this.reviewCommentUsername = [];
-          this.reviewCommentContent = [];
-          this.reviewCommentUserUid = [];
-        } else {
-          this.reviewCommentUsername = this.displayReviews[i].commentUsername;
-          this.reviewCommentContent = this.displayReviews[i].commentContent;
-          this.reviewCommentUserUid = this.displayReviews[i].commentUserUid;
-        }
+      // if (this.displayReviews[i].commentUsername !== null) {
+      if (this.displayReviews[i].commentUsername.length === 0) {
+        this.reviewCommentUsername = [];
+        this.reviewCommentContent = [];
+        this.reviewCommentUserUid = [];
+      } else {
+        this.reviewCommentUsername = this.displayReviews[i].commentUsername;
+        this.reviewCommentContent = this.displayReviews[i].commentContent;
+        this.reviewCommentUserUid = this.displayReviews[i].commentUserUid;
       }
+      // }
 
       document.querySelector(".comment").style.display = "none";
       document.querySelector(".inModalreview").style.display = "block";

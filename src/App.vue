@@ -61,14 +61,15 @@ export default {
   },
   mounted() {
     if (navigator.serviceWorker) {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js')
-      .then(function(reg) {
-        console.log('Registration successful, scope is:', reg);
-      }).catch(function(err) {
-        console.log('Service worker registration failed, error:', err);
-      });
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then(function(reg) {
+          console.log("Registration successful, scope is:", reg);
+        })
+        .catch(function(err) {
+          console.log("Service worker registration failed, error:", err);
+        });
     }
-
   },
   watch: {
     selectPage: function() {
@@ -110,5 +111,6 @@ body * {
   background-image: url("./assets/film.jpg");
   background-size: cover;
   background-position: center center;
+  opacity: 0.9;
 }
 </style>
