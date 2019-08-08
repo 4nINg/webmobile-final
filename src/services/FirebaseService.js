@@ -109,7 +109,7 @@ export default {
     postReview(title, body, writer, writerUid) { //리뷰 작성
         firestore.collection(REVIEW).add({
                 title: title,
-                writerUid : writerUid,
+                writerUid: writerUid,
                 writer: writer,
                 body: body,
                 created_at: firebase.firestore.FieldValue.serverTimestamp(),
@@ -166,7 +166,7 @@ export default {
             imgUrl: imgUrl,
             imgName: imgName,
             commentContent: [],
-            commentUserName: [],
+            commentUsername: [],
             commentUserUid: [],
             created_at: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -185,6 +185,36 @@ export default {
             title: mtitle,
             body: mbody
         });
+    },
+    deletePreview(previewId) {
+        firestore.collection(PREVIEW).doc(previewId).delete();
+    },
+    modifyPreview(previewId, title, body, imgUrl, imgName) {
+        if (imgUrl === "") {
+            firestore.collection(PREVIEW).doc(previewId).update({
+                title: title,
+                body: body
+            });
+        } else {
+
+            firestore.collection(PREVIEW).doc(previewId).update({
+                title: title,
+                body: body,
+                imgUrl: imgUrl,
+                imgName: imgName,
+            });
+        }
+    },
+    postPreviewComment(previewId,
+        previewCommentUserName,
+        previewCommentContent,
+        previewCommentUserUid) {
+        firestore.collection(PREVIEW).doc(previewId).update({
+            commentUserName: previewCommentUserName,
+            commentContent: previewCommentContent,
+            commentUserUid: previewCommentUserUid
+        })
+
     },
     //사용자 정보 불러오기
     getUser(uid) {
@@ -209,33 +239,32 @@ export default {
             })
     },
     //사용자 삭제
-    async deleteUser(uid){
-      const deleteUserFunc = functions.httpsCallable('deleteUser');
-      await deleteUserFunc(uid).then(()=>{
-        alert("삭제완료!")
-      })
-      .catch(err => {
-        console.log("deleteUser Error => " + err);
-      })
+    async deleteUser(uid) {
+        const deleteUserFunc = functions.httpsCallable('deleteUser');
+        await deleteUserFunc(uid).then(() => {
+                alert("삭제완료!")
+            })
+            .catch(err => {
+                console.log("deleteUser Error => " + err);
+            })
     },
     // review 개수
-    getNumOfReview(){
-      return firestore.collection(REVIEW).get().then((snap)=>{
-        console.log(snap)
-        return snap.size;
-      })
+    getNumOfReview() {
+        return firestore.collection(REVIEW).get().then((snap) => {
+            console.log(snap)
+            return snap.size;
+        })
     },
     // preview 개수
-    getNumOfPreview(){
-      return firestore.collection(PREVIEW).get().then((snap)=>{
-        console.log(snap)
-        return snap.size;
-      })
+    getNumOfPreview() {
+        return firestore.collection(PREVIEW).get().then((snap) => {
+            console.log(snap)
+            return snap.size;
+        })
     },
     // user 개수
-    getNumOfUser(){
-    },
-    getUserList(){
+    getNumOfUser() {},
+    getUserList() {
         const getUserListFunc = functions.httpsCallable('getUserList');
         console.log(getUserListFunc());
     }

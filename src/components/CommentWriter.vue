@@ -2,17 +2,20 @@
   <div class="commentWirteMainDiv">
     <input class="commentInputText" type="text" placeholder="댓글을 입력해주세요." v-model="commentBody" />
     <span @click="trans()" class="commentSubmitBtn">submit</span>
-    
   </div>
 </template>
 
 <script>
 import FirebaseService from "../services/FirebaseService";
 
-
 export default {
   name: "CommentWriter",
-  props: ["reviewId", "reviewCommentUsername", "reviewCommentContent", "reviewCommentUserUid"],
+  props: [
+    "reviewId",
+    "reviewCommentUsername",
+    "reviewCommentContent",
+    "reviewCommentUserUid"
+  ],
   components: {},
   data() {
     return {
