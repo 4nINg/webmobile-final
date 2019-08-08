@@ -5,9 +5,17 @@
       <span class="mainLogo">빠영빠영.</span>
     </div>
     <div class>
-      <span @click="changeSelectPage(-1)" id="adminPageBtn"><i class="fas fa-user-crown"></i></span>
-      <div id = "SubscribeBtn" @click="subscribeAlarm()"><span>알림받습니다</span></div>
-      <div id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;"><span>알림취소합시다</span></div>
+      <span @click="changeSelectPage(-1)" id="adminPageBtn">Admin</span>
+      <div id = "SubscribeBtn" @click="subscribeAlarm()" style = "display: none;">
+        <span style = "color:black; font-size:2em; margin:1.5em; ">
+          <i class="fas fa-bell-slash"></i>
+        </span>
+      </div>
+      <div id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
+        <span style = "color:black; font-size:2em; margin:1.5em;">
+          <i class="fas fa-bell"></i>
+        </span>
+      </div>
     </div>
     <div class="sideNav">
       <span v-if="checkLoginSession()" @click="goToLogout()" id="sideNavLogout">Logout</span>
@@ -28,7 +36,9 @@ export default {
       isLogin: false
     };
   },
-  mounted() {},
+  mounted() {
+
+  },
   components: {},
   methods: {
     goToLogin() {
@@ -60,30 +70,72 @@ export default {
       }
     },
 
-    // 구독취소버튼활성화
+    //구독버튼
     subscribeAlarm() {
       const messaging = firebase.messaging();
+      const firestore = firebase.firestore();
+      var flag = confirm("새글 알림을 받으시겠습니까?");
 
-      messaging.getToken().then((currentToken) => {
-        messaging.deleteToken(currentToken).then(() => {
-          console.log('Token deleted.');
-
+      if(flag){
+        messaging.getToken().then((currentToken) => {
+          firestore.collection('registeredToken').get().then((snapshot) => {
+            snapshot.forEach(function(doc) {
+              const temp = doc.data().uid;
+              if(temp === firebase.auth().currentUser.uid) {
+                firestore.collection('registeredToken').doc(temp).update({
+                  alarmPermission: true,
+                  token : currentToken
+                });
+              }
+              //console.log(currentToken);
+            })
+          })
         })
-      })
-      document.querySelector('#SubscribeBtn').style = 'display:none';
-      document.querySelector('#SubscribeCancel').style = 'display:visible';
+        .catch(function(err) {
+          throw err;
+        })
 
+        document.querySelector('#SubscribeBtn').style = 'display:none';
+        document.querySelector('#SubscribeCancel').style = 'display:visible';
+      }
     },
 
-    //구독버튼 활성화
+    //구독취소 버튼
     subscribeAlarmCancel() {
-      document.querySelector('#SubscribeBtn').style = 'display:visible';
-      document.querySelector('#SubscribeCancel').style = 'display:none';
-
+      const messaging = firebase.messaging();
+      const firestore = firebase.firestore();
+      var flag = confirm("새글 알림을 취소하겠습니까?");
+      if(flag) {
+      //토큰 값을 가져와서
+        messaging.getToken().then((currentToken) => {
+          //해당 토큰을 삭제할껀데
+          messaging.deleteToken(currentToken).then(() => {
+            //console.log('Token deleted.');
+            //현재 로그인 유저의 정보를 찾아서
+            firestore.collection('registeredToken').get().then((snapshot) => {
+              snapshot.forEach(function(docs) {
+                if(docs.data().uid === firebase.auth().currentUser.uid) {
+                  // 구독취소와 토큰을 삭제한다
+                  firestore.collection('registeredToken').doc(docs.data().uid).set({
+                    alarmPermission: false,
+                    token : null
+                  }, {merge:true})
+                }
+              })
+            })
+          })
+          .catch(function(err) {
+            throw err;
+          })
+        })
+        .catch(function(err) {
+          throw err;
+        })
+        //구독취소 DB관련 일을 끝내고, 구독하기 버튼 활성화
+        document.querySelector('#SubscribeBtn').style = 'display:visible';
+        document.querySelector('#SubscribeCancel').style = 'display:none';
+      }
     }
-
-
-
   }
 };
 </script>
@@ -164,4 +216,5 @@ a:link {
 #adminPageBtn {
   display: none;
 }
+
 </style>

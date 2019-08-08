@@ -16,6 +16,7 @@ Vue.config.productionTip = false
 Vue.config.devtools = true
 Vue.prototype.$http = require('axios');
 
+
 new Vue({
     router,
     store,
@@ -24,6 +25,24 @@ new Vue({
         firebase.auth().onAuthStateChanged((firebaseUser) => {
             // FirebaseService.getUserList();
             if (firebaseUser) {
+                //유저가 로그인 하게 되면
+                firebase.firestore().collection("registeredToken").get().then((snapshot) => {
+                  snapshot.forEach((docs)=> {
+                    if(docs.data().uid === firebaseUser.uid) {
+                      //로그인한 유저가 이전에 알람을 허용했는지 안했는지 확인해서 알맞은 버튼 활성화.
+                      if(docs.data().alarmPermission) {
+                        //console.log("alarmok");
+                        document.querySelector('#SubscribeBtn').style = 'display:none';
+                        document.querySelector('#SubscribeCancel').style = 'display:visible';
+                      }else {
+                        //console.log("alarmno")
+                        document.querySelector('#SubscribeBtn').style = 'display:visible';
+                        document.querySelector('#SubscribeCancel').style = 'display:none';
+                      }
+                    }
+                  })
+                });
+
                 var user;
                 firebaseUser.getIdTokenResult().then(idTokenResult => {
                     user = {
@@ -43,6 +62,9 @@ new Vue({
             } else {
                 console.log("비로그인 상태")
                 document.querySelector("#adminPageBtn").style.display = "none";
+                //로그아웃을 하면 구독,취소 버튼 비활성화.
+                document.querySelector('#SubscribeCancel').style = 'display:none';
+                document.querySelector('#SubscribeBtn').style = 'display:none';
             }
         })
     }

@@ -51,9 +51,9 @@ export default {
   },
   methods: {
     closePreview() {
-      document.querySelector(".previewTitleInput").value = "";
+      // document.querySelector(".previewTitleInput").value = "";
       this.writeTitle = "";
-      document.querySelector(".previewTitleContent").value = "";
+      // document.querySelector(".previewTitleContent").value = "";
       this.writeBody = "";
       document.querySelector(".inImgUploaderInput").value = "";
       var inImgUploaderFile = document.querySelector(".inImgUploaderFile");
@@ -115,6 +115,13 @@ export default {
         );
         document.querySelector(".previewWriteModal").style.display = "none";
         this.$emit("isSubmit", this.isSubmit);
+        this.writeTitle = "";
+        this.writeBody = "";
+        document.querySelector(".inImgUploaderInput").value = "";
+        var inImgUploaderFile = document.querySelector(".inImgUploaderFile");
+        if (inImgUploaderFile !== null) {
+          inImgUploaderFile.value = "";
+        }
       }
     }
   }

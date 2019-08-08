@@ -9,7 +9,14 @@
         <p>Email</p>
         <input type="text" placeholder="Email" id="signUpID" v-model="email" required />
         <p>Username</p>
-        <input type="text" placeholder="Username" id="signUpUsername" v-model="username" maxlength="10" required />
+        <input
+          type="text"
+          placeholder="Username"
+          id="signUpUsername"
+          v-model="username"
+          maxlength="10"
+          required
+        />
         <p>Password</p>
         <input type="password" placeholder="Password" id="signUpPW" v-model="password" required />
         <p>Password Confirm</p>
@@ -59,30 +66,29 @@ export default {
   methods: {
     //회원가입
     userSignUp() {
-      if(this.email == ""){
-        alert("email을 입력하세요.")
+      if (this.email == "") {
+        alert("email을 입력하세요.");
       }
-      if(this.username == ""){
-        alert("username을 입력하세요.")
+      if (this.username == "") {
+        alert("username을 입력하세요.");
         return;
-      }else if(this.username.length >= 11){
-        alert("username은 10자 이내로 가능합니다.")
+      } else if (this.username.length >= 11) {
+        alert("username은 10자 이내로 가능합니다.");
         return;
       }
       if (this.comparePasswords !== true) {
-        alert("비밀번호를 다시 확인하세요.")
+        alert("비밀번호를 다시 확인하세요.");
         return;
       }
 
-      this.$store
-        .dispatch("userSignUp", {
-          email: this.email,
-          username: this.username,
-          password: this.password
-        })
-        .finally(() => {
-          this.changeSelectPage(0);
-        });
+      this.$store.dispatch("userSignUp", {
+        email: this.email,
+        username: this.username,
+        password: this.password
+      });
+      // .finally(() => {
+      //   this.changeSelectPage(0);
+      // });
     },
     userSignUpCancle() {
       //회원가입 취소
@@ -122,8 +128,6 @@ export default {
 }
 .signupbox {
   width: 30%;
-  height: 60%;
-  /* margin-bottom: 3%; */
   background-color: rgb(255, 255, 255, 0.8);
   margin-left: 30%;
   box-sizing: border-box;
@@ -138,6 +142,8 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  font-size: 0.8em;
+  margin-bottom: 4%;
 }
 
 .signupFormInputArray p {
@@ -159,13 +165,15 @@ export default {
   font-size: 22px;
   margin-top: 5%;
   margin-bottom: 2%;
+  font-size: 4vmin;
 }
 .signupFormButton {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 4%;
+  margin-bottom: 6%;
+  font-size: 0.8em;
 }
 
 .signupFormButton span {
@@ -174,8 +182,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* margin-top: 0.8em; */
-  margin-bottom:auto;
+  margin-bottom: auto;
   width: 80%;
   border: none;
   outline: none;
