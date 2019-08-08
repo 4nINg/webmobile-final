@@ -33,6 +33,7 @@
           <div class="inModalPreviewNotBtn">
             <div class="inModalPreviewImgPart">
               <img :src="previewImg" />
+              <ImgUploader v-if="isModify" ref="uploader" class="imgUploader"></ImgUploader>
             </div>
             <div class="inModalPreviewContentPart">
               <div class="previewModalTitle">
@@ -51,19 +52,62 @@
                 <span>수정</span>
               </div>
             </div>
-            <div class="completeModifyPreviewDiv">
+            <div class="completeModifyPreviewDiv" @click="completeModifyPreview()">
               <div class="modifyCompletePreviewInner">
                 <span>수정 완료</span>
               </div>
             </div>
-            <div class="deletePreviewDiv">
+            <div class="deletePreviewDiv" @click="deletePreview()">
               <span>삭제</span>
             </div>
-            <div class="showPreviewCommentBtn">
+            <div class="showPreviewCommentBtn" @click="showPreviewComment()">
               <span>
                 <i class="far fa-comments"></i>댓글 보기
               </span>
             </div>
+          </div>
+        </div>
+
+        <div class="previewComment">
+          <div class="previewCommentContainer">
+            <div class="previewCommentInnerDiv">
+              <div
+                class="previewCommentVForDiv"
+                v-for="i in previewCommentUserName.length"
+                :key="i"
+              >
+                <span>{{previewCommentUserName[i-1]}}</span>
+                <span>{{previewCommentContent[i-1]}}</span>
+                <input type="text" class="modifyCommentInput" />
+                <div class="previewCommentBtnContainer">
+                  <div class="modifyPreviewCommentDiv">
+                    <div class="modifyPreviewCommentInner">
+                      <span>수정</span>
+                    </div>
+                  </div>
+                  <div class="completeModifyPreviewCommentDiv">
+                    <div class="completeModifyPreviewCommentInner">
+                      <span>수정 완료</span>
+                    </div>
+                  </div>
+                  <div class="deletePreviewCommentDiv">
+                    <span>삭제</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="previewCommentWriteDiv">
+              <PreviewCommentWriter
+                :previewId="previewId"
+                :previewCommentUserName="previewCommentUserName"
+                :previewCommentContent="previewCommentContent"
+                :previewCommentUserUid="previewCommentUserUid"
+                @isSubmit="isSubmit"
+              ></PreviewCommentWriter>
+            </div>
+            <span class="showinModalPreview" @click="backToThePreviewContent()">
+              <i class="fas fa-undo"></i>글 보기
+            </span>
           </div>
         </div>
       </div>
@@ -79,7 +123,8 @@
 <script>
 import PreviewWriter from "@/components/PreviewWriter";
 import FirebaseService from "../services/FirebaseService";
-import { setInterval } from "timers";
+import ImgUploader from "../components/ImgUploader";
+import PreviewCommentWriter from "../components/PreviewCommentWriter";
 
 export default {
   data() {
@@ -94,7 +139,8 @@ export default {
       previewCommentContent: [],
       previewCommentUserName: [],
       previewCommentUserUid: [],
-      displayedPreview: 0
+      displayedPreview: 0,
+      isModify: false
     };
   },
   methods: {
@@ -135,6 +181,7 @@ export default {
       this.previewImg = this.displayPreview[i].imgUrl;
       this.previewTitle = this.displayPreview[i].title;
       this.previewContent = this.displayPreview[i].body;
+
       if (this.displayPreview[i].commentUserUid.length === 0) {
         this.previewCommentUserName = [];
         this.previewCommentContent = [];
@@ -145,25 +192,102 @@ export default {
         this.previewCommentUserUid = this.displayPreview[i].commentUserUid;
       }
 
-      // document.querySelector(".previewComment").style.display = "none";
+      document.querySelector(".previewComment").style.display = "none";
       document.querySelector(".inModalPreview").style.display = "block";
       document.querySelector(".previewModal").style.display = "block";
     },
     closePreviewModal() {
+      document.querySelector(".modifyPreviewTitleInput").style.display = "none";
+      document.querySelector(".preveiwTitle").style.display = "block";
+      document.querySelector(".modifyPreviewContentInput").style.display =
+        "none";
+      document.querySelector(".previewContent").style.display = "block";
+      document.querySelector(".modifyPreviewDiv").style.display = "block";
+      document.querySelector(".completeModifyPreviewDiv").style.display =
+        "none";
+      this.isModify = false;
       document.querySelector(".previewModal").style.display = "none";
     },
     modifyPreview() {
       var beforeModifyTitle = document.querySelector(".preveiwTitle").innerText;
       var beforeModifyContent = document.querySelector(".previewContent")
         .innerText;
+      this.isModify = true;
       document.querySelector(".preveiwTitle").style.display = "none";
+      document.querySelector(".modifyPreviewTitleInput").style.display =
+        "block";
+      document.querySelector(
+        ".modifyPreviewTitleInput"
+      ).value = beforeModifyTitle;
+      document.querySelector(".previewContent").style.display = "none";
+      document.querySelector(".modifyPreviewContentInput").style.display =
+        "block";
+      document.querySelector(
+        ".modifyPreviewContentInput"
+      ).value = beforeModifyContent;
+
+      document.querySelector(".modifyPreviewDiv").style.display = "none";
+      document.querySelector(".completeModifyPreviewDiv").style.display =
+        "block";
+    },
+    completeModifyPreview() {
+      for (var i = 0; i < this.previewList.length; ++i) {
+        if (this.previewList[i].id === this.previewId) {
+          this.previewList[i].title = document.querySelector(
+            ".modifyPreviewTitleInput"
+          ).value;
+          this.previewList[i].body = document.querySelector(
+            ".modifyPreviewContentInput"
+          ).value;
+          this.previewTitle = this.previewList[i].title;
+          this.previewContent = this.previewList[i].body;
+          break;
+        }
+      }
+      document.querySelector(".modifyPreviewTitleInput").style.display = "none";
+      document.querySelector(".preveiwTitle").style.display = "block";
+      document.querySelector(".modifyPreviewContentInput").style.display =
+        "none";
+      document.querySelector(".previewContent").style.display = "block";
+      document.querySelector(".modifyPreviewDiv").style.display = "block";
+      document.querySelector(".completeModifyPreviewDiv").style.display =
+        "none";
+
+      var imgUrl = this.$refs.uploader.imageUrl;
+      if (imgUrl === "" || imgUrl === null) {
+        FirebaseService.modifyPreview(
+          this.previewId,
+          this.previewTitle,
+          this.previewContent,
+          "",
+          ""
+        );
+      } else {
+        this.previewImg = imgUrl;
+        FirebaseService.modifyPreview(
+          this.previewId,
+          this.previewTitle,
+          this.previewContent,
+          this.$refs.uploader.imageUrl,
+          this.$refs.uploader.imageName
+        );
+      }
+      this.isModify = false;
+      this.getPreviewList();
+    },
+    deletePreview() {
+      FirebaseService.deletePreview(this.previewId);
+      this.getPreviewList();
+      // document.querySelector(".previewComment").style.display = "none";
+      document.querySelector(".inModalPreview").style.display = "none";
+      document.querySelector(".previewModal").style.display = "none";
     },
     showPreviewComment() {
-      document.querySelector(".inModalpreview").style.display = "none";
+      document.querySelector(".inModalPreview").style.display = "none";
       document.querySelector(".previewComment").style.display = "block";
     },
     backToThePreviewContent() {
-      document.querySelector(".inModalpreview").style.display = "block";
+      document.querySelector(".inModalPreview").style.display = "block";
       document.querySelector(".previewComment").style.display = "none";
     },
     deletePreviewComment(index) {
@@ -222,10 +346,13 @@ export default {
     completeModifyPreviewComment(index) {}
   },
   components: {
-    PreviewWriter
+    PreviewWriter,
+    ImgUploader,
+    PreviewCommentWriter
   },
   mounted() {
     this.getPreviewList();
+    this.isModify = false;
   }
 };
 </script>
@@ -367,14 +494,17 @@ export default {
 .inModalPreviewImgPart {
   width: 40%;
   height: 100%;
-  border: 1px solid rgb(0, 0, 0, 0.4);
+  /* border: 1px solid rgb(0, 0, 0, 0.4); */
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .inModalPreviewImgPart img {
+  border: 1px solid rgb(0, 0, 0, 0.4);
   width: 100%;
-  height: 100%;
+  height: 95%;
 }
 
 .inModalPreviewContentPart {
@@ -461,5 +591,39 @@ export default {
 
 .completeModifyPreviewDiv {
   display: none;
+}
+
+.previewComment {
+  display: none;
+  width: 90%;
+  height: 75%;
+}
+
+.previewCommentContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.previewCommentInnerDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 80%;
+  overflow: auto;
+}
+
+.previewCommentVForDiv {
+  margin-top: 1%;
+  padding-bottom: 3%;
+  border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.showinModalPreview {
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 </style>

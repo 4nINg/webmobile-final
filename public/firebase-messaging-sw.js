@@ -6,7 +6,7 @@ firebase.initializeApp({
 });
 
 self.addEventListener('install', function(event){
-    console.log('SW 설치 완료', event);
+    // console.log('SW 설치 완료', event);
 });
 
 // 오프라인일때 메세지를 받고 처리 방식
