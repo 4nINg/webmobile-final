@@ -40,13 +40,15 @@ export default new Vuex.Store({
         commit('setLoading', true)
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(firebaseUser => {
-          commit('setUser', { email: payload.email, username: payload.username, grade: 3, uid: firebaseUser.uid });
-          commit('setLoading', false);
-          commit('setError', null);
-
           firebase.auth().currentUser.updateProfile({
             displayName: payload.username
           }).then(function(){
+            commit('setUser', { email: firebaseUser.user.email,
+                                username: firebaseUser.user.displayName,
+                                grade: 3,
+                                uid: firebaseUser.user.uid });
+            commit('setLoading', false);
+            commit('setError', null);
             FirebaseService.setUserGrade(firebaseUser.uid, 3);
             alert("반갑습니다.\n" + payload.username + "님 회원가입되었습니다.");
             // 회원 목록에 저장.

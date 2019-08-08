@@ -1,5 +1,5 @@
 <template>
-  <UserInfoTable id="userInfoTable"></UserInfoTable>
+  <UserInfoTable></UserInfoTable>
   <!-- <SiteInfoTable></SiteInfoTable> -->
 </template>
 <script>
@@ -19,9 +19,5 @@ export default{
 }
 </script>
 <style>
-#userInfoTable{
-  position: relative;
-  top:10%;
-  left:15%;
-}
+
 </style>
