@@ -49,6 +49,19 @@ export default new Vuex.Store({
           }).then(function(){
             FirebaseService.setUserGrade(firebaseUser.uid, 3);
             alert("반갑습니다.\n" + payload.username + "님 회원가입되었습니다.");
+            // 회원 목록에 저장.
+            firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
+              uid : firebase.auth().currentUser.uid,
+              email : firebase.auth().currentUser.email,
+              token : null,
+              alarmPermission : false
+            });
+            // 현재 로그인된 사용자에 등록.
+            firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+              uToken : null,
+              uid : firebase.auth().currentUser.uid,
+              email : firebase.auth().currentUser.email
+            });
           })
         })
         .catch((err) => {
@@ -66,29 +79,29 @@ export default new Vuex.Store({
     },
     // 로그아웃
     userSignOut({ commit }) {
-        const messaging = firebase.messaging();
         var currentUser = firebase.auth().currentUser;
+
         commit('setLoading', true);
         firebase.auth().signOut().then(() => {
             commit('setUser', null);
             commit('setLoading', false);
             alert("로그아웃 완료!");
-            return messaging.getToken();
-        })
-        .then(function(token) {
-          //실시간 데이터 베이스, 현재 토큰값과 비교후 삭제.
-          firebase.database()
-          .ref('connectedUsers/')
-          .once('value', function(snapshot) {
-            snapshot.forEach(function(data) {
-              if(data.val().uToken === token){
-                firebase.database().ref('connectedUsers/' + currentUser.email.split("@")[0]).remove();
-              }
-            })
 
+        })
+
+        //접속 유저 DB에서 삭제
+        firebase.database()
+        .ref('connectedUsers/')
+        .once('value', function(snapshot) {
+          snapshot.forEach((data) =>{
+            if(data.val().uid === currentUser.uid){
+              firebase.database().ref('connectedUsers/' + currentUser.email.split("@")[0]).remove();
+            }
           })
         })
-
+        .catch((err) => {
+          throw err;
+        })
     },
     // 일반 로그인
     userSignIn({ commit }, payload) {
@@ -105,16 +118,13 @@ export default new Vuex.Store({
                     });
                     commit('setLoading', false);
                     alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
+                    // 현재 로그인된 사용자에 등록.
+                    firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+                      uToken : null,
+                      uid : firebase.auth().currentUser.uid,
+                      email : firebase.auth().currentUser.email
+                    });
                 })
-
-                const messaging = firebase.messaging();
-                return messaging.getToken();
-            })
-            .then(function(token) {
-              //realtime database에 로그인된 사용자 Web Token값 넣기
-              firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
-                uToken : token
-              });
             })
             .catch(error => {
                 commit('setError', true);
@@ -138,13 +148,19 @@ export default new Vuex.Store({
                 })
 
                 alert("반갑습니다.\n" + currentUser.displayName + "님 Google 아이디로 로그인되었습니다.");
-                const messaging = firebase.messaging();
-                return messaging.getToken();
-            })
-            .then(function(token) {
-              firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
-                uToken : token
-              });
+                firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
+                  uid : firebase.auth().currentUser.uid,
+                  email : firebase.auth().currentUser.email,
+                  token : null,
+                  alarmPermission : false
+                }, {merge : true});
+
+                // 현재 로그인된 사용자에 등록.
+                firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+                  uToken : null,
+                  uid : firebase.auth().currentUser.uid,
+                  email : firebase.auth().currentUser.email
+                });
             })
             .catch(err => {
                 commit('setError', true);
@@ -169,15 +185,20 @@ export default new Vuex.Store({
                     }
                 })
 
-
                 alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
-                const messaging = firebase.messaging();
-                return messaging.getToken();
-            })
-            .then(function(token) {
-              firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
-                uToken : token
-              });
+                firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
+                  uid : firebase.auth().currentUser.uid,
+                  email : firebase.auth().currentUser.email,
+                  token : null,
+                  alarmPermission : false
+                }, {merge : true});
+
+                // 현재 로그인된 사용자에 등록.
+                firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+                  uToken : null,
+                  uid : firebase.auth().currentUser.uid,
+                  email : firebase.auth().currentUser.email
+                });
             })
             .catch(err => {
                 commit('setError', true);

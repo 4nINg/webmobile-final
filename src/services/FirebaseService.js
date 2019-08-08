@@ -7,7 +7,6 @@ import * as admin from 'firebase-admin';
 
 import "@firebase/messaging";
 
-import store from "../store.js"
 const INFO = "info";
 const REVIEW = "review";
 const USERINFO = "userInfo";
@@ -45,24 +44,23 @@ messaging.usePublicVapidKey("BICBJ4VJNXGOauHFGbcpv8uwalnfMAHwB3DN9HmlyBmPI0jxM8O
 Notification.requestPermission().then(function(Permission) {
     if (Permission === 'granted') {
         console.log('Alarm Permission');
-        return messaging.getToken();
     } else {
         console.log("No Permission");
     }
-}).then(function(token) {
-    console.log("Alarm token : " + token);
-    //토큰 값이 있을때
-    if (token) {
-        firestore.collection('BrowserToken').doc(token).set({
-                token: token,
-                email: "",
-                name: "",
-                alarmPermission: true
-            })
-            .then(function() {
-                console.log("Token 저장 성공");
-            })
-    }
+//알림설정 기능 완료 후 지우고 수정 할 부분.
+// }).then(function(token) {
+//     console.log("Alarm token : " + token);
+//     //토큰 값이 있을때
+//     if (token) {
+//         firestore.collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
+//                 uid : firebase.auth().currentUser.uid,
+//                 token: token,
+//                 alarmPermission: true
+//             })
+//             .then(function() {
+//                 console.log("Token 저장 성공");
+//             })
+//     }
 }).catch(function(err) {
     console.log("Error ", err);
 });
