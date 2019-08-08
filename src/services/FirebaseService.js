@@ -219,24 +219,30 @@ export default {
       })
     },
     // review 개수
-    getNumOfReview(){
-      return firestore.collection(REVIEW).get().then((snap)=>{
-        console.log(snap)
-        return snap.size;
-      })
+    async getNumOfReview(){
+      var cnt;
+      return await firestore.collection(REVIEW).get().then((snap)=>{
+        cnt = snap.docs.length;
+        var result = snap.docs.map(doc => {
+          console.log();
+          return new Date(doc.data().created_at.toDate());
+        });
+        result.push(cnt);
+        return result;
+      });
     },
     // preview 개수
-    getNumOfPreview(){
-      return firestore.collection(PREVIEW).get().then((snap)=>{
-        console.log(snap)
-        return snap.size;
-      })
-    },
-    // user 개수
-    getNumOfUser(){
-    },
-    getUserList(){
-        const getUserListFunc = functions.httpsCallable('getUserList');
-        console.log(getUserListFunc());
+    async getNumOfPreview(){
+      var cnt;
+      return await firestore.collection(PREVIEW).get().then((snap)=>{
+        cnt = snap.docs.length;
+        var result = snap.docs.map(doc => {
+          console.log();
+          return new Date(doc.data().created_at.toDate());
+        });
+        result.push(cnt);
+        return result;
+      });
+
     }
 }

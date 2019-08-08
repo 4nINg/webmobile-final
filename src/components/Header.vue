@@ -5,7 +5,7 @@
       <span class="mainLogo">빠영빠영.</span>
     </div>
     <div class>
-      <span @click="changeSelectPage(-1)" id="adminPageBtn">Admin</span>
+      <span @click="changeSelectPage(-1)" id="adminPageBtn"><i class="fas fa-user-crown"></i></span>
       <div id = "SubscribeBtn" @click="subscribeAlarm()"><span>알림받습니다</span></div>
       <div id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;"><span>알림취소합시다</span></div>
     </div>
