@@ -96,6 +96,9 @@ export default {
   },
   methods: {
     reCount(list, type){
+      if(list == null){
+        return;
+      }
       var currentDate = new Date();
       var recountMax = 0;
       if(type == 1){ //userInfoList
@@ -112,7 +115,8 @@ export default {
             }
           }
           result.push(count);
-          currentDate.setDate(currentDate.getDate() - i);
+          currentDate.setDate(currentDate.getDate() - 1);
+          // console.log(currentDate);
         }
         for(var i = 4; i >= 0; i--){
           if(recountMax < result[i]){
@@ -134,7 +138,7 @@ export default {
             }
           }
           result.push(count);
-          currentDate.setDate(currentDate.getDate() - i);
+          currentDate.setDate(currentDate.getDate() - 1);
         }
         for(var i = 4; i >= 0; i--){
           if(recountMax < result[i]){
@@ -156,7 +160,7 @@ export default {
             }
           }
           result.push(count);
-          currentDate.setDate(currentDate.getDate() - i);
+          currentDate.setDate(currentDate.getDate() - 1);
         }
         for(var i = 4; i >= 0; i--){
           if(recountMax < result[i]){

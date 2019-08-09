@@ -4,7 +4,7 @@ import "firebase/storage";
 import "firebase/auth";
 import "firebase/functions";
 import * as admin from 'firebase-admin';
-
+import store from '../store.js'
 import "@firebase/messaging";
 
 const INFO = "info";
@@ -95,6 +95,7 @@ export default {
         return firestorage;
     },
     getReviewList() { //리뷰리스트를 fireStore에서 get
+        console.log(this.$store);
         const reviewCollection = firestore.collection(REVIEW);
         return reviewCollection
             .orderBy("created_at", "desc")
@@ -219,60 +220,73 @@ export default {
     },
     //사용자 정보 불러오기
     getUser(uid) {
+        store.state.loading = true;
         const getUserFunc = functions.httpsCallable('getUser');
         getUserFunc(uid).then((result) => {
             // console.log(result)
             // console.log(result.data)
             return result.data;
-        }).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err))
+        .finally(() => {
+          store.state.loading = false;
+        });
     },
     //사용자 등급 설정
     setUserGrade(uid, grade) {
+        store.state.loading = true;
         const setUserGradeFunc = functions.httpsCallable('setUserGrade');
         setUserGradeFunc({
                 uid: uid,
                 grade: grade
-            }).then(() => {
+            })
+            .then(() => {
+                store.state.loading = false;
                 console.log("수정완료!")
             })
             .catch(err => {
+                store.state.loading = false;
                 console.log("setUserGrade Error => " + err);
             })
     },
     //사용자 삭제
     async deleteUser(uid) {
+        store.state.loading = true;
         const deleteUserFunc = functions.httpsCallable('deleteUser');
         await deleteUserFunc(uid).then(() => {
-
-            alert("삭제완료!")
+              store.state.loading = false;
+              alert("삭제완료!")
             })
             .catch(err => {
-                console.log("deleteUser Error => " + err);
+              store.state.loading = false;
+              console.log("deleteUser Error => " + err);
             })
     },
     // review 개수
     async getNumOfReview(){
+      store.state.loading = true;
       var cnt;
       return await firestore.collection(REVIEW).get().then((snap)=>{
         cnt = snap.docs.length;
         var result = snap.docs.map(doc => {
-          console.log();
           return new Date(doc.data().created_at.toDate());
         });
         result.push(cnt);
+        store.state.loading = false;
         return result;
       });
     },
     // preview 개수
     async getNumOfPreview(){
+      store.state.loading = true;
       var cnt;
       return await firestore.collection(PREVIEW).get().then((snap)=>{
         cnt = snap.docs.length;
         var result = snap.docs.map(doc => {
-          console.log();
           return new Date(doc.data().created_at.toDate());
         });
         result.push(cnt);
+        store.state.loading = false;
         return result;
       });
 

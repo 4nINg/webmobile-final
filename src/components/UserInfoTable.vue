@@ -1,5 +1,9 @@
 <template>
 <div id="adminMainContainer">
+  <div>
+    <span @click="changeSelect(1)" class="adminSelectBtn"><i class="fas fa-circle"></i></span>
+    <span @click="changeSelect(2)" class="adminSelectBtn"><i class="fas fa-circle"></i></span>
+  </div>
   <div id="adminUserInfoContainer">
     <table>
       <tr>
@@ -9,7 +13,7 @@
         <td>login time</td>
         <td></td>
       </tr>
-      <tr v-for="i in userInfoList.length" :key="i">
+      <tr v-if="userInfoList" v-for="i in userInfoList.length" :key="i">
         <td>
           <span v-if="userInfoList[i-1].grade == 1 && userInfoList[i-1].username == '관리자'" style="color : #ffd15e"><i class="fas fa-crown"></i></span>
           <span v-else-if="userInfoList[i-1].provide == 'google.com'" class="userInfoTableCol1"><i class="fab fa-google"></i></span>
@@ -82,6 +86,7 @@ export default {
   },
   data() {
     return {
+      select: 1,
       userInfoList: null,
       reviewList: null,
       previewList: null,
@@ -95,13 +100,13 @@ export default {
     this.getUserList();
     this.getNumOfReview();
     this.getNumOfPreview();
-    this.getChart();
   },
   methods: {
     async getUserList() {
       const getUserListFunc = firebase.functions().httpsCallable('getUserList');
       await getUserListFunc().then((result) => {
         var list = result.data.users;
+
         this.userInfoList = [];
         for (var i = 0; i < list.length; i++) {
           // console.log(list[i])
@@ -134,6 +139,7 @@ export default {
     updataGrade(index) {
       var radio = document.getElementsByName('userGrade' + index);
       var grade;
+
       for (var i = 0; i < radio.length; i++) {
         if (radio[i].checked) {
           if(radio[i].value == this.userInfoList[index].grade){
@@ -158,14 +164,30 @@ export default {
     async getNumOfReview() {
       this.reviewList = await FirebaseService.getNumOfReview();
       this.numOfReview = this.reviewList[this.reviewList.length - 1];
-
     },
     async getNumOfPreview() {
       this.previewList = await FirebaseService.getNumOfPreview();
       this.numOfPreview = this.previewList[this.previewList.length - 1];
     },
-    async getChart(){
-
+    changeSelect(i){
+      // console.log(this.select)
+      var adminSelectBtn = document.querySelectorAll(".adminSelectBtn");
+      // for(var i = 0; i < adminSelectBtn.length; i++){
+      //   if()
+      // }
+      adminSelectBtn[this.select-1].style.color="black";
+      adminSelectBtn[this.select-1].style.opacity="0.3";
+      adminSelectBtn[i-1].style.color="blue";
+      adminSelectBtn[i-1].style.opacity="1";
+      if(i == 1){
+        //adminUserInfoContainer siteInfoContainer
+        document.querySelector('#adminUserInfoContainer').style.visibility = 'visible';
+        document.querySelector('#siteInfoContainer').style.visibility = 'hidden';
+      }else if(i == 2){
+        document.querySelector('#adminUserInfoContainer').style.visibility = 'hidden';
+        document.querySelector('#siteInfoContainer').style.visibility = 'visible';
+      }
+      this.select = i;
     }
   },
 
@@ -176,14 +198,18 @@ export default {
   margin-left: 10%;
   width: 90%;
   height: 81vh;
+  position: relative;
 }
 #adminUserInfoContainer {
   width:70%;
   background: white;
   border-radius: 15px;
+  position: absolute;;
 }
 #siteInfoContainer{
+  visibility: hidden;
   width:70%;
+  position: absolute;
 }
 #adminUserInfoContainer table{
   text-align: center;
@@ -224,19 +250,35 @@ export default {
 }
 
 label {
+  font-size:1.5em;
   cursor: pointer;
 }
 
+.userGradeRadioBtn + span:not(:first-child) {
+  margin-left: 5px;
+}
+
 #userUpdateBtn {
+  font-size:1.2em;
   cursor: pointer;
   margin-right: 10px;
 }
 
 #userDeleteBtn {
+  font-size:1.2em;
   cursor: pointer;
 }
-
+.adminSelectBtn{
+  cursor: pointer;
+}
 .userGradeRadioBtn:checked + span{
   color: red;
+}
+.adminSelectBtn{
+  opacity: 0.3;
+}
+.adminSelectBtn:first-child{
+  opacity: 1;
+  color: blue;
 }
 </style>
