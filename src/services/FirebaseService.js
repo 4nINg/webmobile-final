@@ -96,14 +96,9 @@ export default {
     getFirestorage() {
         return firestorage;
     },
-<<<<<<< HEAD
-    getReviewList() { //리뷰리스트를 fireStore에서 get
-        console.log(this.$store);
-=======
     // ==================================================== 리뷰 =================================================================
     // 리뷰 전체 리스트 가져오기
     getReviewList() {
->>>>>>> 492578d4adf2e6b3530cbd4a258726bd402b1ec9
         const reviewCollection = firestore.collection(REVIEW);
         return reviewCollection
             .orderBy("created_at", "desc")
@@ -261,16 +256,15 @@ export default {
         });
     },
     //사용자 등급 설정
-    setUserGrade(uid, grade) {
+    async setUserGrade(uid, grade) {
         store.state.loading = true;
         const setUserGradeFunc = functions.httpsCallable('setUserGrade');
-        setUserGradeFunc({
+        await setUserGradeFunc({
                 uid: uid,
                 grade: grade
             })
             .then(() => {
                 store.state.loading = false;
-                console.log("수정완료!")
             })
             .catch(err => {
                 store.state.loading = false;
@@ -282,13 +276,8 @@ export default {
         store.state.loading = true;
         const deleteUserFunc = functions.httpsCallable('deleteUser');
         await deleteUserFunc(uid).then(() => {
-<<<<<<< HEAD
               store.state.loading = false;
               alert("삭제완료!")
-=======
-
-                alert("삭제완료!")
->>>>>>> 492578d4adf2e6b3530cbd4a258726bd402b1ec9
             })
             .catch(err => {
               store.state.loading = false;
@@ -296,7 +285,6 @@ export default {
             })
     },
     // review 개수
-<<<<<<< HEAD
     async getNumOfReview(){
       store.state.loading = true;
       var cnt;
@@ -323,32 +311,6 @@ export default {
         store.state.loading = false;
         return result;
       });
-=======
-    async getNumOfReview() {
-        var cnt;
-        return await firestore.collection(REVIEW).get().then((snap) => {
-            cnt = snap.docs.length;
-            var result = snap.docs.map(doc => {
-                console.log();
-                return new Date(doc.data().created_at.toDate());
-            });
-            result.push(cnt);
-            return result;
-        });
-    },
-    // preview 개수
-    async getNumOfPreview() {
-        var cnt;
-        return await firestore.collection(PREVIEW).get().then((snap) => {
-            cnt = snap.docs.length;
-            var result = snap.docs.map(doc => {
-                console.log();
-                return new Date(doc.data().created_at.toDate());
-            });
-            result.push(cnt);
-            return result;
-        });
->>>>>>> 492578d4adf2e6b3530cbd4a258726bd402b1ec9
 
     }
 }
