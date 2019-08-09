@@ -76,9 +76,10 @@
                 v-for="i in previewCommentUserName.length"
                 :key="i"
               >
-                <span>{{previewCommentUserName[i-1]}}</span>
-                <span>{{previewCommentContent[i-1]}}</span>
-                <input type="text" class="modifyCommentInput" />
+                <span class="previewCommentVForDivTitle">{{previewCommentUserName[i-1]}}</span>
+                <span class="previewCommentVForDivContent">{{previewCommentContent[i-1]}}</span>
+                <input type="text" class="modifyPreviewCommentInput" />
+
                 <div class="previewCommentBtnContainer">
                   <div class="modifyPreviewCommentDiv">
                     <div class="modifyPreviewCommentInner">
@@ -276,11 +277,13 @@ export default {
       this.getPreviewList();
     },
     deletePreview() {
-      FirebaseService.deletePreview(this.previewId);
-      this.getPreviewList();
-      // document.querySelector(".previewComment").style.display = "none";
-      document.querySelector(".inModalPreview").style.display = "none";
-      document.querySelector(".previewModal").style.display = "none";
+      if (confirm("게시글을 삭제하시겠습니까?")) {
+        FirebaseService.deletePreview(this.previewId);
+        this.getPreviewList();
+        document.querySelector(".previewComment").style.display = "none";
+        document.querySelector(".inModalPreview").style.display = "none";
+        document.querySelector(".previewModal").style.display = "none";
+      }
     },
     showPreviewComment() {
       document.querySelector(".inModalPreview").style.display = "none";
@@ -615,9 +618,11 @@ export default {
 
 .previewCommentVForDiv {
   margin-top: 1%;
-  padding-bottom: 3%;
+  padding-bottom: 1%;
   border-bottom: 1px solid rgb(0, 0, 0, 0.1);
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .showinModalPreview {
@@ -625,5 +630,45 @@ export default {
   position: absolute;
   bottom: 0;
   right: 0;
+}
+
+.modifyPreviewCommentInput {
+  display: none;
+  width: 95%;
+  padding: 0.5% 0.5%;
+  font-size: 1em;
+}
+
+.previewCommentBtnContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.completeModifyPreviewCommentDiv {
+  display: none;
+}
+
+.modifyPreviewCommentInner {
+  width: 4em;
+  height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-right: 1%;
+  border: 1px solid rgb(0, 0, 0, 0.5);
+  border-radius: 0.5em;
+}
+.deletePreviewCommentDiv {
+  width: 4em;
+  height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-right: 1%;
+  margin-left: 1%;
+  border: 1px solid rgb(0, 0, 0, 0.5);
+  border-radius: 0.5em;
 }
 </style>

@@ -232,26 +232,28 @@ export default {
       document.querySelector(".comment").style.display = "none";
     },
     deleteReviewComment(index) {
-      var tempCommentUsername = [];
-      var tempCommentContent = [];
-      var tempCommentUserUid = [];
-      for (var i = 0; i < this.reviewCommentUsername.length; ++i) {
-        if (i !== index) {
-          tempCommentUsername.push(this.reviewCommentUsername[i]);
-          tempCommentContent.push(this.reviewCommentContent[i]);
-          tempCommentUserUid.push(this.reviewCommentUserUid[i]);
+      if (confirm("댓글을 삭제하시겠습니까?")) {
+        var tempCommentUsername = [];
+        var tempCommentContent = [];
+        var tempCommentUserUid = [];
+        for (var i = 0; i < this.reviewCommentUsername.length; ++i) {
+          if (i !== index) {
+            tempCommentUsername.push(this.reviewCommentUsername[i]);
+            tempCommentContent.push(this.reviewCommentContent[i]);
+            tempCommentUserUid.push(this.reviewCommentUserUid[i]);
+          }
         }
+        var tempReview = FirebaseService.deleteReviewComment(
+          this.reviewId,
+          tempCommentUsername,
+          tempCommentContent,
+          tempCommentUserUid
+        );
+        this.getReviewList();
+        this.reviewCommentContent = tempCommentContent;
+        this.reviewCommentUsername = tempCommentUsername;
+        this.reviewCommentUserUid = tempCommentUserUid;
       }
-      var tempReview = FirebaseService.deleteReviewComment(
-        this.reviewId,
-        tempCommentUsername,
-        tempCommentContent,
-        tempCommentUserUid
-      );
-      this.getReviewList();
-      this.reviewCommentContent = tempCommentContent;
-      this.reviewCommentUsername = tempCommentUsername;
-      this.reviewCommentUserUid = tempCommentUserUid;
     },
     showReviewWrite() {
       document.querySelector(".reviewWriteModal").style.display = "block";
@@ -359,11 +361,13 @@ export default {
       this.getReviewList();
     },
     deleteReview() {
-      FirebaseService.deleteReview(this.reviewId);
-      document.querySelector(".comment").style.display = "none";
-      document.querySelector(".inModalreview").style.display = "none";
-      document.querySelector(".reviewModal").style.display = "none";
-      this.getReviewList();
+      if (confirm("게시글을 삭제하시겠습니까?")) {
+        FirebaseService.deleteReview(this.reviewId);
+        document.querySelector(".comment").style.display = "none";
+        document.querySelector(".inModalreview").style.display = "none";
+        document.querySelector(".reviewModal").style.display = "none";
+        this.getReviewList();
+      }
     }
   }
 };
@@ -673,6 +677,13 @@ export default {
   display: none;
 }
 
+.modifyCommentInput {
+  margin-top: 1%;
+  width: 90%;
+  padding: 0.5% 0.5%;
+  font-size: 1em;
+}
+
 .modifyCommentwDiv,
 .deleteCommentDiv,
 .completeModifyCommentDiv {
@@ -703,5 +714,16 @@ export default {
 
 .ellipsisReviewTitle {
   margin-bottom: 5%;
+}
+
+.previewCommentVForDivTitle {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.previewCommentBtnContainer,
+.completeModifyPreviewCommentDiv,
+.deletePreviewCommentDiv {
+  cursor: pointer;
 }
 </style>
