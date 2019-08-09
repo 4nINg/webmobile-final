@@ -49,11 +49,11 @@ export default new Vuex.Store({
                             grade: 3,
                             uid: firebaseUser.user.uid
                         });
-                        commit('setLoading', false);
-                        commit('setError', null);
+
                         FirebaseService.setUserGrade(firebaseUser.uid, 3);
                         alert("반갑습니다.\n" + payload.username + "님 회원가입되었습니다.");
-                        window.location.reload();
+                        commit('setLoading', false);
+                        commit('setError', null);
                         // 회원 목록에 저장.
                         firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
                             uid: firebase.auth().currentUser.uid,
@@ -92,6 +92,9 @@ export default new Vuex.Store({
                 commit('setLoading', false);
                 alert("로그아웃 완료!");
 
+            }).catch(err => {
+              commit('setError', err.message)
+              commit('setLoading', false);
             })
 
             //접속 유저 DB에서 삭제
@@ -130,6 +133,10 @@ export default new Vuex.Store({
                             uid: firebase.auth().currentUser.uid,
                             email: firebase.auth().currentUser.email
                         });
+                    })
+                    .catch(err => {
+                      commit('setError', err.message);
+                      commit('setLoading', false);
                     })
                 })
                 .catch(error => {
