@@ -57,7 +57,7 @@ export default new Vuex.Store({
                         window.location.reload();
                         
                         // 회원 목록에 저장.
-                        firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
+  firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
                             uid: firebase.auth().currentUser.uid,
                             email: firebase.auth().currentUser.email,
                             token: null,
