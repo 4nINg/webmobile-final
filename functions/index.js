@@ -11,7 +11,7 @@ const messaging = admin.messaging();
     .document('review/{reviewId}')
     .onCreate((snap, context) => {
       const registerToken = [];
-      const bodycomment = snap.data().body;
+      const bodyTitle = snap.data().title;
 
       //모든 유저 정보가 담긴 DB를 탐색.
       admin.firestore().collection("registeredToken").get().then((snapshot) => {
@@ -27,14 +27,12 @@ const messaging = admin.messaging();
         const message = {
           data : {
             title : '새로운 review가 등록 되었습니다.',
-            body : bodycomment,
+            body : bodyTitle,
           },
           tokens : registerToken
         };
-        //console.log("1");
-        //수신처 다인 메세지 전송
+
         messaging.sendMulticast(message).then((response) => {
-          //console.log("success send message to all user")
           return response;
         })
         .catch((err) => {
@@ -54,12 +52,12 @@ const messaging = admin.messaging();
       .document('preview/{previewId}')
       .onCreate((snap, context) => {
         const registerToken = [];
-        const bodycomment = snap.data().body;
-        const iconImgUrl = snap.data().imgUrl;
-        console.log(iconImgUrl);
+        const bodyTitle = snap.data().title;
+        const alarmImgUrl = snap.data().imgUrl;
+        //console.log(alarmImgUrl);
+
         admin.firestore().collection("registeredToken").get().then((snapshot) => {
           snapshot.forEach((docs) => {
-            console.log(docs.data().token);
             //토큰 값이 있고, 알람이 허용됫으면
             if(docs.data().token && docs.data().alarmPermission) {
               registerToken.push(docs.data().token);
@@ -70,22 +68,21 @@ const messaging = admin.messaging();
           const message = {
             data : {
               title : '새로운 preview가 등록 되었습니다.',
-              body : bodycomment,
-          //    icon : iconImgUrl
+              body : bodyTitle,
+              imageUrl : alarmImgUrl
             },
             tokens : registerToken
           };
+          console.log("2");
           messaging.sendMulticast(message).then((response) => {
             return response;
           })
           .catch((err) => {
-            console.log(err)
             throw err;
           });
           return true;
         })
         .catch((err) => {
-          console.log(err);
           throw err;
         });
         return true;
