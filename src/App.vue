@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Loading v-if="this.$store.state.loading"></Loading>
     <Header :selectPage="selectPage" @inChildSelectPage="childSelectPage"></Header>
     <div class="backgroudDiv"></div>
     <MainPage v-if="selectPage === 0"></MainPage>
@@ -26,6 +27,7 @@ import CommentWriter from "@/components/CommentWriter";
 import Admin from "@/components/Admin";
 import SignUpForm from "@/components/SignUpForm";
 import Preview from "@/components/Preview";
+import Loading from "@/components/Loading";
 
 export default {
   name: "App",
@@ -46,7 +48,8 @@ export default {
     CommentWriter,
     Admin,
     SignUpForm,
-    Preview
+    Preview,
+    Loading
   },
   methods: {
     childSelectPage(i) {
@@ -80,7 +83,12 @@ export default {
         document.querySelector(".headerDiv").style.backgroundColor =
           "transparent";
       }
-    }
+    },
+    // this.$store.state.loading: function(){
+    //   if(this.$store.state.loading){
+    //
+    //   }
+    // }
   }
 };
 </script>

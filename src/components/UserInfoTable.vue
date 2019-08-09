@@ -42,19 +42,19 @@
   <div id="siteInfoContainer">
     <div id="siteInfoBoxContainer">
       <!-- numOfUser -->
-      <div class="siteInfoBox">
+      <div class="siteInfoBox" style="background:gold;">
         <div>USER</div>
         <hr>
         <div>{{numOfUser}}</div>
       </div>
       <!-- numOfReview -->
-      <div class="siteInfoBox">
+      <div class="siteInfoBox" style="background:blue;">
         <div>REVIEW</div>
         <hr>
         <div>{{numOfReview}}</div>
       </div>
       <!-- numOfPreview -->
-      <div class="siteInfoBox">
+      <div class="siteInfoBox" style="background:red;">
         <div>PREVIEW</div>
         <hr>
         <div>{{numOfPreview}}</div>
@@ -82,9 +82,9 @@ export default {
   },
   data() {
     return {
-      userInfoList: [],
-      reviewList: [],
-      previewList: [],
+      userInfoList: null,
+      reviewList: null,
+      previewList: null,
       userGrade: [],
       numOfUser: 0,
       numOfReview: 0,
@@ -102,8 +102,10 @@ export default {
       const getUserListFunc = firebase.functions().httpsCallable('getUserList');
       await getUserListFunc().then((result) => {
         var list = result.data.users;
+        this.userInfoList = [];
         for (var i = 0; i < list.length; i++) {
           // console.log(list[i])
+
           this.userInfoList.push({
             provide: list[i].providerData[0].providerId,
             email: list[i].email,
@@ -114,6 +116,7 @@ export default {
             grade: list[i].customClaims == null ? 3 : list[i].customClaims.grade
           })
         }
+
         this.numOfUser = this.userInfoList.length;
       })
       for (var i = 0; i < this.userInfoList.length; i++) {
@@ -133,13 +136,21 @@ export default {
       var grade;
       for (var i = 0; i < radio.length; i++) {
         if (radio[i].checked) {
+          if(radio[i].value == this.userInfoList[index].grade){
+            return;
+          }
           grade = radio[i].value;
         }
       }
       FirebaseService.setUserGrade(this.userInfoList[index].uid, grade);
+      this.userInfoList[index].grade = grade;
       alert("변경완료!");
     },
     async deleteUser(index) {
+      var deleteCheck = confirm(this.userInfoList[index].username + "님의 계정을 삭제하시겠습니까?");
+      if(!deleteCheck){
+        return;
+      }
       await FirebaseService.deleteUser(this.userInfoList[index].uid);
       this.userInfoList = [];
       this.getUserList();

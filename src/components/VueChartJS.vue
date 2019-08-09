@@ -19,31 +19,33 @@ export default {
           //User
           {
             label: "User",
-            backgroundColor: "rgb(255,255,255,0.1)",
+            backgroundColor: "rgb(255,255,0,0)",
             pointBackgroundColor: "black",
             borderWidth: 2,
             pointBorderColor: "black",
+            borderColor: "gold",
 
             data: []
           },
           //Review
           {
             label: "Review",
-            backgroundColor: "rgb(255,255,255,0.1)",
+            backgroundColor: "rgb(255,0,255,0)",
             pointBackgroundColor: "black",
             borderWidth: 2,
             pointBorderColor: "black",
+            borderColor: "blue",
 
             data: []
           },
           //Preview
           {
             label: "Preview",
-            backgroundColor: "rgb(255,255,255,0.1)",
+            backgroundColor: "rgb(0,255,255,0)",
             pointBackgroundColor: "black",
             borderWidth: 2,
             pointBorderColor: "black",
-
+            borderColor: "red",
             data: []
           }
         ]
@@ -71,7 +73,7 @@ export default {
           ]
         },
         legend: {
-          display: true
+          display: false
         },
         responsive: true,
         maintainAspectRatio: false
