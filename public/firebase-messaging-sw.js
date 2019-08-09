@@ -34,43 +34,27 @@ self.addEventListener('install', event => {
     );
 });
 
-self.addEventListener("fetch", event => {
-  console.log('SW fetch', event);
-
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      if(response) {
-        return response;
-      }
-      var fetchRequest = event.request.clone();
-
-      return fetch(fetchRequest).then(response => {
-        if(!response) {
-          return response;
-        }
-
-        var responseToCache = response.clone();
-
-        caches.open(DYNAMIC_CACHE_NAME).then(cache => {
-          cache.put(event.request, responseToCache);
-        });
-        return response;
-      });
-    })
-  );
-});
-
 
 // 백그라운드일때 메세지를 받고 처리 방식
 firebase.messaging().setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);
   // Customize notification here
-  var notificationTitle = payload.data.title;
-  var notificationOptions = {
-    body: payload.data.body,
-    icon: 'https://ifh.cc/g/lUitx.png',
-    image: payload.data.imageUrl
-  };
-  console.log("background received.")
-  registration.showNotification(notificationTitle, notificationOptions);
+  const flag = payload.data.messageAuth;
+  //리뷰, 프리뷰 생성 알림
+  if(flag === "reviewReg" || flag == "previewReg") {
+    var notificationTitle = "payload.data.title";
+    var notificationOptions = {
+      body: payload.data.body,
+      icon: 'https://ifh.cc/g/lUitx.png',
+      image: payload.data.imageUrl
+    };
+    console.log("background received.")
+    registration.showNotification(notificationTitle, notificationOptions);
+  //리뷰댓글, 프리뷰 댓글 생성 알림
+}else if(flag == "previewComm"){
+    var notificationTitle = payload.data.title;
+    var notificationOptions = {
+
+    };
+  }
 });
