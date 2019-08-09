@@ -28,6 +28,14 @@ const config = {
 };
 
 firebase.initializeApp(config);
+firebase.firestore().enablePersistence()
+    .catch(function(err) {
+        if (err.code == 'failed-precondition') {
+
+        } else if (err.code == 'unimplemented') {
+
+        }
+    });
 
 var serviceAccount = require("../../webmobile-final-c2c78-firebase-adminsdk-pqts2-229bb83353.json");
 
@@ -66,11 +74,6 @@ Notification.requestPermission().then(function(Permission) {
 }).catch(function(err) {
     console.log("Error ", err);
 });
-
-firebase.firestore().enablePersistence()
-    .catch(function(err) {
-        if (err.code == 'failed-precondition') {} else if (err.code == 'unimplemented') {}
-    });
 
 //포그라운드 상태에서 메세지 받는 처리 방식
 firebase.messaging().onMessage((payload) => {
