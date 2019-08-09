@@ -65,10 +65,20 @@ Notification.requestPermission().then(function(Permission) {
     console.log("Error ", err);
 });
 
+
 firebase.firestore().enablePersistence()
     .catch(function(err) {
-        if (err.code == 'failed-precondition') {} else if (err.code == 'unimplemented') {}
+        if (err.code == 'failed-precondition') {
+          console.log("fail-precondition");
+        } else if (err.code == 'unimplemented') {
+          console.log("unimplemented")
+        }
     });
+
+firebase.firestore().settings({
+  cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
+});
+
 
 //포그라운드 상태에서 메세지 받는 처리 방식
 firebase.messaging().onMessage((payload) => {
