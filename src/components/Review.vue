@@ -78,9 +78,9 @@
         <div class="comment">
           <div class="commentContainer">
             <div class="commentInnerDiv">
-              <div v-for="i in reviewCommentUsername.length" :key="i" class="vForDiv">
-                <h3>{{reviewCommentUsername[i-1]}}</h3>
-                <p class="reviewCommentContentP">{{reviewCommentContent[i-1]}}</p>
+              <div v-for="i in reviewComment.length" :key="i" class="vForDiv">
+                <h3>{{reviewComment[i-1].username}}</h3>
+                <p class="reviewCommentContentP">{{reviewComment[i-1].content}}</p>
                 <input type="text" class="modifyCommentInput" />
                 <div class="commentBtnContainerDiv">
                   <!--  댓글 수정 -->
@@ -104,13 +104,7 @@
 
             <!-- 댓글 작성 -->
             <div class="commentWriterDiv" v-if="this.$store.state.user !== null">
-              <CommentWriter
-                :reviewId="reviewId"
-                :reviewCommentUsername="reviewCommentUsername"
-                :reviewCommentContent="reviewCommentContent"
-                :reviewCommentUserUid="reviewCommentUserUid"
-                @isSubmit="isSubmit"
-              ></CommentWriter>
+              <CommentWriter :reviewId="reviewId" @isSubmit="isSubmit"></CommentWriter>
             </div>
 
             <span class="showInModalreview" @click="backToTheReviewContent()">
@@ -141,24 +135,36 @@ export default {
   data() {
     return {
       reviewList: [],
+      commentList: [],
       displayReviews: [],
       showIdx: 0,
       reviewWriterUid: "", //리뷰 작성자 uid
       reviewId: "", //리뷰 식별자
       reviewTitle: "", //리뷰 제목
       reviewContent: "", //리뷰 내용
-      reviewCommentContent: [], //리뷰 댓글 내용
-      reviewCommentUsername: [], //리뷰 댓글 작성자
-      reviewCommentUserUid: [], //리뷰 댓글 작성자 uid
+      reviewComment: [],
       displayedReview: 0
     };
   },
   mounted() {
+    this.getReviewCommentList();
     this.getReviewList();
   },
   methods: {
     isSubmit() {
       this.getReviewList();
+      this.getReviewCommentList();
+    },
+    async getReviewCommentList() {
+      this.commentList = await FirebaseService.getReviewCommentList();
+      if (this.reviewId !== null || this.reviewId !== "") {
+        this.reviewComment = [];
+        for (var j = 0; j < this.commentList.length; ++j) {
+          if (this.commentList[j].reviewId === this.reviewId) {
+            this.reviewComment.push(this.commentList[j]);
+          }
+        }
+      }
     },
     async getReviewList() {
       this.reviewList = await FirebaseService.getReviewList();
@@ -177,26 +183,13 @@ export default {
         this.displayReviews.push(this.reviewList[i]);
       }
     },
-    reShowList() {
-      this.displayReviews = [];
-      for (
-        var i = this.showIdx;
-        i <
-        (this.showIdx + 6 > this.reviewList.length
-          ? this.reviewList.length
-          : this.showIdx + 6);
-        ++i
-      ) {
-        this.displayReviews.push(this.reviewList[i]);
-      }
-    },
     nextList() {
       this.showIdx += 6;
-      this.reShowList();
+      this.showList();
     },
     preList() {
       this.showIdx -= 6;
-      this.reShowList();
+      this.showList();
     },
     showReview(i) {
       this.displayedReview = i + this.showIdx;
@@ -204,18 +197,12 @@ export default {
       this.reviewId = this.displayReviews[i].id;
       this.reviewTitle = this.displayReviews[i].title;
       this.reviewContent = this.displayReviews[i].body;
-      // if (this.displayReviews[i].commentUsername !== null) {
-      if (this.displayReviews[i].commentUsername.length === 0) {
-        this.reviewCommentUsername = [];
-        this.reviewCommentContent = [];
-        this.reviewCommentUserUid = [];
-      } else {
-        this.reviewCommentUsername = this.displayReviews[i].commentUsername;
-        this.reviewCommentContent = this.displayReviews[i].commentContent;
-        this.reviewCommentUserUid = this.displayReviews[i].commentUserUid;
+      this.reviewComment = [];
+      for (var j = 0; j < this.commentList.length; ++j) {
+        if (this.commentList[j].reviewId === this.reviewId) {
+          this.reviewComment.push(this.commentList[j]);
+        }
       }
-      // }
-
       document.querySelector(".comment").style.display = "none";
       document.querySelector(".inModalreview").style.display = "block";
       document.querySelector(".reviewModal").style.display = "block";
@@ -233,33 +220,15 @@ export default {
     },
     deleteReviewComment(index) {
       if (confirm("댓글을 삭제하시겠습니까?")) {
-        var tempCommentUsername = [];
-        var tempCommentContent = [];
-        var tempCommentUserUid = [];
-        for (var i = 0; i < this.reviewCommentUsername.length; ++i) {
-          if (i !== index) {
-            tempCommentUsername.push(this.reviewCommentUsername[i]);
-            tempCommentContent.push(this.reviewCommentContent[i]);
-            tempCommentUserUid.push(this.reviewCommentUserUid[i]);
-          }
-        }
-        var tempReview = FirebaseService.deleteReviewComment(
-          this.reviewId,
-          tempCommentUsername,
-          tempCommentContent,
-          tempCommentUserUid
-        );
-        this.getReviewList();
-        this.reviewCommentContent = tempCommentContent;
-        this.reviewCommentUsername = tempCommentUsername;
-        this.reviewCommentUserUid = tempCommentUserUid;
+        FirebaseService.deleteReviewComment(this.reviewComment[index].id);
+        this.getReviewCommentList();
       }
     },
     showReviewWrite() {
       document.querySelector(".reviewWriteModal").style.display = "block";
     },
     modifyReviewComment(index) {
-      var beforeModifyComment = this.reviewCommentContent[index];
+      var beforeModifyComment = this.reviewComment[index].content;
       var modifyCommentDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
       var deleteCommentDiv = document.querySelectorAll(".deleteCommentDiv"); // 삭제버튼
       var completeModifyCommentDiv = document.querySelectorAll(
@@ -289,16 +258,19 @@ export default {
       var completeModifyCommentDiv = document.querySelectorAll(
         ".completeModifyCommentDiv"
       ); // 수정완료버튼
-      var modifyCommentInput = document.querySelectorAll(".modifyCommentInput");
+      var modifyCommentInput = document.querySelectorAll(".modifyCommentInput"); // 댓글 수정 인풋
       var reviewCommentContentP = document.querySelectorAll(
         ".reviewCommentContentP"
-      );
+      ); // 원래 댓글 내용
       document.querySelector(".commentWriterDiv").style.display = "block"; // 댓글작성 창
 
-      for (var i = 0; i < this.reviewCommentContent.length; ++i) {
+      for (var i = 0; i < this.reviewComment.length; ++i) {
         if (index === i) {
-          this.reviewCommentContent[i] = modifyCommentInput[i].value;
-          reviewCommentContentP[i].innerText = modifyCommentInput[i].value;
+          FirebaseService.modifyReviewComment(
+            this.reviewComment[index].id,
+            modifyCommentInput[i].value
+          );
+          this.getReviewCommentList();
           reviewCommentContentP[i].style.display = "block"; // 원래 내용 없앰
           modifyCommentInput[i].style.display = "none"; // 수정창 보임
           modifyCommentwDiv[i].style.display = "block"; // 수정버튼 없앰
@@ -307,11 +279,6 @@ export default {
           break;
         }
       }
-
-      FirebaseService.modifyReviewComment(
-        this.reviewId,
-        this.reviewCommentContent
-      );
     },
     modifyReview() {
       var beforeModifyTitle = document.querySelector(".reviewTitle").innerText;

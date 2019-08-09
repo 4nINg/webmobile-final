@@ -11,6 +11,8 @@ const INFO = "info";
 const REVIEW = "review";
 const USERINFO = "userInfo";
 const PREVIEW = "preview";
+const REVIEWCOMMENT = "reviewComment";
+const PREVIEWCOMMENT = "previewCommnet";
 // cloud firestore
 
 
@@ -47,20 +49,20 @@ Notification.requestPermission().then(function(Permission) {
     } else {
         console.log("No Permission");
     }
-//알림설정 기능 완료 후 지우고 수정 할 부분.
-// }).then(function(token) {
-//     console.log("Alarm token : " + token);
-//     //토큰 값이 있을때
-//     if (token) {
-//         firestore.collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
-//                 uid : firebase.auth().currentUser.uid,
-//                 token: token,
-//                 alarmPermission: true
-//             })
-//             .then(function() {
-//                 console.log("Token 저장 성공");
-//             })
-//     }
+    //알림설정 기능 완료 후 지우고 수정 할 부분.
+    // }).then(function(token) {
+    //     console.log("Alarm token : " + token);
+    //     //토큰 값이 있을때
+    //     if (token) {
+    //         firestore.collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
+    //                 uid : firebase.auth().currentUser.uid,
+    //                 token: token,
+    //                 alarmPermission: true
+    //             })
+    //             .then(function() {
+    //                 console.log("Token 저장 성공");
+    //             })
+    //     }
 }).catch(function(err) {
     console.log("Error ", err);
 });
@@ -94,8 +96,14 @@ export default {
     getFirestorage() {
         return firestorage;
     },
+<<<<<<< HEAD
     getReviewList() { //리뷰리스트를 fireStore에서 get
         console.log(this.$store);
+=======
+    // ==================================================== 리뷰 =================================================================
+    // 리뷰 전체 리스트 가져오기
+    getReviewList() {
+>>>>>>> 492578d4adf2e6b3530cbd4a258726bd402b1ec9
         const reviewCollection = firestore.collection(REVIEW);
         return reviewCollection
             .orderBy("created_at", "desc")
@@ -108,7 +116,8 @@ export default {
                 });
             });
     },
-    postReview(title, body, writer, writerUid) { //리뷰 작성
+    // 리뷰 작성
+    postReview(title, body, writer, writerUid) {
         firestore.collection(REVIEW).add({
                 title: title,
                 writerUid: writerUid,
@@ -116,37 +125,64 @@ export default {
                 body: body,
                 created_at: firebase.firestore.FieldValue.serverTimestamp(),
                 id: "",
-                commentContent: [],
-                commentUsername: [],
-                commentUserUid: []
+                // commentContent: [],
+                // commentUsername: [],
+                // commentUserUid: []
             })
             .then(() => {}).catch((error) => {
                 alert(error)
             });
     },
-    postReviewComment(reviewId, commentUsername, commentContent, commentUserUid) { //reviewId - review식별자 //댓글 작성
+    // 리뷰 수정
+    modifyReview(reviewId, mtitle, mbody) {
         firestore.collection(REVIEW).doc(reviewId).update({
-            commentUsername: commentUsername,
-            commentContent: commentContent,
-            commentUserUid: commentUserUid
+            title: mtitle,
+            body: mbody
+        });
+    },
+    // 리뷰 삭제
+    deleteReview(reviewId) {
+        firestore.collection(REVIEW).doc(reviewId).delete();
+    },
+    // ==================================================== 리뷰 댓글 =================================================================
+    // 모든 리뷰 댓글 다 들고오기
+    getReviewCommentList() {
+        const reviewCommentCollection = firestore.collection(REVIEWCOMMENT);
+        return reviewCommentCollection
+            .orderBy("created_at", "desc")
+            .get()
+            .then(docSnapshots => {
+                return docSnapshots.docs.map(doc => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    return data;
+                });
+            });
+    },
+    // 리뷰 등록하기
+    postReviewComment(reviewId, content, userUid, username) {
+        firestore.collection(REVIEWCOMMENT).add({
+            content: content,
+            reviewId: reviewId,
+            userUid: userUid,
+            username: username,
+            id: "",
+            created_at: firebase.firestore.FieldValue.serverTimestamp()
         })
     },
-    modifyReviewComment(reviewId, commentContent) { //modify review's commentContent
-        firestore.collection(REVIEW).doc(reviewId).update({
-            commentContent: commentContent
-        })
+    // 리뷰 댓글 수정
+    modifyReviewComment(reviewCommentId, content) {
+        firestore.collection(REVIEWCOMMENT).doc(reviewCommentId).update({
+            content: content
+        });
     },
-    deleteReviewComment(reviewId, commentUsername, commentContent, commentUserUid) {
-        firestore.collection(REVIEW).doc(reviewId).update({
-                commentUsername: commentUsername,
-                commentContent: commentContent,
-                commentUserUid: commentUserUid
-            })
-            // return firestore.collection(REVIEW).doc(reviewId).get().then(DS => {
-            //     return DS.data();
-            // });
+    // 리뷰 댓글 삭제
+    deleteReviewComment(reviewCommentId) {
+        firestore.collection(REVIEWCOMMENT).doc(reviewCommentId).delete();
     },
-    getPreviewList() { //시사회정보 상세보기
+    // ==================================================== 프리뷰 =================================================================
+
+    getPreviewList() {
         const reviewCollection = firestore.collection(PREVIEW);
         return reviewCollection
             .orderBy("created_at", "desc")
@@ -159,7 +195,7 @@ export default {
                 });
             });
     },
-    postPreview(title, uid, writer, body, imgUrl, imgName) { //시사회정보 작성
+    postPreview(title, uid, writer, body, imgUrl, imgName) {
         firestore.collection(PREVIEW).add({
             title: title,
             writerUid: uid,
@@ -173,21 +209,13 @@ export default {
             created_at: firebase.firestore.FieldValue.serverTimestamp()
         });
     },
-    deletePreview(o) { //시사회정보 삭제
+    deletePreview(o) {
         firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
             firestorage.ref().child('review/' + o.num).delete()
             window.location.reload();
         });
     },
-    deleteReview(reviewId) {
-        firestore.collection(REVIEW).doc(reviewId).delete();
-    },
-    modifyReview(reviewId, mtitle, mbody) {
-        firestore.collection(REVIEW).doc(reviewId).update({
-            title: mtitle,
-            body: mbody
-        });
-    },
+
     deletePreview(previewId) {
         firestore.collection(PREVIEW).doc(previewId).delete();
     },
@@ -254,8 +282,13 @@ export default {
         store.state.loading = true;
         const deleteUserFunc = functions.httpsCallable('deleteUser');
         await deleteUserFunc(uid).then(() => {
+<<<<<<< HEAD
               store.state.loading = false;
               alert("삭제완료!")
+=======
+
+                alert("삭제완료!")
+>>>>>>> 492578d4adf2e6b3530cbd4a258726bd402b1ec9
             })
             .catch(err => {
               store.state.loading = false;
@@ -263,6 +296,7 @@ export default {
             })
     },
     // review 개수
+<<<<<<< HEAD
     async getNumOfReview(){
       store.state.loading = true;
       var cnt;
@@ -289,6 +323,32 @@ export default {
         store.state.loading = false;
         return result;
       });
+=======
+    async getNumOfReview() {
+        var cnt;
+        return await firestore.collection(REVIEW).get().then((snap) => {
+            cnt = snap.docs.length;
+            var result = snap.docs.map(doc => {
+                console.log();
+                return new Date(doc.data().created_at.toDate());
+            });
+            result.push(cnt);
+            return result;
+        });
+    },
+    // preview 개수
+    async getNumOfPreview() {
+        var cnt;
+        return await firestore.collection(PREVIEW).get().then((snap) => {
+            cnt = snap.docs.length;
+            var result = snap.docs.map(doc => {
+                console.log();
+                return new Date(doc.data().created_at.toDate());
+            });
+            result.push(cnt);
+            return result;
+        });
+>>>>>>> 492578d4adf2e6b3530cbd4a258726bd402b1ec9
 
     }
 }
