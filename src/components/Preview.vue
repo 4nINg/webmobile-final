@@ -131,25 +131,34 @@ export default {
   data() {
     return {
       previewList: [],
+      commentList: [],
       displayPreview: [],
       showIdx: 0,
+      previewWriterUid: "",
       previewId: "",
       previewImg: "",
       previewTitle: "",
       previewContent: "",
-      previewCommentContent: [],
-      previewCommentUserName: [],
-      previewCommentUserUid: [],
+      previewComment: [],
       displayedPreview: 0,
       isModify: false
     };
   },
   methods: {
     isSubmit() {
+      this.getPreviewCommentList();
       this.getPreviewList();
     },
-    showPreviewWrite() {
-      document.querySelector(".previewWriteModal").style.display = "block";
+    async getPreviewCommentList() {
+      this.commentList = await FirebaseService.getPreviewCommentList();
+      if (this.previewId !== null && this.previewId !== "") {
+        this.previewComment = [];
+        for (var j = 0; j < this.commentList.length; ++j) {
+          if (this.commentList[j].previewId === this.previewId) {
+            this.previewComment.push(this.commentList[j]);
+          }
+        }
+      }
     },
     async getPreviewList() {
       this.previewList = await FirebaseService.getPreviewList();
@@ -178,21 +187,17 @@ export default {
     },
     showPreview(i) {
       this.displayedPreview = i + this.showIdx;
+      this.previewWriterUid = this.displayPreview[i].writerUid;
       this.previewId = this.displayPreview[i].id;
       this.previewImg = this.displayPreview[i].imgUrl;
       this.previewTitle = this.displayPreview[i].title;
       this.previewContent = this.displayPreview[i].body;
-
-      if (this.displayPreview[i].commentUserUid.length === 0) {
-        this.previewCommentUserName = [];
-        this.previewCommentContent = [];
-        this.previewCommentUserUid = [];
-      } else {
-        this.previewCommentUserName = this.displayPreview[i].commentUserName;
-        this.previewCommentContent = this.displayPreview[i].commentContent;
-        this.previewCommentUserUid = this.displayPreview[i].commentUserUid;
+      this.previewComment = [];
+      for (var j = 0; j < this.commentList.length; ++j) {
+        if (this.commentList[j].previewId === this.previewId) {
+          this.previewComment.push(this.commentList[j]);
+        }
       }
-
       document.querySelector(".previewComment").style.display = "none";
       document.querySelector(".inModalPreview").style.display = "block";
       document.querySelector(".previewModal").style.display = "block";
@@ -203,11 +208,25 @@ export default {
       document.querySelector(".modifyPreviewContentInput").style.display =
         "none";
       document.querySelector(".previewContent").style.display = "block";
+
       document.querySelector(".modifyPreviewDiv").style.display = "block";
       document.querySelector(".completeModifyPreviewDiv").style.display =
         "none";
-      this.isModify = false;
+      this.isModify = false; // 이미지 업로더
+      document.querySelector(".previewCommentVForDivContent").style.display =
+        "block";
+      document.querySelector(".modifyPreviewCommentInput").style.display =
+        "none";
+      document.querySelector(".modifyPreviewCommentDiv").style.display =
+        "block";
+      document.querySelector(".completeModifyPreviewCommentDiv").style.display =
+        "none";
+      document.querySelector(".deletePreviewCommentDiv").style.display =
+        "block";
       document.querySelector(".previewModal").style.display = "none";
+    },
+    showPreviewWrite() {
+      document.querySelector(".previewWriteModal").style.display = "block";
     },
     modifyPreview() {
       var beforeModifyTitle = document.querySelector(".preveiwTitle").innerText;
