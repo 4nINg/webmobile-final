@@ -54,6 +54,7 @@ export default new Vuex.Store({
                         FirebaseService.setUserGrade(firebaseUser.uid, 3);
                         alert("반갑습니다.\n" + payload.username + "님 회원가입되었습니다.");
                         window.location.reload();
+                        
                         // 회원 목록에 저장.
                         firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
                             uid: firebase.auth().currentUser.uid,

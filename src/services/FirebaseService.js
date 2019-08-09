@@ -70,15 +70,18 @@ firebase.firestore().enablePersistence()
         if (err.code == 'failed-precondition') {} else if (err.code == 'unimplemented') {}
     });
 
-//온라인 상태에서 메세지 받는 처리 방식
+//포그라운드 상태에서 메세지 받는 처리 방식
 firebase.messaging().onMessage((payload) => {
     console.log(payload);
-    var options = {
+    var notificationTitle = payload.data.title;
+    var notificationOptions = {
         body: payload.data.body,
-        icon: "https://ifh.cc/g/lUitx.png"
+        icon: "https://ifh.cc/g/lUitx.png",
+        img: payload.data.image
     };
-
-    var notification = new Notification(payload.data.title, options);
+    console.log(payload.data.image);
+    var notification = new Notification(notificationTitle, notificationOptions);
+    //registration.showNotification(notificationTitle, notificationOptions);
     console.log("online received.");
 });
 

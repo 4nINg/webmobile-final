@@ -94,7 +94,7 @@ export default {
         .catch(function(err) {
           throw err;
         })
-
+        //구독취소 버튼 활성화
         document.querySelector('#SubscribeBtn').style = 'display:none';
         document.querySelector('#SubscribeCancel').style = 'display:visible';
       }
@@ -131,7 +131,7 @@ export default {
         .catch(function(err) {
           throw err;
         })
-        //구독취소 DB관련 일을 끝내고, 구독하기 버튼 활성화
+        //구독하기 버튼 활성화
         document.querySelector('#SubscribeBtn').style = 'display:visible';
         document.querySelector('#SubscribeCancel').style = 'display:none';
       }
