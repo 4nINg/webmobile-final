@@ -53,24 +53,31 @@ Notification.requestPermission().then(function(Permission) {
     console.log("Error ", err);
 });
 
-firebase.firestore().enablePersistence()
-    .catch(function(err) {
-        if (err.code == 'failed-precondition') {} else if (err.code == 'unimplemented') {}
-    });
 
 //포그라운드 상태에서 메세지 받는 처리 방식
 firebase.messaging().onMessage((payload) => {
     console.log(payload);
-    var notificationTitle = payload.data.title;
-    var notificationOptions = {
-        body: payload.data.body,
-        icon: "https://ifh.cc/g/lUitx.png",
-        img: payload.data.image
-    };
-    console.log(payload.data.image);
-    var notification = new Notification(notificationTitle, notificationOptions);
-    //registration.showNotification(notificationTitle, notificationOptions);
-    console.log("online received.");
+    const flag = payload.data.messageAuth;
+
+    if(flag === "reviewReg" || flag == "previewReg") {
+      var notificationTitle = "에 새 댓글이 등록되었습니다";
+      var notificationOptions = {
+          body: payload.data.body,
+          icon: "https://ifh.cc/g/lUitx.png",
+          img: payload.data.image
+      };
+      console.log(payload.data.image);
+      var notification = new Notification(notificationTitle, notificationOptions);
+      //registration.showNotification(notificationTitle, notificationOptions);
+      console.log("online received.");
+    }else if(flag === "reviewCommentReg" || flag === "previewCommentReg"){
+      var notificationOptions = {
+
+      }
+      //곧 작성.
+    }else {
+      console.log("err");
+    }
 });
 
 

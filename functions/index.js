@@ -4,7 +4,101 @@ const admin = require('firebase-admin');
 
 admin.initializeApp(functions.config().firebase);
 
+
 const messaging = admin.messaging();
+
+  //리뷰댓글생성시 admin에게 알림.
+  exports.createReviewComment = functions.firestore
+    .document('reviewComment/{reviewCommentId}')
+    .onCreate((snap, context) => {
+      var adminToken = '';
+      const commentBody = snap.data().content;
+      const reviewId = snap.data().reviewId;
+
+      admin.firestore().collection("registeredToken").get().then((snapshot) => {
+        snapshot.forEach((docs) => {
+          //admin계정이고
+          if(docs.data().email === "admin@admin.com") {
+          //토큰 허용이면
+            if(docs.data().token && docs.data().alarmPermission) {
+              console.log("re admin~");
+              adminToken = docs.data().token;
+            }
+          }
+        });
+
+        const message = {
+          data : {
+            messageAuth : "reviewCommentReg",
+            title : "새로운 댓글이 등록되었습니다.",
+            body : commentBody,
+            reviewId : reviewId
+          },
+          token : adminToken
+        };
+
+        messaging.send(message).then((response) => {
+          return response;
+        })
+        .catch((err) => {
+          console.log(err);
+          throw err;
+        });
+        return true;
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      });
+      return true;
+    })
+
+    //프리뷰댓글생성시 admin에게 알림.
+    exports.createPreviewComment = functions.firestore
+      .document('previewComment/{previewCommentId}')
+      .onCreate((snap, context) => {
+        var adminToken = '';
+        const commentBody = snap.data().content;
+        const previewId = snap.data().previewId;
+
+        admin.firestore().collection("registeredToken").get().then((snapshot) => {
+          snapshot.forEach((docs) => {
+
+            //admin계정이고
+            if(docs.data().email === "admin@admin.com") {
+            //토큰 허용이면
+              if(docs.data().token && docs.data().alarmPermission) {
+                console.log("pre admin~");
+                adminToken = docs.data().token;
+              }
+            }
+          });
+
+          const message = {
+            data : {
+              messageAuth : "previewCommentReg",
+              title : "새로운 댓글이 등록되었습니다.",
+              body : commentBody,
+              previewId : previewId
+            },
+            token : adminToken
+          };
+
+          messaging.send(message).then((response) => {
+            return response;
+          })
+          .catch((err) => {
+            console.log(err);
+            throw err;
+          });
+          return true;
+        })
+        .catch((err) => {
+          console.log(err);
+          throw err;
+        });
+        return true;
+      })
 
   //리뷰가 생성되면
   exports.createReview = functions.firestore
@@ -26,6 +120,7 @@ const messaging = admin.messaging();
         //메세지 보낸다.
         const message = {
           data : {
+            messageAuth : "reviewReg",
             title : '새로운 review가 등록 되었습니다.',
             body : bodyTitle,
           },
