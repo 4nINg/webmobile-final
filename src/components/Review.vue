@@ -35,27 +35,32 @@
     <div class="reviewModal">
       <div class="reviewModalContainer">
         <span class="closeReview" @click="closeReviewModal()">&times;</span>
-        <div class="inModalreview">
+        <div class="inModalreview" v-if="!isComment">
           <div class="reviewModalTitle">
-            <span class="reviewTitle">{{reviewTitle}}</span>
-            <input type="text" class="modifyReviewTitleInput" />
+            <span class="reviewTitle" v-if="!isReviewModify">{{reviewTitle}}</span>
+            <input
+              type="text"
+              class="modifyReviewTitleInput"
+              :value="reviewTitle"
+              v-if="isReviewModify"
+            />
           </div>
           <div class="reviewModalContent">
-            <p class="reviewContent">{{reviewContent}}</p>
-            <textarea class="modifyReviewContentInput"></textarea>
+            <p class="reviewContent" v-if="!isReviewModify">{{reviewContent}}</p>
+            <textarea class="modifyReviewContentInput" :value="reviewContent" v-if="isReviewModify"></textarea>
           </div>
           <div class="showCommentDiv">
             <!--  리뷰 수정 -->
             <div
               class="modifyReviewDiv"
               @click="modifyReview()"
-              v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1)"
+              v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1) && !isReviewModify"
             >
               <div class="modifyBtninner">
                 <span class="modifyReview">수정</span>
               </div>
             </div>
-            <div class="completeModifyReviewDiv" @click="completeModify()">
+            <div class="completeModifyReviewDiv" @click="completeModify()" v-if="isReviewModify">
               <div class="modifyCompleteInner">
                 <span class="completeModifyReview">수정 완료</span>
               </div>
@@ -75,7 +80,7 @@
             </div>
           </div>
         </div>
-        <div class="comment">
+        <div class="comment" v-if="isComment">
           <div class="commentContainer">
             <div class="commentInnerDiv">
               <div v-for="i in reviewComment.length" :key="i" class="vForDiv">
@@ -143,7 +148,10 @@ export default {
       reviewTitle: "", //리뷰 제목
       reviewContent: "", //리뷰 내용
       reviewComment: [],
-      displayedReview: 0
+      displayedReview: 0,
+      isReviewModify: false, //리뷰를 수정하나요?
+      isCommentModify: false, // 댓글을 수정하나요?
+      isComment: false // 댓글을 보고 있나요
     };
   },
   mounted() {
@@ -203,20 +211,20 @@ export default {
           this.reviewComment.push(this.commentList[j]);
         }
       }
-      document.querySelector(".comment").style.display = "none";
-      document.querySelector(".inModalreview").style.display = "block";
+      this.isComment = false;
+      this.isReviewModify = false;
       document.querySelector(".reviewModal").style.display = "block";
     },
     closeReviewModal() {
+      this.isComment = false;
+      this.isReviewModify = false;
       document.querySelector(".reviewModal").style.display = "none";
     },
     showReviewComment() {
-      document.querySelector(".inModalreview").style.display = "none";
-      document.querySelector(".comment").style.display = "block";
+      this.isComment = true;
     },
     backToTheReviewContent() {
-      document.querySelector(".inModalreview").style.display = "block";
-      document.querySelector(".comment").style.display = "none";
+      this.isComment = false;
     },
     deleteReviewComment(index) {
       if (confirm("댓글을 삭제하시겠습니까?")) {
@@ -284,27 +292,12 @@ export default {
       var beforeModifyTitle = document.querySelector(".reviewTitle").innerText;
       var beforeModifyContent = document.querySelector(".reviewContent")
         .innerText;
-      document.querySelector(".reviewTitle").style.display = "none";
-      document.querySelector(".modifyReviewTitleInput").style.display = "block";
-      document.querySelector(
-        ".modifyReviewTitleInput"
-      ).value = beforeModifyTitle;
-      document.querySelector(".reviewContent").style.display = "none";
-      document.querySelector(".modifyReviewContentInput").style.display =
-        "block";
-      document.querySelector(
-        ".modifyReviewContentInput"
-      ).innerText = beforeModifyContent;
-      document.querySelector(".modifyReviewDiv").style.display = "none";
-      document.querySelector(".completeModifyReviewDiv").style.display =
-        "block";
+      this.isReviewModify = true;
     },
     completeModify() {
       for (var i = 0; i < this.reviewList.length; ++i) {
         if (this.reviewList[i].id === this.reviewId) {
-          this.reviewList[i].title = document.querySelector(
-            ".modifyReviewTitleInput"
-          ).value;
+          this.reviewList[i].title = this.reviewTitle;
           this.reviewList[i].body = document.querySelector(
             ".modifyReviewContentInput"
           ).value;
@@ -313,13 +306,7 @@ export default {
           break;
         }
       }
-      document.querySelector(".reviewTitle").style.display = "block";
-      document.querySelector(".modifyReviewTitleInput").style.display = "none";
-      document.querySelector(".reviewContent").style.display = "block";
-      document.querySelector(".modifyReviewContentInput").style.display =
-        "none";
-      document.querySelector(".modifyReviewDiv").style.display = "block";
-      document.querySelector(".completeModifyReviewDiv").style.display = "none";
+      this.isReviewModify = false;
       FirebaseService.modifyReview(
         this.reviewId,
         this.reviewTitle,
@@ -575,7 +562,6 @@ export default {
 }
 
 .comment {
-  display: none;
   height: 75%;
   width: 70%;
 }
@@ -594,14 +580,12 @@ export default {
 }
 
 .modifyReviewTitleInput {
-  display: none;
-  width: 100%;
+  width: 97%;
   margin-bottom: 1%;
   padding: 1.5% 1.5% 1.5% 1.5%;
 }
 
 .modifyReviewContentInput {
-  display: none;
   width: 100%;
   height: 90%;
 }
@@ -633,15 +617,6 @@ export default {
   height: 1.5em;
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 1em;
-}
-
-.completeModifyReviewDiv {
-  display: none;
-}
-
-.modifyCommentInput,
-.completeModifyCommentDiv {
-  display: none;
 }
 
 .modifyCommentInput {
