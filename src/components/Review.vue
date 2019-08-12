@@ -49,6 +49,16 @@
             <p class="reviewContent" v-if="!isReviewModify">{{reviewContent}}</p>
             <textarea class="modifyReviewContentInput" :value="reviewContent" v-if="isReviewModify"></textarea>
           </div>
+          <!-- 좋아요&싫어요 -->
+          <div class="heartBtn">
+            <span class="dislikeBtn" @click="changeLike()">
+              <i class="far fa-heart"></i> <!-- 싫어요 -->  
+            </span>
+            <span class="likeBtn" @click="changeDislike()">
+               <i class="fas fa-heart"></i> <!-- 좋아요 -->
+            </span>
+            <p>명이 좋아합니다.</p>
+          </div>
           <div class="showCommentDiv">
             <!--  리뷰 수정 -->
             <div
@@ -320,7 +330,13 @@ export default {
       }else{
         return false;
       }
-    }
+    },
+    changeLike() {
+      
+    },
+    changeDislike() {
+
+    },
   }
 };
 </script>
@@ -670,5 +686,16 @@ export default {
 .completeModifyPreviewCommentDiv,
 .deletePreviewCommentDiv {
   cursor: pointer;
+}
+
+.heartBtn {
+}
+
+.likeBtn {
+
+}
+
+.dislikeBtn {
+
 }
 </style>
