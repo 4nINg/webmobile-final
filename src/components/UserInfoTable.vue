@@ -1,5 +1,10 @@
 <template>
 <div id="adminMainContainer">
+  <div id="adminSelectContainer">
+    <span @click="changeSelect(1)" class="adminSelectBtn"><i class="fas fa-circle"></i></span>
+    <span @click="changeSelect(2)" class="adminSelectBtn"><i class="fas fa-circle"></i></span>
+  </div>
+  <div id="adminUserInfoContainer_fake">
   <div id="adminUserInfoContainer">
     <table>
       <tr>
@@ -9,7 +14,8 @@
         <td>login time</td>
         <td></td>
       </tr>
-      <tr v-for="i in userInfoList.length" :key="i">
+
+      <tr v-if="userInfoList" v-for="i in userInfoList.length" :key="i">
         <td>
           <span v-if="userInfoList[i-1].grade == 1 && userInfoList[i-1].username == '관리자'" style="color : #ffd15e"><i class="fas fa-crown"></i></span>
           <span v-else-if="userInfoList[i-1].provide == 'google.com'" class="userInfoTableCol1"><i class="fab fa-google"></i></span>
@@ -39,6 +45,8 @@
       </tr>
     </table>
   </div>
+</div>
+<div id="siteInfoContainer_fake">
   <div id="siteInfoContainer">
     <div id="siteInfoBoxContainer">
       <!-- numOfUser -->
@@ -69,6 +77,7 @@
     </div>
   </div>
 </div>
+</div>
 </template>
 <script>
 import FirebaseService from '../services/FirebaseService';
@@ -82,6 +91,7 @@ export default {
   },
   data() {
     return {
+      select: 1,
       userInfoList: null,
       reviewList: null,
       previewList: null,
@@ -95,13 +105,13 @@ export default {
     this.getUserList();
     this.getNumOfReview();
     this.getNumOfPreview();
-    this.getChart();
   },
   methods: {
     async getUserList() {
       const getUserListFunc = firebase.functions().httpsCallable('getUserList');
       await getUserListFunc().then((result) => {
         var list = result.data.users;
+
         this.userInfoList = [];
         for (var i = 0; i < list.length; i++) {
           // console.log(list[i])
@@ -131,9 +141,11 @@ export default {
         }
       }
     },
-    updataGrade(index) {
+    async updataGrade(index) {
+      this.$store.state.loading = true;
       var radio = document.getElementsByName('userGrade' + index);
       var grade;
+
       for (var i = 0; i < radio.length; i++) {
         if (radio[i].checked) {
           if(radio[i].value == this.userInfoList[index].grade){
@@ -142,9 +154,8 @@ export default {
           grade = radio[i].value;
         }
       }
-      FirebaseService.setUserGrade(this.userInfoList[index].uid, grade);
-      this.userInfoList[index].grade = grade;
-      alert("변경완료!");
+      await FirebaseService.setUserGrade(this.userInfoList[index].uid, grade);
+      await this.getUserList();
     },
     async deleteUser(index) {
       var deleteCheck = confirm(this.userInfoList[index].username + "님의 계정을 삭제하시겠습니까?");
@@ -158,14 +169,28 @@ export default {
     async getNumOfReview() {
       this.reviewList = await FirebaseService.getNumOfReview();
       this.numOfReview = this.reviewList[this.reviewList.length - 1];
-
     },
     async getNumOfPreview() {
       this.previewList = await FirebaseService.getNumOfPreview();
       this.numOfPreview = this.previewList[this.previewList.length - 1];
     },
-    async getChart(){
-
+    changeSelect(i){
+      // console.log(this.select)
+      var adminSelectBtn = document.querySelectorAll(".adminSelectBtn");
+      // for(var i = 0; i < adminSelectBtn.length; i++){
+      //   if()
+      // }
+      adminSelectBtn[this.select-1].style.opacity="0.3";
+      adminSelectBtn[i-1].style.opacity="1";
+      if(i == 1){
+        //adminUserInfoContainer siteInfoContainer
+        document.querySelector('#adminUserInfoContainer_fake').style.visibility = 'visible';
+        document.querySelector('#siteInfoContainer_fake').style.visibility = 'hidden';
+      }else if(i == 2){
+        document.querySelector('#adminUserInfoContainer_fake').style.visibility = 'hidden';
+        document.querySelector('#siteInfoContainer_fake').style.visibility = 'visible';
+      }
+      this.select = i;
     }
   },
 
@@ -173,19 +198,45 @@ export default {
 </script>
 <style>
 #adminMainContainer {
-  margin-left: 10%;
+  margin-left: 5%;
   width: 90%;
   height: 81vh;
+  position: relative;
 }
-#adminUserInfoContainer {
-  width:70%;
+#adminSelectContainer{
+  display: flex;
+  justify-content: center;
+}
+#adminUserInfoContainer_fake {
+  width:100%;
+  height: 80%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+}
+#siteInfoContainer_fake{
+  visibility: hidden;
+  width:100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+}
+#adminUserInfoContainer{
+  display: flex;
+  width:80%;
+  justify-content: center;
+  align-items: flex-start;
   background: white;
   border-radius: 15px;
+  height: 50%;
+  overflow: auto;
 }
 #siteInfoContainer{
-  width:70%;
+  width: 60%;
 }
 #adminUserInfoContainer table{
+  height: 300px;
+  overflow: scroll;
   text-align: center;
   align-items: center;
   width:95%;
@@ -200,11 +251,11 @@ export default {
   width: 50%;
 }
 
-#siteInfoBoxContainer {
-  width: 70%;
+#siteInfoBoxContainer{
+  margin-top: 20px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: space-around;
-  align-items: center;
 }
 
 .siteInfoBox>div {
@@ -213,8 +264,14 @@ export default {
 
 .siteInfoBox {
   width: 100px;
-  border: 2px solid black;
   border-radius: 5px;
+}
+
+.siteInfoBox hr{
+  width:70px;
+  margin: 0 auto;
+  border: 0.5px solid black;
+
 }
 
 .userGradeRadioBtn {
@@ -224,19 +281,40 @@ export default {
 }
 
 label {
+  font-size:1.5em;
   cursor: pointer;
 }
 
+.userGradeRadioBtn + span:not(:first-child) {
+  margin-left: 5px;
+}
+
 #userUpdateBtn {
+  font-size:1.2em;
   cursor: pointer;
   margin-right: 10px;
 }
 
 #userDeleteBtn {
+  font-size:1.2em;
   cursor: pointer;
 }
-
+.userGradeRadioBtn + span{
+  color: rgb(106, 176, 76, 0.3);
+}
 .userGradeRadioBtn:checked + span{
-  color: red;
+  color: rgb(106, 176, 76, 1);
+}
+.adminSelectBtn{
+  cursor: pointer;
+  opacity: 0.3;
+  color: #535c68;
+}
+.adminSelectBtn:not(:first-child){
+  margin-left: 5px;
+}
+.adminSelectBtn:first-child{
+  opacity: 1;
+  color: #535c68;
 }
 </style>
