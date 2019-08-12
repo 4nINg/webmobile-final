@@ -29,38 +29,63 @@
     <div class="previewModal">
       <div class="previewModalContainer">
         <span class="closePreview" @click="closePreviewModal()">&times;</span>
-        <div class="inModalPreview">
+        <div class="inModalPreview" v-if="!isPreviewComment">
           <div class="inModalPreviewNotBtn">
             <div class="inModalPreviewImgPart">
               <img :src="previewImg" />
-              <ImgUploader v-if="isModify" ref="uploader" class="imgUploader"></ImgUploader>
+              <ImgUploader v-if="isPreviewModify" ref="uploader" class="imgUploader"></ImgUploader>
             </div>
             <div class="inModalPreviewContentPart">
               <div class="previewModalTitle">
-                <span class="preveiwTitle">{{previewTitle}}</span>
-                <input type="text" class="modifyPreviewTitleInput" />
+                <span class="preveiwTitle" v-if="!isPreviewModify">{{previewTitle}}</span>
+                <input
+                  type="text"
+                  class="modifyPreviewTitleInput"
+                  v-if="isPreviewModify"
+                  :value="previewTitle"
+                />
               </div>
               <div class="previewModalContent">
-                <p class="previewContent">{{previewContent}}</p>
-                <textarea class="modifyPreviewContentInput"></textarea>
+                <p class="previewContent" v-if="!isPreviewModify">{{previewContent}}</p>
+                <textarea
+                  class="modifyPreviewContentInput"
+                  v-if="isPreviewModify"
+                  :value="previewContent"
+                ></textarea>
               </div>
             </div>
           </div>
           <div class="inmodalPreviewBtnDiv">
-            <div class="modifyPreviewDiv" @click="modifyPreview()">
+            <div
+              class="modifyPreviewDiv"
+              @click="modifyPreview()"
+              v-if="this.$store.state.user !== null && (this.$store.state.user.uid == previewWriterUid || this.$store.state.user.grade == 1) && !isPreviewModify"
+            >
               <div class="modifyPreviewInner">
                 <span>수정</span>
               </div>
             </div>
-            <div class="completeModifyPreviewDiv" @click="completeModifyPreview()">
+            <div
+              class="completeModifyPreviewDiv"
+              @click="completeModifyPreview()"
+              v-if="isPreviewModify"
+            >
               <div class="modifyCompletePreviewInner">
                 <span>수정 완료</span>
               </div>
             </div>
-            <div class="deletePreviewDiv" @click="deletePreview()">
+            <div
+              class="deletePreviewDiv"
+              @click="deletePreview()"
+              v-if="this.$store.state.user !== null && (this.$store.state.user.uid == previewWriterUid || this.$store.state.user.grade == 1) && !isPreviewModify"
+            >
               <span>삭제</span>
             </div>
-            <div class="showPreviewCommentBtn" @click="showPreviewComment()">
+            <div
+              class="showPreviewCommentBtn"
+              @click="showPreviewComment()"
+              v-if="!isPreviewComment && !isPreviewModify"
+            >
               <span>
                 <i class="far fa-comments"></i>댓글 보기
               </span>
@@ -68,47 +93,46 @@
           </div>
         </div>
 
-        <div class="previewComment">
+        <div class="previewComment" v-if="isPreviewComment">
           <div class="previewCommentContainer">
             <div class="previewCommentInnerDiv">
-              <div
-                class="previewCommentVForDiv"
-                v-for="i in previewCommentUserName.length"
-                :key="i"
-              >
-                <span class="previewCommentVForDivTitle">{{previewCommentUserName[i-1]}}</span>
-                <span class="previewCommentVForDivContent">{{previewCommentContent[i-1]}}</span>
+              <div class="previewCommentVForDiv" v-for="i in previewComment.length" :key="i">
+                <span class="previewCommentVForDivUsername">{{previewComment[i-1].username}}</span>
+                <span class="previewCommentVForDivContent">{{previewComment[i-1].content}}</span>
                 <input type="text" class="modifyPreviewCommentInput" />
 
                 <div class="previewCommentBtnContainer">
-                  <div class="modifyPreviewCommentDiv">
+                  <div class="modifyPreviewCommentDiv" @click="modifyPreviewComment(i-1)">
                     <div class="modifyPreviewCommentInner">
                       <span>수정</span>
                     </div>
                   </div>
-                  <div class="completeModifyPreviewCommentDiv">
+                  <div
+                    class="completeModifyPreviewCommentDiv"
+                    @click="completeModifyPreviewComment(i-1)"
+                  >
                     <div class="completeModifyPreviewCommentInner">
                       <span>수정 완료</span>
                     </div>
                   </div>
-                  <div class="deletePreviewCommentDiv">
+                  <div class="deletePreviewCommentDiv" @click="deletePreviewComment(i-1)">
                     <span>삭제</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="previewCommentWriteDiv">
-              <PreviewCommentWriter
-                :previewId="previewId"
-                :previewCommentUserName="previewCommentUserName"
-                :previewCommentContent="previewCommentContent"
-                :previewCommentUserUid="previewCommentUserUid"
-                @isSubmit="isSubmit"
-              ></PreviewCommentWriter>
+            <div class="previewCommentWriteDiv" v-if="this.$store.state.user !== null">
+              <PreviewCommentWriter :previewId="previewId" @isSubmit="isSubmit"></PreviewCommentWriter>
             </div>
-            <span class="showinModalPreview" @click="backToThePreviewContent()">
-              <i class="fas fa-undo"></i>글 보기
-            </span>
+            <div
+              class="showinModalPreview"
+              @click="backToThePreviewContent()"
+              v-if="isPreviewComment"
+            >
+              <span>
+                <i class="fas fa-undo"></i>글 보기
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -131,25 +155,36 @@ export default {
   data() {
     return {
       previewList: [],
+      commentList: [],
       displayPreview: [],
       showIdx: 0,
+      previewWriterUid: "",
       previewId: "",
       previewImg: "",
       previewTitle: "",
       previewContent: "",
-      previewCommentContent: [],
-      previewCommentUserName: [],
-      previewCommentUserUid: [],
+      previewComment: [],
       displayedPreview: 0,
-      isModify: false
+      isModify: false,
+      isPreviewModify: false,
+      isPreviewComment: false
     };
   },
   methods: {
     isSubmit() {
+      this.getPreviewCommentList();
       this.getPreviewList();
     },
-    showPreviewWrite() {
-      document.querySelector(".previewWriteModal").style.display = "block";
+    async getPreviewCommentList() {
+      this.commentList = await FirebaseService.getPreviewCommentList();
+      if (this.previewId !== null && this.previewId !== "") {
+        this.previewComment = [];
+        for (var j = 0; j < this.commentList.length; ++j) {
+          if (this.commentList[j].previewId === this.previewId) {
+            this.previewComment.push(this.commentList[j]);
+          }
+        }
+      }
     },
     async getPreviewList() {
       this.previewList = await FirebaseService.getPreviewList();
@@ -178,65 +213,108 @@ export default {
     },
     showPreview(i) {
       this.displayedPreview = i + this.showIdx;
+      this.previewWriterUid = this.displayPreview[i].writerUid;
       this.previewId = this.displayPreview[i].id;
       this.previewImg = this.displayPreview[i].imgUrl;
       this.previewTitle = this.displayPreview[i].title;
       this.previewContent = this.displayPreview[i].body;
-
-      if (this.displayPreview[i].commentUserUid.length === 0) {
-        this.previewCommentUserName = [];
-        this.previewCommentContent = [];
-        this.previewCommentUserUid = [];
-      } else {
-        this.previewCommentUserName = this.displayPreview[i].commentUserName;
-        this.previewCommentContent = this.displayPreview[i].commentContent;
-        this.previewCommentUserUid = this.displayPreview[i].commentUserUid;
+      this.previewComment = [];
+      for (var j = 0; j < this.commentList.length; ++j) {
+        if (this.commentList[j].previewId === this.previewId) {
+          this.previewComment.push(this.commentList[j]);
+        }
       }
-
-      document.querySelector(".previewComment").style.display = "none";
-      document.querySelector(".inModalPreview").style.display = "block";
+      this.isPreviewComment = false;
+      this.isPreviewModify = false;
       document.querySelector(".previewModal").style.display = "block";
     },
     closePreviewModal() {
-      document.querySelector(".modifyPreviewTitleInput").style.display = "none";
-      document.querySelector(".preveiwTitle").style.display = "block";
-      document.querySelector(".modifyPreviewContentInput").style.display =
-        "none";
-      document.querySelector(".previewContent").style.display = "block";
-      document.querySelector(".modifyPreviewDiv").style.display = "block";
-      document.querySelector(".completeModifyPreviewDiv").style.display =
-        "none";
-      this.isModify = false;
+      this.isModify = false; // 이미지 업로더
+      this.isPreviewComment = false;
+      this.isPreviewModify = false;
       document.querySelector(".previewModal").style.display = "none";
     },
+    showPreviewComment() {
+      this.isPreviewComment = true;
+    },
+    backToThePreviewContent() {
+      this.isPreviewComment = false;
+    },
+    deletePreviewComment(index) {
+      if (confirm("댓글을 삭제하시겠습니까?")) {
+        FirebaseService.deletePreviewComment(this.previewComment[index].id);
+        this.getPreviewCommentList();
+      }
+    },
+    showPreviewWrite() {
+      document.querySelector(".previewWriteModal").style.display = "block";
+    },
+    modifyPreviewComment(index) {
+      var beforeModifyCommentValue = this.previewComment[index].content; // 내용 들고 오기
+      var modifyPreviewCommentDiv = document.querySelectorAll(
+        ".modifyPreviewCommentDiv"
+      ); // 수정 버튼
+      var deletePreviewCommentDiv = document.querySelectorAll(
+        ".deletePreviewCommentDiv"
+      ); // 삭제 버튼
+      var completeModifyPreviewCommentDiv = document.querySelectorAll(
+        ".completeModifyPreviewCommentDiv"
+      ); // 수정 완료 버튼
+      var modifyPreviewCommentInput = document.querySelectorAll(
+        ".modifyPreviewCommentInput"
+      ); // 수정시 이용할 인풋
+      var previewCommentVForDivContent = document.querySelectorAll(
+        ".previewCommentVForDivContent"
+      ); // 원래 댓글 내용
+
+      document.querySelector(".previewCommentWriteDiv").style.display = "none"; // 댓글 작성창
+      previewCommentVForDivContent[index].style.display = "none";
+      modifyPreviewCommentInput[index].style.display = "block";
+      modifyPreviewCommentDiv[index].style.display = "none";
+      deletePreviewCommentDiv[index].style.display = "none";
+      completeModifyPreviewCommentDiv[index].style.display = "block";
+      modifyPreviewCommentInput[index].value = beforeModifyCommentValue;
+    },
+    completeModifyPreviewComment(index) {
+      var modifyPreviewCommentDiv = document.querySelectorAll(
+        ".modifyPreviewCommentDiv"
+      ); //수정버튼
+      var deletePreviewCommentDiv = document.querySelectorAll(
+        ".deletePreviewCommentDiv"
+      ); // 삭제버튼
+      var completeModifyPreviewCommentDiv = document.querySelectorAll(
+        ".completeModifyPreviewCommentDiv"
+      ); // 수정완료버튼
+      var modifyPreviewCommentInput = document.querySelectorAll(
+        ".modifyPreviewCommentInput"
+      ); // 댓글 수정 인풋
+      var previewCommentVForDivContent = document.querySelectorAll(
+        ".previewCommentVForDivContent"
+      ); // 원래 댓글 내용
+      document.querySelector(".previewCommentWriteDiv").style.display = "block"; // 댓글작성 창
+      FirebaseService.modifyPreviewComment(
+        this.previewComment[index].id,
+        modifyPreviewCommentInput[index].value
+      );
+      this.getPreviewCommentList();
+      previewCommentVForDivContent[index].style.display = "block"; // 원래 내용 보임
+      modifyPreviewCommentInput[index].style.display = "none"; // 수정창 없앰
+      modifyPreviewCommentDiv[index].style.display = "block"; // 수정버튼 보임
+      deletePreviewCommentDiv[index].style.display = "block"; // 삭제버튼 보임
+      completeModifyPreviewCommentDiv[index].style.display = "none"; //수정완료버튼 없앰
+    },
+
     modifyPreview() {
       var beforeModifyTitle = document.querySelector(".preveiwTitle").innerText;
       var beforeModifyContent = document.querySelector(".previewContent")
         .innerText;
       this.isModify = true;
-      document.querySelector(".preveiwTitle").style.display = "none";
-      document.querySelector(".modifyPreviewTitleInput").style.display =
-        "block";
-      document.querySelector(
-        ".modifyPreviewTitleInput"
-      ).value = beforeModifyTitle;
-      document.querySelector(".previewContent").style.display = "none";
-      document.querySelector(".modifyPreviewContentInput").style.display =
-        "block";
-      document.querySelector(
-        ".modifyPreviewContentInput"
-      ).value = beforeModifyContent;
-
-      document.querySelector(".modifyPreviewDiv").style.display = "none";
-      document.querySelector(".completeModifyPreviewDiv").style.display =
-        "block";
+      this.isPreviewModify = true;
     },
     completeModifyPreview() {
       for (var i = 0; i < this.previewList.length; ++i) {
         if (this.previewList[i].id === this.previewId) {
-          this.previewList[i].title = document.querySelector(
-            ".modifyPreviewTitleInput"
-          ).value;
+          this.previewList[i].title = this.previewTitle;
           this.previewList[i].body = document.querySelector(
             ".modifyPreviewContentInput"
           ).value;
@@ -245,15 +323,7 @@ export default {
           break;
         }
       }
-      document.querySelector(".modifyPreviewTitleInput").style.display = "none";
-      document.querySelector(".preveiwTitle").style.display = "block";
-      document.querySelector(".modifyPreviewContentInput").style.display =
-        "none";
-      document.querySelector(".previewContent").style.display = "block";
-      document.querySelector(".modifyPreviewDiv").style.display = "block";
-      document.querySelector(".completeModifyPreviewDiv").style.display =
-        "none";
-
+      this.isPreviewModify = false;
       var imgUrl = this.$refs.uploader.imageUrl;
       if (imgUrl === "" || imgUrl === null) {
         FirebaseService.modifyPreview(
@@ -280,73 +350,10 @@ export default {
       if (confirm("게시글을 삭제하시겠습니까?")) {
         FirebaseService.deletePreview(this.previewId);
         this.getPreviewList();
-        document.querySelector(".previewComment").style.display = "none";
-        document.querySelector(".inModalPreview").style.display = "none";
+        this.isPreviewComment = false;
         document.querySelector(".previewModal").style.display = "none";
       }
-    },
-    showPreviewComment() {
-      document.querySelector(".inModalPreview").style.display = "none";
-      document.querySelector(".previewComment").style.display = "block";
-    },
-    backToThePreviewContent() {
-      document.querySelector(".inModalPreview").style.display = "block";
-      document.querySelector(".previewComment").style.display = "none";
-    },
-    deletePreviewComment(index) {
-      var tempCommentUserName = [];
-      var tempCommentContent = [];
-      var tempCommentUserUid = [];
-      for (var i = 0; i < this.previewCommentUserUid.length; ++i) {
-        if (i !== index) {
-          tempCommentUserName.push(this.previewCommentUserName[i]);
-          tempCommentContent.push(this.previewCommentContent[i]);
-          tempCommentUserUid.push(this.previewCommentUserUid[i]);
-        }
-      }
-      var tempPreview = FirebaseService.deletePreviewComment(
-        this.previewId,
-        tempCommentUserName,
-        tempCommentContent,
-        tempCommentUserUid
-      );
-      this.getPreviewList();
-      this.previewCommentContent = tempCommentContent;
-      this.previewCommentUserName = tempCommentUserName;
-    },
-    modifyPreviewComment(index) {
-      var beforeModifyCommentValue = this.previewCommentContent[index]; // 내용 들고 오기
-      var modifyPreviewCommentDiv = document.querySelectorAll(
-        ".modifyPreviewCommentDiv"
-      ); // 수정 버튼
-      var deletePreviewCommentDiv = document.querySelectorAll(
-        ".deletePreviewCommentDiv"
-      ); // 삭제 버튼
-      var completeModifyPreviewCommentDiv = document.querySelectorAll(
-        ".completeModifyPreviewCommentDiv"
-      ); // 수정 완료 버튼
-      var modifyPreviewCommentInput = document.querySelectorAll(
-        ".modifyPreviewCommentInput"
-      ); // 수정시 이용할 인풋
-      var previewCommentContent = document.querySelectorAll(
-        ".previewCommentContent"
-      );
-
-      document.querySelector(".previewCommentWriteDiv").style.display = "none";
-
-      for (var i = 0; i < previewCommentContent.length; ++i) {
-        if (i === index) {
-          previewCommentContent[i].style.display = "none";
-          modifyPreviewCommentInput[i].style.display = "block";
-          modifyPreviewCommentDiv[i].style.display = "none";
-          deletePreviewCommentDiv[i].style.display = "none";
-          completeModifyPreviewCommentDiv[i].style.display = "block";
-          modifyPreviewCommentInput[i].value = beforeModifyCommentValue;
-          break;
-        }
-      }
-    },
-    completeModifyPreviewComment(index) {}
+    }
   },
   components: {
     PreviewWriter,
@@ -355,6 +362,7 @@ export default {
   },
   mounted() {
     this.getPreviewList();
+    this.getPreviewCommentList();
     this.isModify = false;
   }
 };
@@ -446,6 +454,8 @@ export default {
 .rightArrow {
   cursor: pointer;
   top: 50%;
+  font-size: 2em;
+  opacity: 0.6;
 }
 
 .previewModal {
@@ -531,7 +541,6 @@ export default {
 }
 
 .modifyPreviewTitleInput {
-  display: none;
   width: 100%;
   height: 100%;
   padding: 1.5% 1.5% 1.5% 1.5%;
@@ -551,7 +560,6 @@ export default {
 }
 
 .modifyPreviewContentInput {
-  display: none;
   width: 100%;
   height: 100%;
 }
@@ -567,6 +575,14 @@ export default {
 
 .inmodalPreviewBtnDiv > div:hover {
   box-shadow: 0.2em 0.2em 0.2em 0.2em rgb(0, 0, 0, 0.1);
+}
+
+.completeModifyPreviewCommentInner {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .modifyPreviewDiv,
@@ -592,12 +608,7 @@ export default {
   height: 1.5em;
 }
 
-.completeModifyPreviewDiv {
-  display: none;
-}
-
 .previewComment {
-  display: none;
   width: 90%;
   height: 75%;
 }
@@ -642,6 +653,20 @@ export default {
 .previewCommentBtnContainer {
   display: flex;
   justify-content: flex-end;
+  margin-top: 0.5%;
+  width: 98%;
+}
+
+.completeModifyPreviewCommentDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  width: 5em;
+  height: 1.5em;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 0.5em;
 }
 
 .completeModifyPreviewCommentDiv {
@@ -650,7 +675,7 @@ export default {
 
 .modifyPreviewCommentInner {
   width: 4em;
-  height: 2em;
+  height: 1.5em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -661,7 +686,7 @@ export default {
 }
 .deletePreviewCommentDiv {
   width: 4em;
-  height: 2em;
+  height: 1.5em;
   display: flex;
   justify-content: center;
   align-items: center;

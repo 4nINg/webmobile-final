@@ -49,49 +49,28 @@ Notification.requestPermission().then(function(Permission) {
     } else {
         console.log("No Permission");
     }
-    //알림설정 기능 완료 후 지우고 수정 할 부분.
-    // }).then(function(token) {
-    //     console.log("Alarm token : " + token);
-    //     //토큰 값이 있을때
-    //     if (token) {
-    //         firestore.collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
-    //                 uid : firebase.auth().currentUser.uid,
-    //                 token: token,
-    //                 alarmPermission: true
-    //             })
-    //             .then(function() {
-    //                 console.log("Token 저장 성공");
-    //             })
-    //     }
 }).catch(function(err) {
     console.log("Error ", err);
 });
 
+firebase.firestore().enablePersistence()
+    .catch(function(err) {
+        if (err.code == 'failed-precondition') {} else if (err.code == 'unimplemented') {}
+    });
 
 //포그라운드 상태에서 메세지 받는 처리 방식
 firebase.messaging().onMessage((payload) => {
     console.log(payload);
-    const flag = payload.data.messageAuth;
-
-    if(flag === "reviewReg" || flag == "previewReg") {
-      var notificationTitle = "에 새 댓글이 등록되었습니다";
-      var notificationOptions = {
-          body: payload.data.body,
-          icon: "https://ifh.cc/g/lUitx.png",
-          img: payload.data.image
-      };
-      console.log(payload.data.image);
-      var notification = new Notification(notificationTitle, notificationOptions);
-      //registration.showNotification(notificationTitle, notificationOptions);
-      console.log("online received.");
-    }else if(flag === "reviewCommentReg" || flag === "previewCommentReg"){
-      var notificationOptions = {
-
-      }
-      //곧 작성.
-    }else {
-      console.log("err");
-    }
+    var notificationTitle = payload.data.title;
+    var notificationOptions = {
+        body: payload.data.body,
+        icon: "https://ifh.cc/g/lUitx.png",
+        img: payload.data.image
+    };
+    console.log(payload.data.image);
+    var notification = new Notification(notificationTitle, notificationOptions);
+    //registration.showNotification(notificationTitle, notificationOptions);
+    console.log("online received.");
 });
 
 
@@ -127,9 +106,6 @@ export default {
                 body: body,
                 created_at: firebase.firestore.FieldValue.serverTimestamp(),
                 id: "",
-                // commentContent: [],
-                // commentUsername: [],
-                // commentUserUid: []
             })
             .then(() => {}).catch((error) => {
                 alert(error)
@@ -161,7 +137,7 @@ export default {
                 });
             });
     },
-    // 리뷰 등록하기
+    // 리뷰 댓글 등록하기
     postReviewComment(reviewId, content, userUid, username) {
         firestore.collection(REVIEWCOMMENT).add({
             content: content,
@@ -183,7 +159,6 @@ export default {
         firestore.collection(REVIEWCOMMENT).doc(reviewCommentId).delete();
     },
     // ==================================================== 프리뷰 =================================================================
-
     getPreviewList() {
         const reviewCollection = firestore.collection(PREVIEW);
         return reviewCollection
@@ -205,19 +180,9 @@ export default {
             body: body,
             imgUrl: imgUrl,
             imgName: imgName,
-            commentContent: [],
-            commentUsername: [],
-            commentUserUid: [],
             created_at: firebase.firestore.FieldValue.serverTimestamp()
         });
     },
-    deletePreview(o) {
-        firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
-            firestorage.ref().child('review/' + o.num).delete()
-            window.location.reload();
-        });
-    },
-
     deletePreview(previewId) {
         firestore.collection(PREVIEW).doc(previewId).delete();
     },
@@ -228,7 +193,6 @@ export default {
                 body: body
             });
         } else {
-
             firestore.collection(PREVIEW).doc(previewId).update({
                 title: title,
                 body: body,
@@ -237,17 +201,43 @@ export default {
             });
         }
     },
-    postPreviewComment(previewId,
-        previewCommentUserName,
-        previewCommentContent,
-        previewCommentUserUid) {
-        firestore.collection(PREVIEW).doc(previewId).update({
-            commentUserName: previewCommentUserName,
-            commentContent: previewCommentContent,
-            commentUserUid: previewCommentUserUid
-        })
-
+    // =================================================== 프리뷰 댓글 ==============================================================
+    // 프리뷰 댓글 다 들고오기
+    getPreviewCommentList() {
+        const reviewCommentCollection = firestore.collection(PREVIEWCOMMENT);
+        return reviewCommentCollection
+            .orderBy("created_at", "desc")
+            .get()
+            .then(docSnapshots => {
+                return docSnapshots.docs.map(doc => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    return data;
+                });
+            });
     },
+    // 프리뷰댓글 등록
+    postPreviewComment(previewId, content, userUid, username) {
+        firestore.collection(PREVIEWCOMMENT).add({
+            content: content,
+            previewId: previewId,
+            userUid: userUid,
+            username: username,
+            id: "",
+            created_at: firebase.firestore.FieldValue.serverTimestamp()
+        })
+    },
+    // 프리뷰 댓글 수정
+    modifyPreviewComment(previewCommentId, content) {
+        firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).update({
+            content: content
+        });
+    },
+    // 프리뷰 댓글 삭제
+    deletePreviewComment(previewCommentId) {
+        firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).delete();
+    },
+
     //사용자 정보 불러오기
     getUser(uid) {
         const getUserFunc = functions.httpsCallable('getUser');

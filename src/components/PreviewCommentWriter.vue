@@ -12,12 +12,7 @@
 <script>
 import FirebaseService from "../services/FirebaseService";
 export default {
-  props: [
-    "previewId",
-    "previewCommentUserName",
-    "previewCommentContent",
-    "previewCommentUserUid"
-  ],
+  props: ["previewId"],
   data() {
     return {
       previewCommentBody: ""
@@ -29,16 +24,13 @@ export default {
   methods: {
     transComment() {
       if (this.previewCommentBody !== "") {
-        this.previewCommentUserName.push(this.$store.state.user.username);
-        this.previewCommentContent.push(this.previewCommentBody);
-        this.previewCommentUserUid.push(this.$store.state.user.uid);
-        this.previewCommentBody = "";
         FirebaseService.postPreviewComment(
           this.previewId,
-          this.previewCommentUserName,
-          this.previewCommentContent,
-          this.previewCommentUserUid
+          this.previewCommentBody,
+          this.$store.state.user.uid,
+          this.$store.state.user.username
         );
+        this.previewCommentBody = "";
         this.isPreviewCommentSubmit = true;
         this.$emit("isSubmit", this.isSubmit);
       } else {
