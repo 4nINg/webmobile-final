@@ -9,7 +9,8 @@ body {
     overflow: hidden;
 }
 
-#cursor {
+
+/* #cursor {
     position: absolute;
     width: 20px;
     height: 20px;
@@ -19,4 +20,31 @@ body {
     transform: tranlate(-50%, 50%);
     border-radius: 50%;
     pointer-events: none;
+} */
+
+div.clickEffect {
+    position: fixed;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: #FFFFFF;
+    border-radius: 50%;
+    animation: clickEffect 0.4s ease-out;
+    z-index: 99999;
+}
+
+@keyframes clickEffect {
+    0% {
+        opacity: 1;
+        width: 0.5em;
+        height: 0.5em;
+        margin: -0.25em;
+        border-width: 0.5em;
+    }
+    100% {
+        opacity: 0.2;
+        width: 15em;
+        height: 15em;
+        margin: -7.5em;
+        border-width: 0.03em;
+    }
 }

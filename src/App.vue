@@ -119,15 +119,4 @@ body * {
   background-position: center center;
   opacity: 0.75;
 }
-#cursor {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #000;
-  box-sizing: border-box;
-  transition: 0.1s;
-  transform: tranlate(-50%, 50%);
-  border-radius: 50%;
-  pointer-events: none;
-}
 </style>
