@@ -60,17 +60,30 @@ firebase.firestore().enablePersistence()
 
 //포그라운드 상태에서 메세지 받는 처리 방식
 firebase.messaging().onMessage((payload) => {
-    console.log(payload);
+  var flag = payload.data.messageAuth;
+
+  if(flag === "reviewCommentReg" || flag === "previewCommentReg") {
     var notificationTitle = payload.data.title;
     var notificationOptions = {
-        body: payload.data.body,
+        body : "작성자 : " + payload.data.username + "\n" + "내용 : " + payload.data.body,
+        data : payload.data.username,
         icon: "https://ifh.cc/g/lUitx.png",
-        img: payload.data.image
+        image : ""
     };
-    console.log(payload.data.image);
     var notification = new Notification(notificationTitle, notificationOptions);
     //registration.showNotification(notificationTitle, notificationOptions);
     console.log("online received.");
+  }else if(flag === "reviewReg" || flag === "previewReg") {
+    var notificationTitle = payload.data.title;
+    var notificationOptions = {
+      body : payload.data.body,
+      icon: "https://ifh.cc/g/lUitx.png"
+    };
+
+    var notification = new Notification(notificationTitle, notificationOptions);
+    console.log("online received.");
+  }
+
 });
 
 
