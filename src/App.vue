@@ -110,15 +110,14 @@ body * {
   height: 100vh;
 }
 .backgroudDiv {
-  height: 81vh;
-  width: 32vw;
+  height: 87vh;
+  width: 100vw;
   position: absolute;
-  left: 45%;
   z-index: -1;
-  background-image: url("./assets/film.jpg");
+  background-image: url("./assets/MovieBG.png");
   background-size: cover;
   background-position: center center;
-  opacity: 0.9;
+  opacity: 0.75;
 }
 #cursor {
   position: absolute;

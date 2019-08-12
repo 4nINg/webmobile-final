@@ -12,7 +12,7 @@ const REVIEW = "review";
 const USERINFO = "userInfo";
 const PREVIEW = "preview";
 const REVIEWCOMMENT = "reviewComment";
-const PREVIEWCOMMENT = "previewCommnet";
+const PREVIEWCOMMENT = "previewComment";
 // cloud firestore
 
 

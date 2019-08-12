@@ -410,7 +410,7 @@ export default {
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 1%;
+  margin-top: 5%;
 }
 
 .preview {

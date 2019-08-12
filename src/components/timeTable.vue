@@ -1,17 +1,13 @@
 <template>
   <div class="tableMainDiv">
     <div class="searchBox">
-      <span @click="openModal()" class="calendarBtn">
-        <i class="far fa-calendar-alt"></i>
-      </span>
+      <div @click="openModal()" class="calendarBtn">
+        <span>
+          <i class="far fa-calendar-alt"></i>
+        </span>
+      </div>
       <div class="searchTextBox">
-        <input
-          type="text"
-          v-model="searchKeyword"
-          placeholder="Search"
-          class="searchTxt"
-          @keyup="searchSuggest"
-        />
+        <input type="text" v-model="searchKeyword" placeholder="Search" class="searchTxt" />
         <div class="searchSuggetDiv">
           <ul>
             <li v-for="i in searchSuggestList.length" :key="i">
@@ -23,10 +19,11 @@
           </ul>
         </div>
       </div>
-
-      <span @click="searchMovie()">
-        <i class="fas fa-search searchBtn"></i>
-      </span>
+      <div @click="searchMovie()" class="searchBtn">
+        <span>
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
     </div>
     <div class="searchResult">
       <div class="searchResultImg"></div>
@@ -36,9 +33,18 @@
       </div>
     </div>
     <div class="tableDiv">
-      <div class="partDiv cgvDiv"></div>
-      <div class="partDiv megaboxDiv"></div>
-      <div class="partDiv lotteDiv"></div>
+      <div class="partDiv cgvDiv">
+        <div class="cgvInner" v-if="cgvResult.length === 0">현재 상영 정보가 없습니다.</div>
+        <div v-for="q in cgvResult.length" :key="q" class="cgvInner">{{cgvResult[q-1]}}</div>
+      </div>
+      <div class="partDiv megaboxDiv">
+        <div class="cgvInner" v-if="megaboxResult.length === 0">현재 상영 정보가 없습니다.</div>
+        <div v-for="w in megaboxResult.length" :key="w" class="megaboxInner">{{megaboxResult[w-1]}}</div>
+      </div>
+      <div class="partDiv lotteDiv">
+        <div class="cgvInner" v-if="lotteResult.length === 0">현재 상영 정보가 없습니다.</div>
+        <div v-for="e in lotteResult.length" :key="e" class="lotteInner">{{lotteResult[e-1]}}</div>
+      </div>
     </div>
     <div id="myModal" class="modal">
       <div class="modal-content">
@@ -128,14 +134,14 @@ export default {
       monthAndYear: null,
       megaboxDate: [],
       megaboxList: [],
-      megaboxResult: null,
+      megaboxResult: [],
       lotteDate: [],
       lotteList: [],
-      lotteResult: null,
+      lotteResult: [],
       cgvDate: [],
       cgvList: [],
-      cgvResult: null,
-      searchKeyword: null,
+      cgvResult: [],
+      searchKeyword: "",
       totalMovieList: [],
       searchMovieTitle: "",
       searchMovieImgUrl: "",
@@ -152,7 +158,6 @@ export default {
     this.selectMonth = document.getElementById("month");
     this.monthAndYear = document.getElementById("monthAndYear");
     this.showCalendar(this.currentMonth, this.currentYear);
-
   },
   methods: {
     selectSearchSuggest(i) {
@@ -163,11 +168,6 @@ export default {
     searchSuggest() {
       this.searchSuggestList = [];
       if (this.searchKeyword !== "") {
-        for (var i = 0; i < this.totalMovieList.length; ++i) {
-          if (this.totalMovieList[i].includes(this.searchKeyword)) {
-            this.searchSuggestList.push(this.totalMovieList[i]);
-          }
-        }
       }
     },
     next() {
@@ -291,25 +291,23 @@ export default {
           var flag = true;
           var byTitleTime = null;
           for (var q = 0; q < movieList.length; ++q) {
-            if (movieList[q] === "@") {
-              continue;
-            }
-            try {
-              byMovie = movieList[q].split(",");
-              for (var j = 0; j < byMovie.length; j++) {
-                flag = true;
-                byTitleTime = byMovie[j].split("/");
-                for (var k = 0; k < self.totalMovieList.length; ++k) {
-                  if (self.totalMovieList[k].includes(byTitleTime[0])) {
-                    flag = false;
-                    break;
-                  }
-                }
-                if (flag) {
-                  self.totalMovieList.push(byTitleTime[0]);
+            // if (movieList[q] === "@") {
+            //   continue;
+            // }
+            byMovie = movieList[q].split(",,");
+            for (var j = 0; j < byMovie.length; j++) {
+              flag = true;
+              byTitleTime = byMovie[j].split("/");
+              for (var k = 0; k < self.totalMovieList.length; ++k) {
+                if (self.totalMovieList[k] === byTitleTime[0]) {
+                  flag = false;
+                  break;
                 }
               }
-            } catch (error) {}
+              if (flag) {
+                self.totalMovieList.push(byTitleTime[0]);
+              }
+            }
           }
         });
     },
@@ -322,7 +320,7 @@ export default {
           }
         })
         .then(response => {
-          var byDate = response.data.info.split("&"); //날짜별;
+          var byDate = response.data.info.split("&&"); //날짜별;
           var date = [];
           var movieList = [];
           var temp = null;
@@ -342,25 +340,23 @@ export default {
           var flag = true;
           var byTitleTime = null;
           for (var q = 0; q < movieList.length; ++q) {
-            if (movieList[q] === "@") {
-              continue;
-            }
-            try {
-              byMovie = movieList[q].split(",");
-              for (var j = 0; j < byMovie.length; j++) {
-                flag = true;
-                byTitleTime = byMovie[j].split("/");
-                for (var k = 0; k < self.totalMovieList.length; ++k) {
-                  if (self.totalMovieList[k].includes(byTitleTime[0])) {
-                    flag = false;
-                    break;
-                  }
-                }
-                if (flag) {
-                  self.totalMovieList.push(byTitleTime[0]);
+            // if (movieList[q] === "@") {
+            //   continue;
+            // }
+            byMovie = movieList[q].split(",,");
+            for (var j = 0; j < byMovie.length; j++) {
+              flag = true;
+              byTitleTime = byMovie[j].split("/");
+              for (var k = 0; k < self.totalMovieList.length; ++k) {
+                if (self.totalMovieList[k] === byTitleTime[0]) {
+                  flag = false;
+                  break;
                 }
               }
-            } catch (error) {}
+              if (flag) {
+                self.totalMovieList.push(byTitleTime[0]);
+              }
+            }
           }
         });
     },
@@ -373,7 +369,7 @@ export default {
           }
         })
         .then(response => {
-          var byDate = response.data.info.split("&"); //날짜별;
+          var byDate = response.data.info.split("&&"); //날짜별;
           var date = [];
           var movieList = [];
           var temp = null;
@@ -393,25 +389,23 @@ export default {
           var flag = true;
           var byTitleTime = null;
           for (var q = 0; q < movieList.length; ++q) {
-            if (movieList[q] === "@") {
-              continue;
-            }
-            try {
-              byMovie = movieList[q].split(",");
-              for (var j = 0; j < byMovie.length; j++) {
-                flag = true;
-                byTitleTime = byMovie[j].split("/");
-                for (var k = 0; k < self.totalMovieList.length; ++k) {
-                  if (self.totalMovieList[k].includes(byTitleTime[0])) {
-                    flag = false;
-                    break;
-                  }
-                }
-                if (flag) {
-                  self.totalMovieList.push(byTitleTime[0]);
+            // if (movieList[q] === "@") {
+            //   continue;
+            // }
+            byMovie = movieList[q].split(",,");
+            for (var j = 0; j < byMovie.length; j++) {
+              flag = true;
+              byTitleTime = byMovie[j].split("/");
+              for (var k = 0; k < self.totalMovieList.length; ++k) {
+                if (self.totalMovieList[k] === byTitleTime[0]) {
+                  flag = false;
+                  break;
                 }
               }
-            } catch (error) {}
+              if (flag) {
+                self.totalMovieList.push(byTitleTime[0]);
+              }
+            }
           }
         });
     },
@@ -424,7 +418,6 @@ export default {
         alert("검색어를 입력해주세요!");
         return;
       }
-
       this.searchMovieImgUrl = "";
       this.searchMegabox();
       this.searchLotte();
@@ -438,13 +431,15 @@ export default {
       this.movieDetail();
     },
     async movieDetail() {
+      this.searchSuggestList = [];
       this.$store.state.loading = true;
       var self = this;
       var searchResult = null;
+      var finalKeyword = this.searchKeyword.replace(" (우리말녹음)", "");
       await axios
         .get(
           "https://api.themoviedb.org/3/search/movie?api_key=584467f43959cb7bd6c03220e9d02eb7&language=ko&query=" +
-            self.searchKeyword +
+            finalKeyword +
             "&page=1&include_adult=true&region=kr&year=2019&primary_release_year=2019"
         )
         .then(response => {
@@ -465,7 +460,7 @@ export default {
     },
     searchLotte() {
       var lotteDiv = document.querySelector(".lotteDiv");
-      this.lotteResult = null;
+      this.lotteResult = [];
       var result = [];
       var bfsplit = null;
       for (var i = 0; i < this.lotteDate.length - 1; ++i) {
@@ -480,27 +475,16 @@ export default {
       var final = null;
       for (var i = 0; i < afsplit.length - 1; ++i) {
         temp = afsplit[i].split("/");
-        if (temp[0].includes(this.searchKeyword)) {
+        if (temp[0] === this.searchKeyword) {
           final = temp[1].split("|");
           this.lotteResult = final;
           break;
         }
       }
-      if (bfsplit === null || this.lotteResult === null) {
-        lotteDiv.innerHTML =
-          '<div class="lotteInner">현재 상영 정보가 없습니다.</div>';
-        return;
-      }
-
-      var htmlText = "";
-      for (var n = 0; n < this.lotteResult.length; ++n) {
-        htmlText += '<div class="lotteInner">' + this.lotteResult[n] + "</div>";
-      }
-      lotteDiv.innerHTML = htmlText;
     },
     searchMegabox() {
       var megaboxDiv = document.querySelector(".megaboxDiv");
-      this.megaboxResult = null;
+      this.megaboxResult = [];
       var result = [];
       var bfsplit = null;
 
@@ -515,27 +499,16 @@ export default {
       var final = null;
       for (var i = 0; i < afsplit.length - 1; ++i) {
         temp = afsplit[i].split("/");
-        if (temp[0].includes(this.searchKeyword)) {
+        if (temp[0] === this.searchKeyword) {
           final = temp[1].split("|");
           this.megaboxResult = final;
           break;
         }
       }
-      if (bfsplit === null || this.megaboxResult === null) {
-        megaboxDiv.innerHTML =
-          '<div class="megaboxInner">현재 상영 정보가 없습니다.</div>';
-        return;
-      }
-      var htmlText = "";
-      for (var n = 0; n < this.megaboxResult.length; ++n) {
-        htmlText +=
-          '<div class="megaboxInner">' + this.megaboxResult[n] + "</div>";
-      }
-      megaboxDiv.innerHTML = htmlText;
     },
     searchCgv() {
       var cgvDiv = document.querySelector(".cgvDiv");
-      this.cgvResult = null;
+      this.cgvResult = [];
       var result = [];
       var bfsplit = null;
       for (var i = 0; i < this.cgvDate.length - 1; ++i) {
@@ -550,28 +523,26 @@ export default {
       var final = null;
       for (var i = 0; i < afsplit.length - 1; ++i) {
         temp = afsplit[i].split("/");
-        if (temp[0].includes(this.searchKeyword)) {
+        if (temp[0] === this.searchKeyword) {
           final = temp[1].split("|");
           this.cgvResult = final;
           break;
         }
       }
-      if (bfsplit === null || this.cgvResult === null) {
-        cgvDiv.innerHTML =
-          '<div class="cgvInner">현재 상영 정보가 없습니다.</div>';
-        return;
-      }
-      var htmlText = "";
-      for (var n = 0; n < this.cgvResult.length; ++n) {
-        htmlText += '<div class="cgvInner">' + this.cgvResult[n] + "</div>";
-      }
-      cgvDiv.innerHTML = htmlText;
     }
   },
   watch: {
     searchKeyword: function() {
       if (this.searchKeyword === "") {
         this.searchSuggestList = [];
+      } else {
+        this.searchSuggestList = [];
+        for (var i = 0; i < this.totalMovieList.length; ++i) {
+          if (this.totalMovieList[i].includes(this.searchKeyword)) {
+            this.searchSuggestList.push(this.totalMovieList[i]);
+          }
+        }
+        this.searchSuggestList.sort();
       }
     }
   }
@@ -583,28 +554,31 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  height: 80vh;
-  width: 88%;
-  margin-left: 10%;
-  margin-right: 2%;
+  /* align-items: center; */
+  height: 87%;
+  width: 93%;
+  margin-left: 7%;
   background-color: rgb(255, 255, 255, 0.7);
 }
 
 .searchBox {
   position: absolute;
-  top: 10%;
-  width: 80%;
+  top: 4.5%;
+  margin-left: 15%;
+  width: 60%;
+  height: 5%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   font-size: 1.4em;
-  margin-bottom: 2%;
+  /* margin-bottom: 2%; */
 }
 
 .searchBtn {
   cursor: pointer;
-  margin-left: 50%;
+  /* background-color: red; */
+  margin-top: 0.3%;
+  margin-left: 1%;
 }
 .searchTextBox {
   width: 35%;
@@ -617,6 +591,7 @@ export default {
 .searchTxt {
   background-color: rgb(0, 0, 0, 0.1);
   width: 94.5%;
+  height: 100%;
   padding: 3% 3%;
   border: none;
   border-top-left-radius: 0.5em;
@@ -649,10 +624,6 @@ export default {
 
 ::-webkit-input-placeholder {
   color: black;
-}
-
-.searchBtn {
-  margin-bottom: 0.8%;
 }
 
 .tableDiv {
@@ -688,6 +659,7 @@ export default {
 .calendarBtn {
   cursor: pointer;
   margin-right: 1.5%;
+  margin-top: 0.3%;
 }
 
 .modal {
@@ -855,7 +827,7 @@ export default {
 }
 
 .searchResult {
-  width: 91.7%;
+  width: 100%;
   height: 38vh;
   margin-bottom: 1%;
   display: flex;
