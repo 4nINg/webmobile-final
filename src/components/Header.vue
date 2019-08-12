@@ -215,6 +215,8 @@ a:link {
 
 #adminPageBtn {
   display: none;
+  width: 28px;
+  height: 32px;
 }
 
 </style>
