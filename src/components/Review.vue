@@ -334,18 +334,18 @@ export default {
 
 .writeBtnDiv {
   width: 70%;
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
   display: flex;
   justify-content: flex-end;
   position: absolute;
-  top: 8%;
+  top: 7.5%;
   right: 5%;
 }
 
 .writeBtnDiv span {
   cursor: pointer;
   font-size: 1.1em;
-  margin-bottom: 2.5%;
+  margin-bottom: 1.5%;
 }
 
 .rightArrow {
@@ -357,7 +357,7 @@ export default {
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 1%;
+  margin-top: 5%;
 }
 
 .review {
