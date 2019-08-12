@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,6 +17,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Poor+Story&display=swap" rel="stylesheet">
     <title>movie-project</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -23,6 +25,16 @@
       <strong>We're sorry but movie-project doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+    <div id="cursor"></div>
+    <script type="text/javascript">
+        var cursor = document.getElementById("cursor");
+        document.addEventListener("mousemove", function(e) {
+            var x = e.clientX;
+            var y = e.clientY;
+            cursor.style.left = x + "px";
+            cursor.style.top = y + "px";
+        });
+    </script>
     <!-- built files will be auto injected -->
     <!-- 챗봇 -->
     <div id="frogue-container" class="position-right-bottom" data-chatbot="211de036-4513-4faa-bd28-677c0171b40f" data-user="jo.youthful@gmail.com" data-init-key="211de036-4513-4faa-bd28-677c0171b40f"></div>

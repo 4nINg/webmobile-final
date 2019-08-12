@@ -55,9 +55,9 @@ export default new Vuex.Store({
                         commit('setLoading', false);
                         commit('setError', null);
                         window.location.reload();
-                        
+
                         // 회원 목록에 저장.
-  firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
+                        firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
                             uid: firebase.auth().currentUser.uid,
                             email: firebase.auth().currentUser.email,
                             token: null,
@@ -95,8 +95,8 @@ export default new Vuex.Store({
                 alert("로그아웃 완료!");
 
             }).catch(err => {
-              commit('setError', err.message)
-              commit('setLoading', false);
+                commit('setError', err.message)
+                commit('setLoading', false);
             })
 
             //접속 유저 DB에서 삭제
@@ -115,39 +115,91 @@ export default new Vuex.Store({
         },
         // 일반 로그인
         userSignIn({ commit }, payload) {
-            commit('setLoading', true);
-            firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
-                .then(firebaseUser => {
+            var temp = [];
+            var flag = false;
 
-                    firebaseUser.user.getIdTokenResult().then(idTokenResult => {
-                        commit('setUser', {
-                            uid: firebaseUser.user.uid,
-                            email: firebaseUser.user.email,
-                            username: firebaseUser.user.displayName,
-                            grade: idTokenResult.claims.grade
-                        });
+            firebase.database()
+                .ref('connectedUsers/')
+                .once('value', function(snapshot) {
+                    snapshot.forEach(function(doc) {
+                        temp.push(doc.val().email);
+                    })
+                })
+
+            for (var i = 0; i < temp.length; i++) {
+                if (temp[i] === payload.email) {
+                    flag = true;
+                }
+            }
+
+            if (flag) {
+                console.log("여기야2222");
+                firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+                    .then(firebaseUser => {
+                        firebaseUser.user.getIdTokenResult().then(idTokenResult => {
+                                commit('setUser', {
+                                    uid: firebaseUser.user.uid,
+                                    email: firebaseUser.user.email,
+                                    username: firebaseUser.user.displayName,
+                                    grade: idTokenResult.claims.grade
+                                });
+                                commit('setLoading', false);
+                                alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
+                                window.location.reload();
+                                // 현재 로그인된 사용자에 등록.
+                                firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+                                    uid: firebase.auth().currentUser.uid,
+                                    email: firebase.auth().currentUser.email
+                                });
+                            })
+                            .catch(err => {
+                                commit('setError', err.message);
+                                commit('setLoading', false);
+                            })
+                    })
+                    .catch(error => {
+                        commit('setError', true);
+                        alert("일반 로그인 에러: " + error);
                         commit('setLoading', false);
-                        alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
-                        window.location.reload();
-                        // 현재 로그인된 사용자에 등록.
-                        firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
-                            uToken: null,
-                            uid: firebase.auth().currentUser.uid,
-                            email: firebase.auth().currentUser.email
-                        });
                     })
-                    .catch(err => {
-                      commit('setError', err.message);
-                      commit('setLoading', false);
-                    })
-                })
-                .catch(error => {
-                    commit('setError', true);
-                    alert("일반 로그인 에러: " + error);
-                    commit('setLoading', false);
-                })
-
+            } else {
+                alert("이미 로그인 되어 있는 아이디입니다.")
+                commit('setLoading', false);
+            }
         },
+        // userSignIn({ commit }, payload) {
+        //     commit('setLoading', true);
+        //     firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+        //         .then(firebaseUser => {
+        //             firebaseUser.user.getIdTokenResult().then(idTokenResult => {
+        //                     commit('setUser', {
+        //                         uid: firebaseUser.user.uid,
+        //                         email: firebaseUser.user.email,
+        //                         username: firebaseUser.user.displayName,
+        //                         grade: idTokenResult.claims.grade
+        //                     });
+        //                     commit('setLoading', false);
+        //                     alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
+        //                     window.location.reload();
+        //                     // 현재 로그인된 사용자에 등록.
+        //                     firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+        //                         uToken: null,
+        //                         uid: firebase.auth().currentUser.uid,
+        //                         email: firebase.auth().currentUser.email
+        //                     });
+        //                 })
+        //                 .catch(err => {
+        //                     commit('setError', err.message);
+        //                     commit('setLoading', false);
+        //                 })
+        //         })
+        //         .catch(error => {
+        //             commit('setError', true);
+        //             alert("일반 로그인 에러: " + error);
+        //             commit('setLoading', false);
+        //         })
+
+        // },
         //google 로그인
         userSignInWithGoogle({ commit }, payload) {
             var currentUser;
