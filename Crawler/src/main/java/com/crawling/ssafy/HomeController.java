@@ -152,7 +152,7 @@ public class HomeController {
             result += "@";
          }
          if(i != 6) {            
-            result += "&";
+            result += "&&";
          }
       }
       System.out.println("lotte   "+result);
