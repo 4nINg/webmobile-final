@@ -4,7 +4,7 @@ import "firebase/storage";
 import "firebase/auth";
 import "firebase/functions";
 import * as admin from 'firebase-admin';
-import store from '../store.js'
+
 import "@firebase/messaging";
 
 const INFO = "info";
@@ -28,14 +28,6 @@ const config = {
 };
 
 firebase.initializeApp(config);
-firebase.firestore().enablePersistence()
-    .catch(function(err) {
-        if (err.code == 'failed-precondition') {
-
-        } else if (err.code == 'unimplemented') {
-
-        }
-    });
 
 var serviceAccount = require("../../webmobile-final-c2c78-firebase-adminsdk-pqts2-229bb83353.json");
 
@@ -61,30 +53,24 @@ Notification.requestPermission().then(function(Permission) {
     console.log("Error ", err);
 });
 
+firebase.firestore().enablePersistence()
+    .catch(function(err) {
+        if (err.code == 'failed-precondition') {} else if (err.code == 'unimplemented') {}
+    });
+
 //포그라운드 상태에서 메세지 받는 처리 방식
 firebase.messaging().onMessage((payload) => {
     console.log(payload);
-    const flag = payload.data.messageAuth;
-
-    if(flag === "reviewReg" || flag == "previewReg") {
-      var notificationTitle = "에 새 댓글이 등록되었습니다";
-      var notificationOptions = {
-          body: payload.data.body,
-          icon: "https://ifh.cc/g/lUitx.png",
-          img: payload.data.image
-      };
-      console.log(payload.data.image);
-      var notification = new Notification(notificationTitle, notificationOptions);
-      //registration.showNotification(notificationTitle, notificationOptions);
-      console.log("online received.");
-    }else if(flag === "reviewCommentReg" || flag === "previewCommentReg"){
-      var notificationOptions = {
-
-      }
-      //곧 작성.
-    }else {
-      console.log("err");
-    }
+    var notificationTitle = payload.data.title;
+    var notificationOptions = {
+        body: payload.data.body,
+        icon: "https://ifh.cc/g/lUitx.png",
+        img: payload.data.image
+    };
+    console.log(payload.data.image);
+    var notification = new Notification(notificationTitle, notificationOptions);
+    //registration.showNotification(notificationTitle, notificationOptions);
+    console.log("online received.");
 });
 
 
@@ -241,87 +227,75 @@ export default {
             created_at: firebase.firestore.FieldValue.serverTimestamp()
         })
     },
-    // 리뷰 댓글 수정
-    modifyReviewComment(previewCommentId, content) {
+    // 프리뷰 댓글 수정
+    modifyPreviewComment(previewCommentId, content) {
         firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).update({
             content: content
         });
     },
-    // 리뷰 댓글 삭제
-    deleteReviewComment(previewCommentId) {
+    // 프리뷰 댓글 삭제
+    deletePreviewComment(previewCommentId) {
         firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).delete();
     },
 
     //사용자 정보 불러오기
     getUser(uid) {
-        store.state.loading = true;
         const getUserFunc = functions.httpsCallable('getUser');
         getUserFunc(uid).then((result) => {
             // console.log(result)
             // console.log(result.data)
             return result.data;
-        })
-        .catch(err => console.log(err))
-        .finally(() => {
-          store.state.loading = false;
-        });
+        }).catch(err => console.log(err));
     },
     //사용자 등급 설정
-    async setUserGrade(uid, grade) {
-        store.state.loading = true;
+    setUserGrade(uid, grade) {
         const setUserGradeFunc = functions.httpsCallable('setUserGrade');
-        await setUserGradeFunc({
+        setUserGradeFunc({
                 uid: uid,
                 grade: grade
-            })
-            .then(() => {
-                store.state.loading = false;
+            }).then(() => {
+                console.log("수정완료!")
             })
             .catch(err => {
-                store.state.loading = false;
                 console.log("setUserGrade Error => " + err);
             })
     },
     //사용자 삭제
     async deleteUser(uid) {
-        store.state.loading = true;
         const deleteUserFunc = functions.httpsCallable('deleteUser');
         await deleteUserFunc(uid).then(() => {
-              store.state.loading = false;
-              alert("삭제완료!")
+
+                alert("삭제완료!")
             })
             .catch(err => {
-              store.state.loading = false;
-              console.log("deleteUser Error => " + err);
+                console.log("deleteUser Error => " + err);
             })
     },
     // review 개수
-    async getNumOfReview(){
-      store.state.loading = true;
-      var cnt;
-      return await firestore.collection(REVIEW).get().then((snap)=>{
-        cnt = snap.docs.length;
-        var result = snap.docs.map(doc => {
-          return new Date(doc.data().created_at.toDate());
+    async getNumOfReview() {
+        var cnt;
+        return await firestore.collection(REVIEW).get().then((snap) => {
+            cnt = snap.docs.length;
+            var result = snap.docs.map(doc => {
+                console.log();
+                return new Date(doc.data().created_at.toDate());
+            });
+            result.push(cnt);
+            return result;
         });
-        result.push(cnt);
-        store.state.loading = false;
-        return result;
-      });
     },
     // preview 개수
-    async getNumOfPreview(){
-      store.state.loading = true;
-      var cnt;
-      return await firestore.collection(PREVIEW).get().then((snap)=>{
-        cnt = snap.docs.length;
-        var result = snap.docs.map(doc => {
-          return new Date(doc.data().created_at.toDate());
+    async getNumOfPreview() {
+        var cnt;
+        return await firestore.collection(PREVIEW).get().then((snap) => {
+            cnt = snap.docs.length;
+            var result = snap.docs.map(doc => {
+                console.log();
+                return new Date(doc.data().created_at.toDate());
+            });
+            result.push(cnt);
+            return result;
         });
-        result.push(cnt);
-        store.state.loading = false;
-        return result;
-      });
 
     }
 }

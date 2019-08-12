@@ -69,11 +69,15 @@
             <div
               class="deleteReviewDiv"
               @click="deleteReview()"
-              v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1)"
+              v-if="this.$store.state.user !== null && (this.$store.state.user.uid == reviewWriterUid || this.$store.state.user.grade == 1) && !isReviewModify"
             >
               <span>삭제</span>
             </div>
-            <div class="showCommentBtn" @click="showReviewComment()">
+            <div
+              class="showCommentBtn"
+              @click="showReviewComment()"
+              v-if="!isComment && !isReviewModify"
+            >
               <span>
                 <i class="far fa-comments"></i>댓글 보기
               </span>
@@ -96,7 +100,7 @@
                   </div>
                   <div class="completeModifyCommentDiv" @click="completeModifyReviewComment(i-1)">
                     <div class="modifyCompleteCommentInner">
-                      <span class="completeModifyComment">수정 완료</span>
+                      <span>수정 완료</span>
                     </div>
                   </div>
                   <!--  댓글 삭제 -->
@@ -111,10 +115,11 @@
             <div class="commentWriterDiv" v-if="this.$store.state.user !== null">
               <CommentWriter :reviewId="reviewId" @isSubmit="isSubmit"></CommentWriter>
             </div>
-
-            <span class="showInModalreview" @click="backToTheReviewContent()">
-              <i class="fas fa-undo"></i>글 보기
-            </span>
+            <div class="showInModalreview" @click="backToTheReviewContent()" v-if="isComment">
+              <span>
+                <i class="fas fa-undo"></i>글 보기
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -150,7 +155,6 @@ export default {
       reviewComment: [],
       displayedReview: 0,
       isReviewModify: false, //리뷰를 수정하나요?
-      isCommentModify: false, // 댓글을 수정하나요?
       isComment: false // 댓글을 보고 있나요
     };
   },
@@ -242,23 +246,17 @@ export default {
       var completeModifyCommentDiv = document.querySelectorAll(
         ".completeModifyCommentDiv"
       ); // 수정완료버튼
-      var modifyCommentInput = document.querySelectorAll(".modifyCommentInput");
+      var modifyCommentInput = document.querySelectorAll(".modifyCommentInput"); // 댓글 수정 인풋
       var reviewCommentContentP = document.querySelectorAll(
         ".reviewCommentContentP"
-      );
+      ); // 원래 댓글 내용
       document.querySelector(".commentWriterDiv").style.display = "none"; // 댓글작성 창
-
-      for (var i = 0; i < reviewCommentContentP.length; ++i) {
-        if (i === index) {
-          reviewCommentContentP[i].style.display = "none"; // 원래 내용 없앰
-          modifyCommentInput[i].style.display = "block"; // 수정창 보임
-          modifyCommentDiv[i].style.display = "none"; // 수정버튼 없앰
-          deleteCommentDiv[i].style.display = "none"; // 삭제버튼 없앰
-          completeModifyCommentDiv[i].style.display = "block"; //수정완료버튼 보임
-          modifyCommentInput[i].value = beforeModifyComment;
-          break;
-        }
-      }
+      reviewCommentContentP[index].style.display = "none"; // 원래 내용 없앰
+      modifyCommentInput[index].style.display = "block"; // 수정창 보임
+      modifyCommentDiv[index].style.display = "none"; // 수정버튼 없앰
+      deleteCommentDiv[index].style.display = "none"; // 삭제버튼 없앰
+      completeModifyCommentDiv[index].style.display = "block"; //수정완료버튼 보임
+      modifyCommentInput[index].value = beforeModifyComment;
     },
     completeModifyReviewComment(index) {
       var modifyCommentwDiv = document.querySelectorAll(".modifyCommentwDiv"); //수정버튼
@@ -271,22 +269,16 @@ export default {
         ".reviewCommentContentP"
       ); // 원래 댓글 내용
       document.querySelector(".commentWriterDiv").style.display = "block"; // 댓글작성 창
-
-      for (var i = 0; i < this.reviewComment.length; ++i) {
-        if (index === i) {
-          FirebaseService.modifyReviewComment(
-            this.reviewComment[index].id,
-            modifyCommentInput[i].value
-          );
-          this.getReviewCommentList();
-          reviewCommentContentP[i].style.display = "block"; // 원래 내용 없앰
-          modifyCommentInput[i].style.display = "none"; // 수정창 보임
-          modifyCommentwDiv[i].style.display = "block"; // 수정버튼 없앰
-          deleteCommentDiv[i].style.display = "block"; // 삭제버튼 없앰
-          completeModifyCommentDiv[i].style.display = "none"; //수정완료버튼 보임
-          break;
-        }
-      }
+      FirebaseService.modifyReviewComment(
+        this.reviewComment[index].id,
+        modifyCommentInput[index].value
+      );
+      this.getReviewCommentList();
+      reviewCommentContentP[index].style.display = "block"; // 원래 내용 보임
+      modifyCommentInput[index].style.display = "none"; // 수정창 없앰
+      modifyCommentwDiv[index].style.display = "block"; // 수정버튼 보임
+      deleteCommentDiv[index].style.display = "block"; // 삭제버튼 보임
+      completeModifyCommentDiv[index].style.display = "none"; //수정완료버튼 없앰
     },
     modifyReview() {
       var beforeModifyTitle = document.querySelector(".reviewTitle").innerText;
@@ -317,8 +309,7 @@ export default {
     deleteReview() {
       if (confirm("게시글을 삭제하시겠습니까?")) {
         FirebaseService.deleteReview(this.reviewId);
-        document.querySelector(".comment").style.display = "none";
-        document.querySelector(".inModalreview").style.display = "none";
+        this.isComment = false;
         document.querySelector(".reviewModal").style.display = "none";
         this.getReviewList();
       }
@@ -620,6 +611,7 @@ export default {
 }
 
 .modifyCommentInput {
+  display: none;
   margin-top: 1%;
   width: 90%;
   padding: 0.5% 0.5%;
@@ -630,6 +622,10 @@ export default {
 .deleteCommentDiv,
 .completeModifyCommentDiv {
   cursor: pointer;
+}
+
+.completeModifyCommentDiv {
+  display: none;
 }
 
 .commentBtnContainerDiv {
