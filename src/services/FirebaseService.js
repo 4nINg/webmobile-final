@@ -245,7 +245,10 @@ export default {
             // console.log(result)
             // console.log(result.data)
             return result.data;
-        }).catch(err => console.log(err));
+        })
+        .catch(err => console.log(err))
+        .finally(() => {
+        });
     },
     //사용자 등급 설정
     setUserGrade(uid, grade) {
@@ -272,30 +275,61 @@ export default {
             })
     },
     // review 개수
-    async getNumOfReview() {
-        var cnt;
-        return await firestore.collection(REVIEW).get().then((snap) => {
-            cnt = snap.docs.length;
-            var result = snap.docs.map(doc => {
-                console.log();
-                return new Date(doc.data().created_at.toDate());
-            });
-            result.push(cnt);
-            return result;
+    async getNumOfReview(){
+      var cnt;
+      return await firestore.collection(REVIEW).get().then((snap)=>{
+        cnt = snap.docs.length;
+        var result = snap.docs.map(doc => {
+          return new Date(doc.data().created_at.toDate());
         });
+        result.push(cnt);
+        return result;
+      });
     },
     // preview 개수
-    async getNumOfPreview() {
-        var cnt;
-        return await firestore.collection(PREVIEW).get().then((snap) => {
-            cnt = snap.docs.length;
-            var result = snap.docs.map(doc => {
-                console.log();
-                return new Date(doc.data().created_at.toDate());
-            });
-            result.push(cnt);
-            return result;
+    async getNumOfPreview(){
+      var cnt;
+      return await firestore.collection(PREVIEW).get().then((snap)=>{
+        cnt = snap.docs.length;
+        var result = snap.docs.map(doc => {
+          return new Date(doc.data().created_at.toDate());
         });
-
+        result.push(cnt);
+        return result;
+      });
+    },
+    //관리자페이지용 review get
+    async getReviewListForAdmin(){
+      var result
+      return await firestore.collection(REVIEW).orderBy("created_at", "desc").get().then((snap)=>{
+        return snap.docs.map(doc => {
+            result = doc.data();
+            var data = {
+                id: doc.id,
+                title : result.title,
+                body : result.body,
+                writer : result.writer,
+                created_at : new Date(doc.data().created_at.toDate())
+            }
+          return data
+        });
+      });
+    },
+    //관리자페이지용 preview get
+    async getPreviewListForAdmin(){
+        var result;
+        return await firestore.collection(PREVIEW).orderBy("created_at", "desc").get().then((snap)=>{
+          return snap.docs.map(doc => {
+              result = doc.data();
+              var data = {
+                  id: doc.id,
+                  title : result.title,
+                  body : result.body,
+                  writer : result.writer,
+                  created_at : new Date(doc.data().created_at.toDate())
+              }
+            return data
+          });
+        });
     }
 }

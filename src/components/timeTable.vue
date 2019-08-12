@@ -453,6 +453,7 @@ export default {
       this.movieDetail();
     },
     async movieDetail() {
+      this.$store.state.loading = true;
       var self = this;
       var searchResult = null;
       await axios
@@ -472,6 +473,7 @@ export default {
           } catch (error) {
             this.searchMovieImgUrl = "";
           }
+          this.$store.state.loading = false;
         });
       this.searchKeyword = "";
       this.searchSuggestList = [];

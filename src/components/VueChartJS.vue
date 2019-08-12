@@ -10,6 +10,7 @@ export default {
   extends: chart.Line,
   data() {
     return {
+      userInfoListLength : this.userInfoList.length,
       max: 0,
       mylabels: [],
       mydata: [],
@@ -87,7 +88,6 @@ export default {
     //   this.datacollection.labels[i] = currentDate;
     //   currentDate = new Date(currentDate).getTime() - (1 * 24 * 60 * 60 * 1000);
     // }
-
     this.reCount(this.userInfoList, 1);
     this.reCount(this.reviewList, 2);
     this.reCount(this.previewList, 3);
@@ -129,7 +129,7 @@ export default {
         for(var i = 0; i < 5; i++){
           var count = 0;
           for(var j = 0; j < list.length - 1; j++){
-            var tmpArr = (list[j] + "").split(" ");
+            var tmpArr = (list[j].created_at + "").split(" ");
             var curArr = (currentDate+"").split(" ");
             if(tmpArr[0] == curArr[0] &&
                tmpArr[1] == curArr[1] &&
@@ -151,7 +151,7 @@ export default {
         for(var i = 0; i < 5; i++){
           var count = 0;
           for(var j = 0; j < list.length - 1; j++){
-            var tmpArr = (list[j] + "").split(" ");
+            var tmpArr = (list[j].created_at + "").split(" ");
             var curArr = (currentDate+"").split(" ");
             if(tmpArr[0] == curArr[0] &&
                tmpArr[1] == curArr[1] &&
@@ -183,7 +183,7 @@ export default {
     }
   },
   watch : {
-    userInfoList:function(){
+    userInfoListLength:function(){
       this.reCount(this.userInfoList, 1);
     },
     reviewList:function(){
