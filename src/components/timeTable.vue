@@ -152,6 +152,22 @@ export default {
     this.selectMonth = document.getElementById("month");
     this.monthAndYear = document.getElementById("monthAndYear");
     this.showCalendar(this.currentMonth, this.currentYear);
+
+    $(function() {
+      var searching = ["알라딘", "알라딘2"]
+      $("#searchTxt").autocomplete({
+        source: searching,
+        select: function(event, ui) {
+          console.log(ui.item)
+        },
+        focus: function(event, ui) {
+          return false;
+        }
+      });
+      console.log(searching)
+    });
+
+
   },
   methods: {
     selectSearchSuggest(i) {
@@ -574,6 +590,7 @@ export default {
   }
 };
 </script>
+
 <style>
 .tableMainDiv {
   display: flex;
