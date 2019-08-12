@@ -26,18 +26,28 @@
       <strong>We're sorry but movie-project doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+    <!-- 커서 애니메이션 -->
     <div class="clickEffect"></div>
     <script type="text/javascript">
-        function clickEffect(e){
-          var d=document.createElement("div");
-          d.className="clickEffect";
-          d.style.top=e.clientY+"px";d.style.left=e.clientX+"px";
-          document.body.appendChild(d);
-          d.addEventListener('animationend',function(){d.parentElement.removeChild(d);}.bind(this));
+        function clickEffect(e) {  
+            var d = document.createElement("div");  
+            d.className = "clickEffect";  
+            d.style.top = e.clientY + "px";
+            d.style.left = e.clientX + "px";  
+            document.body.appendChild(d);  
+            d.addEventListener('animationend', function() {
+                d.parentElement.removeChild(d);
+            }.bind(this));
         }
-        document.addEventListener('click',clickEffect);
+        document.addEventListener('click', clickEffect);
+        // document.addEventListener("mousemove", function(e) {
+        //     var x = e.clientX;
+        //     var y = e.clientY;
+        //     cursor.style.left = x + "px";
+        //     cursor.style.top = y + "px";
+        // });
     </script>
-    
+    <!-- 커서 애니메이션 -->
     <!-- built files will be auto injected -->
     <!-- 챗봇 -->
     <div id="frogue-container" class="position-right-bottom" data-chatbot="211de036-4513-4faa-bd28-677c0171b40f" data-user="jo.youthful@gmail.com" data-init-key="211de036-4513-4faa-bd28-677c0171b40f"></div>
