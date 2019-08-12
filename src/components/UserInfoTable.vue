@@ -3,78 +3,50 @@
   <div id="adminSelectContainer">
     <span @click="changeSelect(1)" class="adminSelectBtn"><i class="fas fa-circle"></i></span>
     <span @click="changeSelect(2)" class="adminSelectBtn"><i class="fas fa-circle"></i></span>
+    <span @click="changeSelect(3)" class="adminSelectBtn"><i class="fas fa-circle"></i></span>
   </div>
-  <div id="adminUserInfoContainer_fake">
+  <div id="adminPage_1">
   <div id="adminUserInfoContainer">
-    <table>
-      <tr>
-        <td>type</td>
-        <td>username</td>
-        <td>grade</td>
-        <td>login time</td>
-        <td></td>
-      </tr>
-
-      <tr v-for="user in userInfoList.length" :key="user">
-        <td>
-          <span v-if="userInfoList[user-1].grade == 1 && userInfoList[user-1].username == '관리자'" style="color : #ffd15e"><i class="fas fa-crown"></i></span>
-          <span v-else-if="userInfoList[user-1].provide == 'google.com'" class="userInfoTableCol1"><i class="fab fa-google"></i></span>
-          <span v-else-if="userInfoList[user-1].provide == 'facebook.com'" class="userInfoTableCol1" style="color : #3b5998"><i class="fab fa-facebook"></i></span>
-          <span v-else style="color : #abaaa6"><i class="fas fa-envelope userInfoTableCol1"></i></span>
-        </td>
-        <td>
-          {{userInfoList[user-1].username}}
-        </td>
-        <td>
-          <span v-if="userInfoList[user-1].email !== 'admin@admin.com'">
-            <label><input type="radio" :name="'userGrade' + (user-1)" value="1" class="userGradeRadioBtn"><span><i class="fas fa-tree"></i></span></label>
-            <label><input type="radio" :name="'userGrade' + (user-1)" value="2" class="userGradeRadioBtn"><span><i class="fab fa-pagelines"></i></span></label>
-            <label><input type="radio" :name="'userGrade' + (user-1)" value="3" class="userGradeRadioBtn"><span><i class="fas fa-seedling"></i></span></label>
+      <div class="adminUserHeader">
+        <span class="adminUserHeaderForFirst">type</span>
+        <span class="adminUserHeaderForSecond">username</span>
+        <span class="adminUserHeaderForThird">grade</span>
+        <span class="adminUserHeaderForForth">login time</span>
+        <span class="adminUserHeaderForFifth">&nbsp;</span>
+      </div>
+      <div class="tableScrollDiv">
+        <div v-for="user in userInfoList.length" :key="user"  class="tableScrollDivVFor">
+          <span class="tableScrollDivVForFirst">
+            <span v-if="userInfoList[user-1].grade == 1 && userInfoList[user-1].username == '관리자'" style="color : #ffd15e"><i class="fas fa-crown"></i></span>
+            <span v-else-if="userInfoList[user-1].provide == 'google.com'" class="userInfoTableCol1"><i class="fab fa-google"></i></span>
+            <span v-else-if="userInfoList[user-1].provide == 'facebook.com'" class="userInfoTableCol1" style="color : #3b5998"><i class="fab fa-facebook"></i></span>
+            <span v-else style="color : #abaaa6"><i class="fas fa-envelope userInfoTableCol1"></i></span>
           </span>
-          <span v-else>
-            I'm the bo$$
+          <span class="tableScrollDivVForSecond">
+            {{userInfoList[user-1].username}}
           </span>
-        </td>
-        <td>
-          {{userInfoList[user-1].lastSignInTime}}
-        </td>
-        <td>
-          <span v-if="userInfoList[user-1].email !== 'admin@admin.com'" @click="updataGrade(user-1)" id="userUpdateBtn"><i class="fas fa-wrench"></i></span>
-          <span v-if="userInfoList[user-1].email !== 'admin@admin.com'" @click="deleteUser(user-1)" id="userDeleteBtn"><i class="fas fa-trash-alt"></i></span>
-        </td>
-      </tr>
-    </table>
-  </div>
-  <div id="adminReviewContainer">
-    <table>
-      <tr>
-        <td>제목</td>
-        <td>글쓴이</td>
-        <td></td>
-      </tr>
-      <tr v-for="review in reviewList.length" :key="review">
-        <td>{{reviewList[review-1].title}}</td>
-        <td>{{reviewList[review-1].writer}}</td>
-        <td><span @click="deleteReview(review-1)" id="ReviewDeleteBtn"><i class="fas fa-trash-alt"></i></span></td>
-      </tr>
-    </table>
-  </div>
-  <div id="adminPreviewContainer">
-    <table>
-      <tr>
-        <td>제목</td>
-        <td>글쓴이</td>
-        <td></td>
-      </tr>
-      <tr v-for="preview in previewList.length" :key="preview">
-        <td>{{previewList[preview-1].title}}</td>
-        <td>{{previewList[preview-1].writer}}</td>
-        <td><span @click="deletePreview(preview-1)" id="PreviewDeleteBtn"><i class="fas fa-trash-alt"></i></span></td>
-      </tr>
-    </table>
+          <span class="tableScrollDivVForThird">
+            <span v-if="userInfoList[user-1].email !== 'admin@admin.com'">
+              <label><input type="radio" :name="'userGrade' + (user-1)" value="1" class="userGradeRadioBtn"><span><i class="fas fa-tree"></i></span></label>
+              <label><input type="radio" :name="'userGrade' + (user-1)" value="2" class="userGradeRadioBtn"><span><i class="fab fa-pagelines"></i></span></label>
+              <label><input type="radio" :name="'userGrade' + (user-1)" value="3" class="userGradeRadioBtn"><span><i class="fas fa-seedling"></i></span></label>
+            </span>
+            <span v-else style="font-size:1.5em">
+              I'm the bo$$
+            </span>
+          </span>
+          <span class="tableScrollDivVForForth">
+            {{userInfoList[user-1].lastSignInTime}}
+          </span>
+          <span class="tableScrollDivVForFifth">
+            <span v-if="userInfoList[user-1].email !== 'admin@admin.com'" @click="updataGrade(user-1)" id="userUpdateBtn"><i class="fas fa-wrench"></i></span>
+            <span v-if="userInfoList[user-1].email !== 'admin@admin.com'" @click="deleteUser(user-1)" class="deleteBtn"><i class="fas fa-trash-alt"></i></span>
+          </span>
+        </div>
+      </div>
   </div>
 </div>
-<div id="siteInfoContainer_fake">
+<div id="adminPage_2">
   <div id="siteInfoContainer">
     <div id="siteInfoBoxContainer">
       <!-- numOfUser -->
@@ -104,6 +76,36 @@
         :previewList="previewList"
       ></graph>
     </div>
+  </div>
+</div>
+<div id="adminPage_3">
+  <div id="adminReviewContainer">
+    <div class="adminReviewHeader">
+      <span class="adminReviewHeaderForFirst">제목</span>
+      <span class="adminReviewHeaderForSecond">글쓴이</span>
+      <span class="adminReviewHeaderForThird"></span>
+    </div>
+      <div class="tableScrollDiv">
+        <div v-for="review in reviewList.length" :key="review" class="tableScrollDivVFor">
+          <span class="tableScrollDivVForFirst">{{reviewList[review-1].title.length > 20 ? contentToSummary(reviewList[review-1].title) : reviewList[review-1].title}}</span>
+          <span class="tableScrollDivVForSecond">{{reviewList[review-1].writer}}</span>
+          <span @click="deleteReview(review-1)" class="deleteBtn tableScrollDivVForThird"><i class="fas fa-trash-alt"></i></span>
+        </div>
+      </div>
+  </div>
+  <div id="adminPreviewContainer">
+      <div class="adminPreviewHeader">
+        <span class="adminPreviewHeaderForFirst">제목</span>
+        <span class="adminPreviewHeaderForSecond">글쓴이</span>
+        <span class="adminPreviewHeaderForThird"></span>
+      </div>
+      <div class="tableScrollDiv">
+        <div v-for="preview in previewList.length" :key="preview" class="tableScrollDivVFor">
+          <span class="tableScrollDivVForFirst">{{previewList[preview-1].title > 20 ? contentToSummary(previewList[preview-1].title) : previewList[preview-1].title}}</span>
+          <span class="tableScrollDivVForSecond">{{previewList[preview-1].writer}}</span>
+          <span @click="deletePreview(preview-1)" class="deleteBtn tableScrollDivVForThird"><i class="fas fa-trash-alt"></i></span>
+        </div>
+      </div>
   </div>
 </div>
 </div>
@@ -138,8 +140,8 @@ export default {
     async adminPageInit(){
       await this.setLoadingTrue();
       await this.getUserList();
-      await this.getNumOfReview();
-      await this.getNumOfPreview();
+      await this.getReview();
+      await this.getPreview();
       await this.setLoadingFalse();
       this.graphInit = true;
     },
@@ -201,11 +203,11 @@ export default {
       this.userInfoList = [];
       await this.getUserList();
     },
-    async getNumOfReview() {
+    async getReview() {
       this.reviewList = await FirebaseService.getReviewListForAdmin();
       this.numOfReview = this.reviewList.length;
     },
-    async getNumOfPreview() {
+    async getPreview() {
       this.previewList = await FirebaseService.getPreviewListForAdmin();
       this.numOfPreview = this.previewList.length;
     },
@@ -219,11 +221,17 @@ export default {
       adminSelectBtn[i-1].style.opacity="1";
       if(i == 1){
         //adminUserInfoContainer siteInfoContainer
-        document.querySelector('#adminUserInfoContainer_fake').style.visibility = 'visible';
-        document.querySelector('#siteInfoContainer_fake').style.visibility = 'hidden';
+        document.querySelector('#adminPage_1').style.visibility = 'visible';
+        document.querySelector('#adminPage_2').style.visibility = 'hidden';
+        document.querySelector('#adminPage_3').style.visibility = 'hidden';
       }else if(i == 2){
-        document.querySelector('#adminUserInfoContainer_fake').style.visibility = 'hidden';
-        document.querySelector('#siteInfoContainer_fake').style.visibility = 'visible';
+        document.querySelector('#adminPage_1').style.visibility = 'hidden';
+        document.querySelector('#adminPage_2').style.visibility = 'visible';
+        document.querySelector('#adminPage_3').style.visibility = 'hidden';
+      }else if(i == 3){
+        document.querySelector('#adminPage_1').style.visibility = 'hidden';
+        document.querySelector('#adminPage_2').style.visibility = 'hidden';
+        document.querySelector('#adminPage_3').style.visibility = 'visible';
       }
       this.select = i;
     },
@@ -232,6 +240,31 @@ export default {
       },
       setLoadingFalse(){
         this.$store.state.loading = false;
+      },
+      contentToSummary(content){
+        var result = "";
+        for(var i = 0; i < 20; i++){
+          result += content.charAt(i);
+        }
+        return result+"...";
+      },
+      async deleteReview(index){
+        var deleteCheck = confirm("해당 게시글을 삭제하시겠습니까?");
+        if(!deleteCheck){
+          return;
+        }
+        await FirebaseService.deleteReview(this.reviewList[index].id);
+        this.reviewList = [];
+        await this.getReview();
+      },
+      async deletePreview(index){
+        var deleteCheck = confirm("해당 게시글을 삭제하시겠습니까?");
+        if(!deleteCheck){
+          return;
+        }
+        await FirebaseService.deletePreview(this.previewList[index].id);
+        this.previewList = [];
+        await this.getPreview();
       }
   }
 }
@@ -240,58 +273,190 @@ export default {
 #adminMainContainer {
   margin-left: 5%;
   width: 90%;
-  height: 81vh;
+  height: 87%;
   position: relative;
+  background: rgb(255,255,255,0.8);
 }
+
+
 #adminSelectContainer{
+  height: 5%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-bottom: 2%;
 }
-#adminUserInfoContainer_fake {
+.adminSelectBtn{
+  cursor: pointer;
+  opacity: 0.3;
+  color: #535c68;
+  font-size: 1.3em;
+}
+.adminSelectBtn:not(:first-child){
+  margin-left: 5px;
+}
+.adminSelectBtn:first-child{
+  opacity: 1;
+  color: #535c68;
+}
+
+
+#adminPage_1 {
   width:100%;
   height: 80%;
   position: absolute;
+  display: flex;
+  justify-content: center;
 }
-#siteInfoContainer_fake{
+#adminPage_2{
   visibility: hidden;
   width:100%;
   position: absolute;
   display: flex;
   justify-content: center;
 }
-#adminUserInfoContainer, #adminReviewContainer, #adminPreviewContainer {
+#adminPage_3{
+  visibility: hidden;
+  position: absolute;
+  width: 100%;
+  height: 90%;
   display: flex;
-  width:80%;
-  justify-content: center;
-  align-items: flex-start;
-  background: white;
-  border-radius: 15px;
-  height: 50%;
-  overflow: auto;
-  /* text-overflow:ellipsis; */
-}
-#siteInfoContainer{
-  width: 60%;
-}
-#adminUserInfoContainer table{
-  height: 300px;
-  overflow: scroll;
-  text-align: center;
-  align-items: center;
-  width:95%;
-  border-collapse: collapse;
-}
-#adminUserInfoContainer table tr:not(:last-child){
-  line-height:30px;
-  border-bottom: 1px solid #e0e0e0;
+  justify-content: space-around;
 }
 
-.userInfoTableMainDiv>div {
-  width: 50%;
+
+#adminUserInfoContainer{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 90%;
+  align-items: flex-start;
+}
+
+.adminUserHeader{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  
+  border-bottom: 1px solid black;
+}
+
+#adminUserInfoContainer .tableScrollDiv{
+  width: 100%;
+  height: 82%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.adminUserHeaderForFirst,
+#adminUserInfoContainer .tableScrollDivVForFirst
+{
+  width: 5%;
+  text-align: center;
+}
+
+.adminUserHeaderForSecond,
+#adminUserInfoContainer .tableScrollDivVForSecond
+{
+  width: 15%;
+  text-align: center;
+}
+
+.adminUserHeaderForThird,
+#adminUserInfoContainer .tableScrollDivVForThird
+{
+  width: 30%;
+  text-align: center;
+}
+
+.adminUserHeaderForForth,
+#adminUserInfoContainer .tableScrollDivVForForth
+{
+  width: 40%;
+  text-align: center;
+}
+
+.adminUserHeaderForFifth,
+#adminUserInfoContainer .tableScrollDivVForFifth
+{
+  width: 10%;
+  text-align: center;
+}
+
+#adminReviewContainer, #adminPreviewContainer{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 45%;
+  align-items: flex-start;
+}
+
+.adminReviewHeader, .adminPreviewHeader{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1%;
+  border-bottom: 1px solid black;
+}
+
+#adminReviewContainer .tableScrollDiv, #adminPreviewContainer .tableScrollDiv{
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.tableScrollDivVFor{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 0.5%;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.tableScrollDivVFor:last-child{
+  border-bottom: 0px;
+}
+
+.tableScrollDivVForFirst{
+  text-align: left;
+}
+
+.adminReviewHeaderForFirst,
+.adminPreviewHeaderForFirst,
+#adminReviewContainer .tableScrollDivVForFirst,
+#adminPreviewContainer .tableScrollDivVForFirst{
+  width: 70%;
+}
+
+.adminReviewHeaderForSecond,
+.adminPreviewHeaderForSecond,
+#adminReviewContainer .tableScrollDivVForSecond,
+#adminPreviewContainer .tableScrollDivVForSecond{
+  width: 15%;
+}
+
+.adminReviewHeaderForThird,
+.adminPreviewHeaderForThird,
+#adminReviewContainer .tableScrollDivVForThird,
+#adminPreviewContainer .tableScrollDivVForThird{
+  width: 15%;
+}
+
+
+#siteInfoContainer{
+  width: 80%;
 }
 
 #siteInfoBoxContainer{
-  margin-top: 20px;
   margin-bottom: 20px;
   display: flex;
   justify-content: space-around;
@@ -324,9 +489,7 @@ label {
   cursor: pointer;
 }
 
-.userGradeRadioBtn + span:not(:first-child) {
-  margin-left: 5px;
-}
+
 
 #userUpdateBtn {
   font-size:1.2em;
@@ -334,26 +497,21 @@ label {
   margin-right: 10px;
 }
 
-#userDeleteBtn {
+.deleteBtn {
   font-size:1.2em;
   cursor: pointer;
 }
+
+
 .userGradeRadioBtn + span{
   color: rgb(106, 176, 76, 0.3);
+}
+.userGradeRadioBtn + span:not(:first-child) {
+  margin-left: 5px;
 }
 .userGradeRadioBtn:checked + span{
   color: rgb(106, 176, 76, 1);
 }
-.adminSelectBtn{
-  cursor: pointer;
-  opacity: 0.3;
-  color: #535c68;
-}
-.adminSelectBtn:not(:first-child){
-  margin-left: 5px;
-}
-.adminSelectBtn:first-child{
-  opacity: 1;
-  color: #535c68;
-}
+
+
 </style>

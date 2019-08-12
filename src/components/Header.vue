@@ -4,17 +4,17 @@
       <span class="logo">빠른 영화, 빠른 영화관</span>
       <span class="mainLogo">빠영빠영.</span>
     </div>
-    <div class>
-      <span @click="changeSelectPage(-1)" id="adminPageBtn">Admin</span>
-      <div id = "SubscribeBtn" @click="subscribeAlarm()" style = "display: none;">
-        <span style = "color:black; font-size:2em; margin:1.5em; ">
+    <div class="headerBtn">
+      <div>
+        <span id = "SubscribeBtn" @click="subscribeAlarm()" style="display: none;">
           <i class="fas fa-bell-slash"></i>
         </span>
-      </div>
-      <div id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
-        <span style = "color:black; font-size:2em; margin:1.5em;">
+        <span id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
           <i class="fas fa-bell"></i>
         </span>
+      </div>
+      <div @click="changeSelectPage(-1)" id="adminPageBtn">
+        <img src="../assets/adminBtn.png" id="adminPageBtnImg">
       </div>
     </div>
     <div class="sideNav">
@@ -96,7 +96,7 @@ export default {
         })
         //구독취소 버튼 활성화
         document.querySelector('#SubscribeBtn').style = 'display:none';
-        document.querySelector('#SubscribeCancel').style = 'display:visible';
+        document.querySelector('#SubscribeCancel').style = 'display:block';
       }
     },
 
@@ -132,7 +132,7 @@ export default {
           throw err;
         })
         //구독하기 버튼 활성화
-        document.querySelector('#SubscribeBtn').style = 'display:visible';
+        document.querySelector('#SubscribeBtn').style = 'display:block';
         document.querySelector('#SubscribeCancel').style = 'display:none';
       }
     }
@@ -153,6 +153,8 @@ export default {
   color: black;
   text-align: center;
   width: 100%;
+  height: 13%;
+  /* align-items: center; */
 }
 
 .headerDiv span {
@@ -215,6 +217,28 @@ a:link {
 
 #adminPageBtn {
   display: none;
+  height: 35px;
+  width: 35px;
+  margin-top: 8%;
 }
+
+#adminPageBtnImg{
+  height: 35px;
+  width: 35px;
+  cursor: pointer;
+}
+
+#SubscribeBtn, #SubscribeCancel{
+  font-size: 2.0em;
+  color: gold;
+  margin-right: 10px;
+}
+.headerBtn{
+  /* margin-top: 2px; */
+  margin-right: 10px;
+  display: flex;
+}
+
+
 
 </style>
