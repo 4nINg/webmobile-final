@@ -154,7 +154,7 @@ export default {
                 });
             });
     },
-    // 리뷰 등록하기
+    // 리뷰 댓글 등록하기
     postReviewComment(reviewId, content, userUid, username) {
         firestore.collection(REVIEWCOMMENT).add({
             content: content,
@@ -198,19 +198,9 @@ export default {
             body: body,
             imgUrl: imgUrl,
             imgName: imgName,
-            commentContent: [],
-            commentUsername: [],
-            commentUserUid: [],
             created_at: firebase.firestore.FieldValue.serverTimestamp()
         });
     },
-    deletePreview(o) {
-        firestore.collection(REVIEW).doc(o.id).delete().finally(() => {
-            firestorage.ref().child('review/' + o.num).delete()
-            window.location.reload();
-        });
-    },
-
     deletePreview(previewId) {
         firestore.collection(PREVIEW).doc(previewId).delete();
     },
@@ -221,7 +211,6 @@ export default {
                 body: body
             });
         } else {
-
             firestore.collection(PREVIEW).doc(previewId).update({
                 title: title,
                 body: body,
@@ -230,20 +219,45 @@ export default {
             });
         }
     },
-    postPreviewComment(previewId,
-        previewCommentUserName,
-        previewCommentContent,
-        previewCommentUserUid) {
-        firestore.collection(PREVIEW).doc(previewId).update({
-            commentUserName: previewCommentUserName,
-            commentContent: previewCommentContent,
-            commentUserUid: previewCommentUserUid
-        })
-
+    // =================================================== 프리뷰 댓글 ==============================================================
+    // 프리뷰 댓글 다 들고오기
+    getPreviewCommentList() {
+        const reviewCommentCollection = firestore.collection(PREVIEWCOMMENT);
+        return reviewCommentCollection
+            .orderBy("created_at", "desc")
+            .get()
+            .then(docSnapshots => {
+                return docSnapshots.docs.map(doc => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    return data;
+                });
+            });
     },
+    // 프리뷰댓글 등록
+    postPreviewComment(previewId, content, userUid, username) {
+        firestore.collection(PREVIEWCOMMENT).add({
+            content: content,
+            previewId: previewId,
+            userUid: userUid,
+            username: username,
+            id: "",
+            created_at: firebase.firestore.FieldValue.serverTimestamp()
+        })
+    },
+    // 프리뷰 댓글 수정
+    modifyPreviewComment(previewCommentId, content) {
+        firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).update({
+            content: content
+        });
+    },
+    // 프리뷰 댓글 삭제
+    deletePreviewComment(previewCommentId) {
+        firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).delete();
+    },
+
     //사용자 정보 불러오기
     getUser(uid) {
-        store.state.loading = true;
         const getUserFunc = functions.httpsCallable('getUser');
         getUserFunc(uid).then((result) => {
             // console.log(result)
@@ -252,7 +266,6 @@ export default {
         })
         .catch(err => console.log(err))
         .finally(() => {
-          store.state.loading = false;
         });
     },
     //사용자 등급 설정
@@ -286,7 +299,6 @@ export default {
     },
     // review 개수
     async getNumOfReview(){
-      store.state.loading = true;
       var cnt;
       return await firestore.collection(REVIEW).get().then((snap)=>{
         cnt = snap.docs.length;
@@ -294,13 +306,11 @@ export default {
           return new Date(doc.data().created_at.toDate());
         });
         result.push(cnt);
-        store.state.loading = false;
         return result;
       });
     },
     // preview 개수
     async getNumOfPreview(){
-      store.state.loading = true;
       var cnt;
       return await firestore.collection(PREVIEW).get().then((snap)=>{
         cnt = snap.docs.length;
@@ -308,9 +318,41 @@ export default {
           return new Date(doc.data().created_at.toDate());
         });
         result.push(cnt);
-        store.state.loading = false;
         return result;
       });
-
+    },
+    //관리자페이지용 review get
+    async getReviewListForAdmin(){
+      var result
+      return await firestore.collection(REVIEW).orderBy("created_at", "desc").get().then((snap)=>{
+        return snap.docs.map(doc => {
+            result = doc.data();
+            var data = {
+                id: doc.id,
+                title : result.title,
+                body : result.body,
+                writer : result.writer,
+                created_at : new Date(doc.data().created_at.toDate())
+            }
+          return data
+        });
+      });
+    },
+    //관리자페이지용 preview get
+    async getPreviewListForAdmin(){
+        var result;
+        return await firestore.collection(PREVIEW).orderBy("created_at", "desc").get().then((snap)=>{
+          return snap.docs.map(doc => {
+              result = doc.data();
+              var data = {
+                  id: doc.id,
+                  title : result.title,
+                  body : result.body,
+                  writer : result.writer,
+                  created_at : new Date(doc.data().created_at.toDate())
+              }
+            return data
+          });
+        });
     }
 }

@@ -4,7 +4,26 @@
       <span @click="openModal()" class="calendarBtn">
         <i class="far fa-calendar-alt"></i>
       </span>
-      <input type="text" v-model="searchKeyword" placeholder="Search" class="searchTxt" />
+      <div class="searchTextBox">
+        <input
+          type="text"
+          v-model="searchKeyword"
+          placeholder="Search"
+          class="searchTxt"
+          @keyup="searchSuggest"
+        />
+        <div class="searchSuggetDiv">
+          <ul>
+            <li v-for="i in searchSuggestList.length" :key="i">
+              <div
+                @click="selectSearchSuggest(i-1)"
+                class="searchSuggest"
+              >{{searchSuggestList[i-1]}}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       <span @click="searchMovie()">
         <i class="fas fa-search searchBtn"></i>
       </span>
@@ -49,14 +68,8 @@
 
               <tbody id="calendar-body"></tbody>
             </table>
-
-            <!-- <div class="form-inline preNextDiv">
-              <button class="btn btn-outline-primary col-sm-6" id="previous" @click="previous()">Pre</button>
-              <button class="btn btn-outline-primary col-sm-6" id="next" @click="next()">Next</button>
-            </div>-->
             <br />
             <form class="form-inline jumpDiv">
-              <!-- <label class="lead mr-2 ml-2" for="month">Jump To:</label> -->
               <select class="form-control col-sm-4" name="month" id="month" @change="jump()">
                 <option value="0">Jan</option>
                 <option value="1">Feb</option>
@@ -89,7 +102,6 @@
 </template>
 <script>
 import axios from "axios";
-
 export default {
   data() {
     return {
@@ -127,7 +139,8 @@ export default {
       totalMovieList: [],
       searchMovieTitle: "",
       searchMovieImgUrl: "",
-      searchMovieOverview: ""
+      searchMovieOverview: "",
+      searchSuggestList: []
     };
   },
   mounted() {
@@ -141,6 +154,21 @@ export default {
     this.showCalendar(this.currentMonth, this.currentYear);
   },
   methods: {
+    selectSearchSuggest(i) {
+      var searchSuggest = document.querySelectorAll(".searchSuggest");
+      this.searchKeyword = searchSuggest[i].innerText;
+      this.searchSuggestList = [];
+    },
+    searchSuggest() {
+      this.searchSuggestList = [];
+      if (this.searchKeyword !== "") {
+        for (var i = 0; i < this.totalMovieList.length; ++i) {
+          if (this.totalMovieList[i].includes(this.searchKeyword)) {
+            this.searchSuggestList.push(this.totalMovieList[i]);
+          }
+        }
+      }
+    },
     next() {
       this.currentYear === 11 ? this.currentYear + 1 : this.currentYear;
       this.currentMonth = (this.currentMonth + 1) % 12;
@@ -218,7 +246,6 @@ export default {
             date++;
           }
         }
-
         tbl.appendChild(row); // appending each row into calendar body.
       }
     },
@@ -226,6 +253,7 @@ export default {
       document.getElementById("myModal").style.display = "block";
     },
     closeModal() {
+      document.querySelector(".searchSuggetDiv").style.display = "block";
       document.getElementById("myModal").style.display = "none";
     },
     crawlingData() {
@@ -265,20 +293,22 @@ export default {
             if (movieList[q] === "@") {
               continue;
             }
-            byMovie = movieList[q].split(",");
-            for (var j = 0; j < byMovie.length; j++) {
-              flag = true;
-              byTitleTime = byMovie[j].split("/");
-              for (var k = 0; k < self.totalMovieList.length; ++k) {
-                if (self.totalMovieList[k].includes(byTitleTime[0])) {
-                  flag = false;
-                  break;
+            try {
+              byMovie = movieList[q].split(",");
+              for (var j = 0; j < byMovie.length; j++) {
+                flag = true;
+                byTitleTime = byMovie[j].split("/");
+                for (var k = 0; k < self.totalMovieList.length; ++k) {
+                  if (self.totalMovieList[k].includes(byTitleTime[0])) {
+                    flag = false;
+                    break;
+                  }
+                }
+                if (flag) {
+                  self.totalMovieList.push(byTitleTime[0]);
                 }
               }
-              if (flag) {
-                self.totalMovieList.push(byTitleTime[0]);
-              }
-            }
+            } catch (error) {}
           }
         });
     },
@@ -314,20 +344,22 @@ export default {
             if (movieList[q] === "@") {
               continue;
             }
-            byMovie = movieList[q].split(",");
-            for (var j = 0; j < byMovie.length; j++) {
-              flag = true;
-              byTitleTime = byMovie[j].split("/");
-              for (var k = 0; k < self.totalMovieList.length; ++k) {
-                if (self.totalMovieList[k].includes(byTitleTime[0])) {
-                  flag = false;
-                  break;
+            try {
+              byMovie = movieList[q].split(",");
+              for (var j = 0; j < byMovie.length; j++) {
+                flag = true;
+                byTitleTime = byMovie[j].split("/");
+                for (var k = 0; k < self.totalMovieList.length; ++k) {
+                  if (self.totalMovieList[k].includes(byTitleTime[0])) {
+                    flag = false;
+                    break;
+                  }
+                }
+                if (flag) {
+                  self.totalMovieList.push(byTitleTime[0]);
                 }
               }
-              if (flag) {
-                self.totalMovieList.push(byTitleTime[0]);
-              }
-            }
+            } catch (error) {}
           }
         });
     },
@@ -363,20 +395,22 @@ export default {
             if (movieList[q] === "@") {
               continue;
             }
-            byMovie = movieList[q].split(",");
-            for (var j = 0; j < byMovie.length; j++) {
-              flag = true;
-              byTitleTime = byMovie[j].split("/");
-              for (var k = 0; k < self.totalMovieList.length; ++k) {
-                if (self.totalMovieList[k].includes(byTitleTime[0])) {
-                  flag = false;
-                  break;
+            try {
+              byMovie = movieList[q].split(",");
+              for (var j = 0; j < byMovie.length; j++) {
+                flag = true;
+                byTitleTime = byMovie[j].split("/");
+                for (var k = 0; k < self.totalMovieList.length; ++k) {
+                  if (self.totalMovieList[k].includes(byTitleTime[0])) {
+                    flag = false;
+                    break;
+                  }
+                }
+                if (flag) {
+                  self.totalMovieList.push(byTitleTime[0]);
                 }
               }
-              if (flag) {
-                self.totalMovieList.push(byTitleTime[0]);
-              }
-            }
+            } catch (error) {}
           }
         });
     },
@@ -389,6 +423,8 @@ export default {
         alert("검색어를 입력해주세요!");
         return;
       }
+
+      this.searchMovieImgUrl = "";
       this.searchMegabox();
       this.searchLotte();
       this.searchCgv();
@@ -401,6 +437,7 @@ export default {
       this.movieDetail();
     },
     async movieDetail() {
+      this.$store.state.loading = true;
       var self = this;
       var searchResult = null;
       await axios
@@ -411,14 +448,19 @@ export default {
         )
         .then(response => {
           searchResult = response.data;
-          console.log(searchResult.results[0].title);
-
-          document.querySelector(".searchResultImg").style.backgroundImage =
-            "url(https://image.tmdb.org/t/p/w200" +
-            searchResult.results[0].poster_path;
-          self.searchMovieTitle = searchResult.results[0].title;
-          self.searchMovieOverview = searchResult.results[0].overview;
+          try {
+            document.querySelector(".searchResultImg").style.backgroundImage =
+              "url(https://image.tmdb.org/t/p/w200" +
+              searchResult.results[0].poster_path;
+            self.searchMovieTitle = searchResult.results[0].title;
+            self.searchMovieOverview = searchResult.results[0].overview;
+          } catch (error) {
+            this.searchMovieImgUrl = "";
+          }
+          this.$store.state.loading = false;
         });
+      this.searchKeyword = "";
+      this.searchSuggestList = [];
     },
     searchLotte() {
       var lotteDiv = document.querySelector(".lotteDiv");
@@ -524,6 +566,13 @@ export default {
       }
       cgvDiv.innerHTML = htmlText;
     }
+  },
+  watch: {
+    searchKeyword: function() {
+      if (this.searchKeyword === "") {
+        this.searchSuggestList = [];
+      }
+    }
   }
 };
 </script>
@@ -546,7 +595,7 @@ export default {
   width: 80%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   font-size: 1.4em;
   margin-bottom: 2%;
 }
@@ -555,19 +604,45 @@ export default {
   cursor: pointer;
   margin-left: 50%;
 }
+.searchTextBox {
+  width: 35%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
 
 .searchTxt {
-  width: 35%;
-  padding: 1%;
-  box-sizing: border-box;
+  background-color: rgb(0, 0, 0, 0.1);
+  width: 94.5%;
+  padding: 3% 3%;
   border: none;
-  border-radius: 0.7em;
-  background-color: rgb(150, 150, 150, 0.2);
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
   color: black;
 }
 
 .searchTxt:focus {
   outline: none;
+}
+
+.searchSuggetDiv {
+  border: 1px solid rgb(0, 0, 0, 0.1);
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  background-color: white;
+  width: 100%;
+  z-index: 9999999999999999;
+}
+
+.searchSuggetDiv li {
+  list-style: none;
+  font-size: 0.6em;
+  /* margin-bottom: 1%; */
+  padding-top: 1%;
+  margin-left: 1%;
+  padding-bottom: 1%;
+  border-bottom: 1px solid rgb(0, 0, 0, 0.1);
 }
 
 ::-webkit-input-placeholder {
@@ -791,6 +866,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin-right: 9.3%;
+  margin-left: 5%;
 }
 
 .searchResultImg {
@@ -803,7 +879,7 @@ export default {
 
 .searchResultTitle {
   width: 100%;
-  height: 30%;
+  height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -817,5 +893,10 @@ export default {
   display: flex;
   justify-content: center;
   overflow: auto;
+  /* margin-bottom: 5%; */
+}
+
+.searchSuggest {
+  width: 100%;
 }
 </style>
