@@ -111,6 +111,7 @@ export default new Vuex.Store({
                 .catch((err) => {
                     throw err;
                 })
+
         },
         // 일반 로그인
         userSignIn({ commit }, payload) {
@@ -146,6 +147,7 @@ export default new Vuex.Store({
                                   grade: idTokenResult.claims.grade
                               });
                               commit('setLoading', false);
+
                               alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
                               window.location.reload();
                               // 현재 로그인된 사용자에 등록.
@@ -153,6 +155,7 @@ export default new Vuex.Store({
                                   uid: firebase.auth().currentUser.uid,
                                   email: firebase.auth().currentUser.email
                               });
+
                           })
                           .catch(err => {
                             commit('setError', err.message);
