@@ -6,12 +6,28 @@ firebase.initializeApp({
 });
 
 self.addEventListener('install', function(event) {
-    console.log('SW 설치 완료', event);
+    //console.log('SW 설치 완료', event);
 });
 
 var DYNAMIC_CACHE = "다이나믹-캐시-스토리지1";
 
+self.addEventListener("activate", function(event) {
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.filter(function(cacheName) {
+
+        }).map(function(cacheName) {
+            return caches.delete(cacheName);
+        })
+      );
+    })
+  );
+});
+
+
 self.addEventListener("fetch", event => {
+    console.log("fetch");
     event.respondWith(
         caches.match(event.request).then(response => {
             // 캐시에 있으면 repsonse를 그대로 돌려준다.
@@ -61,25 +77,26 @@ self.addEventListener("fetch", event => {
     );
 });
 
+
 // 백그라운드일때 메세지를 받고 처리 방식
 firebase.messaging().setBackgroundMessageHandler(function(payload) {
     var flag = payload.data.messageAuth;
 
-    if(flag === "reviewCommentReg" || flag === "previewCommentReg") {
-      var notificationTitle = payload.data.title;
-      var notificationOptions = {
-          body : "작성자 : " + payload.data.username + "\n" + "내용 : " + payload.data.body,
-          data : payload.data.username,
-          icon: "https://ifh.cc/g/lUitx.png",
-      };
-      console.log("background received.")
-      registration.showNotification(notificationTitle, notificationOptions);
-    }else if(flag === "reviewReg" || flag === "previewReg") {
-      var notificationTitle = payload.data.title;
-      var notificationOptions = {
-        body : payload.data.body,
-        icon: "https://ifh.cc/g/lUitx.png"
-      };
-      registration.showNotification(notificationTitle, notificationOptions);
+    if (flag === "reviewCommentReg" || flag === "previewCommentReg") {
+        var notificationTitle = payload.data.title;
+        var notificationOptions = {
+            body: "작성자 : " + payload.data.username + "\n" + "내용 : " + payload.data.body,
+            data: payload.data.username,
+            icon: "https://ifh.cc/g/lUitx.png",
+        };
+        console.log("background received.")
+        registration.showNotification(notificationTitle, notificationOptions);
+    } else if (flag === "reviewReg" || flag === "previewReg") {
+        var notificationTitle = payload.data.title;
+        var notificationOptions = {
+            body: payload.data.body,
+            icon: "https://ifh.cc/g/lUitx.png"
+        };
+        registration.showNotification(notificationTitle, notificationOptions);
     }
 });
