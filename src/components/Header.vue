@@ -6,15 +6,22 @@
     </div>
     <div class="headerBtn">
       <div>
+<<<<<<< HEAD
         <span id = "SubscribeBtn" @click="subscribeAlarm()" style="display: none;">
           <i class="fas fa-bell-slash"></i>
         </span>
         <span id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
+=======
+        <span id="SubscribeBtn" @click="subscribeAlarm()" style="display: none;">
+          <i class="fas fa-bell-slash"></i>
+        </span>
+        <span id="SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
+>>>>>>> 7aee8ee8f8210e8d79bb937bd30efc86fb95db18
           <i class="fas fa-bell"></i>
         </span>
       </div>
       <div @click="changeSelectPage(-1)" id="adminPageBtn">
-        <img src="../assets/adminBtn.png" id="adminPageBtnImg">
+        <img src="../assets/adminBtn.png" id="adminPageBtnImg" />
       </div>
     </div>
     <div class="sideNav">
@@ -44,9 +51,15 @@ export default {
     },
     goToLogout() {
       var logoutFlag = confirm("정말로 로그 아웃 하시겠습니까?");
+<<<<<<< HEAD
       if(logoutFlag) {
         this.$store.dispatch("userSignOut").finally(() => {
         this.changeSelectPage(0);
+=======
+      if (logoutFlag) {
+        this.$store.dispatch("userSignOut").finally(() => {
+          this.changeSelectPage(0);
+>>>>>>> 7aee8ee8f8210e8d79bb937bd30efc86fb95db18
         });
       }
     },
@@ -246,23 +259,21 @@ a:link {
   margin-top: 8%;
 }
 
-#adminPageBtnImg{
+#adminPageBtnImg {
   height: 35px;
   width: 35px;
   cursor: pointer;
 }
 
-#SubscribeBtn, #SubscribeCancel{
-  font-size: 2.0em;
+#SubscribeBtn,
+#SubscribeCancel {
+  font-size: 2em;
   color: gold;
   margin-right: 10px;
 }
-.headerBtn{
+.headerBtn {
   /* margin-top: 2px; */
   margin-right: 10px;
   display: flex;
 }
-
-
-
 </style>
