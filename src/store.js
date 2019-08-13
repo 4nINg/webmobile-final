@@ -332,6 +332,7 @@ export default new Vuex.Store({
                           alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
                           window.location.reload();
 
+
                       })
                       .catch(err => {
                           commit('setError', true);
