@@ -265,7 +265,7 @@ export default {
     crawMegabox() {
       var self = this;
       axios
-        .get("http://localhost:8888/megabox", {
+        .get("http://192.168.100.81:8888/megabox", {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -314,7 +314,7 @@ export default {
     crawLotte() {
       var self = this;
       axios
-        .get("http://localhost:8888/lottecinema", {
+        .get("http://192.168.100.81:8888/lottecinema", {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -363,7 +363,7 @@ export default {
     crawCgv() {
       var self = this;
       axios
-        .get("http://localhost:8888/cgv", {
+        .get("http://192.168.100.81:8888/cgv", {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -546,7 +546,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style>

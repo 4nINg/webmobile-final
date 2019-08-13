@@ -319,10 +319,13 @@ export default {
         this.getReviewList();
       }
     },
-    checkSession(uid){
-      if(this.$store.state.user !== null && (this.$store.state.user.uid == uid || this.$store.state.user.grade == 1)){
+    checkSession(uid) {
+      if (
+        this.$store.state.user !== null &&
+        (this.$store.state.user.uid == uid || this.$store.state.user.grade == 1)
+      ) {
         return true;
-      }else{
+      } else {
         return false;
       }
     },
