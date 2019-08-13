@@ -91,7 +91,7 @@
                 <h3>{{reviewComment[i-1].username}}</h3>
                 <p class="reviewCommentContentP">{{reviewComment[i-1].content}}</p>
                 <input type="text" class="modifyCommentInput" />
-                <div class="commentBtnContainerDiv">
+                <div class="commentBtnContainerDiv" v-if="checkSession(reviewComment[i-1].userUid)">
                   <!--  댓글 수정 -->
                   <div class="modifyCommentwDiv" @click="modifyReviewComment(i-1)">
                     <div class="modifyCommentBtninner">
@@ -313,7 +313,14 @@ export default {
         document.querySelector(".reviewModal").style.display = "none";
         this.getReviewList();
       }
-    }
+    },
+    checkSession(uid){
+      if(this.$store.state.user !== null && (this.$store.state.user.uid == uid || this.$store.state.user.grade == 1)){
+        return true;
+      }else{
+        return false;
+      }
+    },
   }
 };
 </script>
@@ -334,18 +341,18 @@ export default {
 
 .writeBtnDiv {
   width: 70%;
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
   display: flex;
   justify-content: flex-end;
   position: absolute;
-  top: 8%;
+  top: 7.5%;
   right: 5%;
 }
 
 .writeBtnDiv span {
   cursor: pointer;
   font-size: 1.1em;
-  margin-bottom: 2.5%;
+  margin-bottom: 1.5%;
 }
 
 .rightArrow {
@@ -357,7 +364,7 @@ export default {
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 1%;
+  margin-top: 5%;
 }
 
 .review {

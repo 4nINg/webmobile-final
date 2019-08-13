@@ -101,7 +101,7 @@
                 <span class="previewCommentVForDivContent">{{previewComment[i-1].content}}</span>
                 <input type="text" class="modifyPreviewCommentInput" />
 
-                <div class="previewCommentBtnContainer">
+                <div class="previewCommentBtnContainer" v-if="checkSession(previewComment[i-1].userUid)">
                   <div class="modifyPreviewCommentDiv" @click="modifyPreviewComment(i-1)">
                     <div class="modifyPreviewCommentInner">
                       <span>수정</span>
@@ -353,6 +353,13 @@ export default {
         this.isPreviewComment = false;
         document.querySelector(".previewModal").style.display = "none";
       }
+    },
+    checkSession(uid){
+      if(this.$store.state.user !== null && (this.$store.state.user.uid == uid || this.$store.state.user.grade == 1)){
+        return true;
+      }else{
+        return false;
+      }
     }
   },
   components: {
@@ -403,7 +410,7 @@ export default {
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 1%;
+  margin-top: 5%;
 }
 
 .preview {

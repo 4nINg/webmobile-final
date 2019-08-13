@@ -12,7 +12,7 @@ const REVIEW = "review";
 const USERINFO = "userInfo";
 const PREVIEW = "preview";
 const REVIEWCOMMENT = "reviewComment";
-const PREVIEWCOMMENT = "previewCommnet";
+const PREVIEWCOMMENT = "previewComment";
 // cloud firestore
 
 
@@ -60,17 +60,29 @@ firebase.firestore().enablePersistence()
 
 //포그라운드 상태에서 메세지 받는 처리 방식
 firebase.messaging().onMessage((payload) => {
-    console.log(payload);
-    var notificationTitle = payload.data.title;
-    var notificationOptions = {
-        body: payload.data.body,
-        icon: "https://ifh.cc/g/lUitx.png",
-        img: payload.data.image
-    };
-    console.log(payload.data.image);
-    var notification = new Notification(notificationTitle, notificationOptions);
-    //registration.showNotification(notificationTitle, notificationOptions);
-    console.log("online received.");
+    var flag = payload.data.messageAuth;
+
+    if (flag === "reviewCommentReg" || flag === "previewCommentReg") {
+        var notificationTitle = payload.data.title;
+        var notificationOptions = {
+            body: "작성자 : " + payload.data.username + "\n" + "내용 : " + payload.data.body,
+            data: payload.data.username,
+            icon: "https://ifh.cc/g/lUitx.png"
+        };
+        var notification = new Notification(notificationTitle, notificationOptions);
+        //registration.showNotification(notificationTitle, notificationOptions);
+        console.log("online received.");
+    } else if (flag === "reviewReg" || flag === "previewReg") {
+        var notificationTitle = payload.data.title;
+        var notificationOptions = {
+            body: payload.data.body,
+            icon: "https://ifh.cc/g/lUitx.png"
+        };
+
+        var notification = new Notification(notificationTitle, notificationOptions);
+        console.log("online received.");
+    }
+
 });
 
 
@@ -242,13 +254,12 @@ export default {
     getUser(uid) {
         const getUserFunc = functions.httpsCallable('getUser');
         getUserFunc(uid).then((result) => {
-            // console.log(result)
-            // console.log(result.data)
-            return result.data;
-        })
-        .catch(err => console.log(err))
-        .finally(() => {
-        });
+                // console.log(result)
+                // console.log(result.data)
+                return result.data;
+            })
+            .catch(err => console.log(err))
+            .finally(() => {});
     },
     //사용자 등급 설정
     setUserGrade(uid, grade) {
@@ -275,61 +286,61 @@ export default {
             })
     },
     // review 개수
-    async getNumOfReview(){
-      var cnt;
-      return await firestore.collection(REVIEW).get().then((snap)=>{
-        cnt = snap.docs.length;
-        var result = snap.docs.map(doc => {
-          return new Date(doc.data().created_at.toDate());
+    async getNumOfReview() {
+        var cnt;
+        return await firestore.collection(REVIEW).get().then((snap) => {
+            cnt = snap.docs.length;
+            var result = snap.docs.map(doc => {
+                return new Date(doc.data().created_at.toDate());
+            });
+            result.push(cnt);
+            return result;
         });
-        result.push(cnt);
-        return result;
-      });
     },
     // preview 개수
-    async getNumOfPreview(){
-      var cnt;
-      return await firestore.collection(PREVIEW).get().then((snap)=>{
-        cnt = snap.docs.length;
-        var result = snap.docs.map(doc => {
-          return new Date(doc.data().created_at.toDate());
+    async getNumOfPreview() {
+        var cnt;
+        return await firestore.collection(PREVIEW).get().then((snap) => {
+            cnt = snap.docs.length;
+            var result = snap.docs.map(doc => {
+                return new Date(doc.data().created_at.toDate());
+            });
+            result.push(cnt);
+            return result;
         });
-        result.push(cnt);
-        return result;
-      });
     },
     //관리자페이지용 review get
-    async getReviewListForAdmin(){
-      var result
-      return await firestore.collection(REVIEW).orderBy("created_at", "desc").get().then((snap)=>{
-        return snap.docs.map(doc => {
-            result = doc.data();
-            var data = {
-                id: doc.id,
-                title : result.title,
-                body : result.body,
-                writer : result.writer,
-                created_at : new Date(doc.data().created_at.toDate())
-            }
-          return data
+    async getReviewListForAdmin() {
+        var result
+        return await firestore.collection(REVIEW).orderBy("created_at", "desc").get().then((snap) => {
+            return snap.docs.map(doc => {
+                result = doc.data();
+                var data = {
+                    id: doc.id,
+                    title: result.title,
+                    body: result.body,
+                    writer: result.writer,
+                    created_at: new Date(doc.data().created_at.toDate())
+                }
+                return data
+            });
         });
-      });
     },
     //관리자페이지용 preview get
-    async getPreviewListForAdmin(){
+    async getPreviewListForAdmin() {
         var result;
-        return await firestore.collection(PREVIEW).orderBy("created_at", "desc").get().then((snap)=>{
-          return snap.docs.map(doc => {
-              result = doc.data();
-              var data = {
-                  id: doc.id,
-                  title : result.title,
-                  body : result.body,
-                  writer : result.writer,
-                  created_at : new Date(doc.data().created_at.toDate())
-              }
-            return data
-          });
+        return await firestore.collection(PREVIEW).orderBy("created_at", "desc").get().then((snap) => {
+            return snap.docs.map(doc => {
+                result = doc.data();
+                var data = {
+                    id: doc.id,
+                    title: result.title,
+                    body: result.body,
+                    writer: result.writer,
+                    created_at: new Date(doc.data().created_at.toDate())
+                }
+                return data
+            });
         });
     }
 }

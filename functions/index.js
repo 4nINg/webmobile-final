@@ -11,9 +11,9 @@ const messaging = admin.messaging();
   exports.createReviewComment = functions.firestore
     .document('reviewComment/{reviewCommentId}')
     .onCreate((snap, context) => {
-      var adminToken = '';
+      const adminToken = [];
       const commentBody = snap.data().content;
-      const reviewId = snap.data().reviewId;
+      const username = snap.data().username;
 
       admin.firestore().collection("registeredToken").get().then((snapshot) => {
         snapshot.forEach((docs) => {
@@ -22,22 +22,22 @@ const messaging = admin.messaging();
           //토큰 허용이면
             if(docs.data().token && docs.data().alarmPermission) {
               console.log("re admin~");
-              adminToken = docs.data().token;
+              adminToken.push(docs.data().token);
             }
           }
         });
-
+        console.log(adminToken);
         const message = {
           data : {
             messageAuth : "reviewCommentReg",
             title : "새로운 댓글이 등록되었습니다.",
             body : commentBody,
-            reviewId : reviewId
+            username : username,
           },
-          token : adminToken
+          tokens : adminToken
         };
 
-        messaging.send(message).then((response) => {
+        messaging.sendMulticast(message).then((response) => {
           return response;
         })
         .catch((err) => {
@@ -57,9 +57,9 @@ const messaging = admin.messaging();
     exports.createPreviewComment = functions.firestore
       .document('previewComment/{previewCommentId}')
       .onCreate((snap, context) => {
-        var adminToken = '';
+        const adminToken = [];
         const commentBody = snap.data().content;
-        const previewId = snap.data().previewId;
+        const username = snap.data().username;
 
         admin.firestore().collection("registeredToken").get().then((snapshot) => {
           snapshot.forEach((docs) => {
@@ -67,9 +67,9 @@ const messaging = admin.messaging();
             //admin계정이고
             if(docs.data().email === "admin@admin.com") {
             //토큰 허용이면
-              if(docs.data().token && docs.data().alarmPermission) {
+              if(docs.data().alarmPermission) {
                 console.log("pre admin~");
-                adminToken = docs.data().token;
+                adminToken.push(docs.data().token);
               }
             }
           });
@@ -79,12 +79,12 @@ const messaging = admin.messaging();
               messageAuth : "previewCommentReg",
               title : "새로운 댓글이 등록되었습니다.",
               body : commentBody,
-              previewId : previewId
+              username : username
             },
-            token : adminToken
+            tokens : adminToken
           };
 
-          messaging.send(message).then((response) => {
+          messaging.sendMulticast(message).then((response) => {
             return response;
           })
           .catch((err) => {
@@ -112,7 +112,7 @@ const messaging = admin.messaging();
         snapshot.forEach((docs) => {
           console.log(docs.data().token);
           //토큰 값이 있고, 알람이 허용됫으면
-          if(docs.data().token && docs.data().alarmPermission) {
+          if(docs.data().alarmPermission) {
             registerToken.push(docs.data().token);
           }
         });

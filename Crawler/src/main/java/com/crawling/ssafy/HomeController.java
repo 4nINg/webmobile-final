@@ -88,7 +88,7 @@ public class HomeController {
             time = tr.get(j).select("td").text().replace(" | ", "|");
             result += time;
             if(j != tr.size()-1) {
-               result += ",";
+               result += ",,";
             }
          }
          
@@ -96,7 +96,7 @@ public class HomeController {
             result += "@";
          }
          if(i != 6) {            
-            result += "&";
+            result += "&&";
          }
       }
       System.out.println("mega   "+result);
@@ -145,7 +145,7 @@ public class HomeController {
             time = tr.get(j).select("td").text().replace(" | ", "|");
             result += time;
             if(j != tr.size()-1) {
-               result += ",";
+               result += ",,";
             }
          }
          if(title.equals("") && time.equals("")){
@@ -209,14 +209,14 @@ public class HomeController {
                 }
              }
             if(k != col.size()-1) {
-               result += ",";
+               result += ",,";
             }
          }
          if(title.equals("") && time.equals("")){
             result += "@";
          }
          if(i != 6) {            
-            result += "&";
+            result += "&&";
          }
       }
       System.out.println("cgv    "+result);
