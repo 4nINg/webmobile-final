@@ -110,7 +110,7 @@ const messaging = admin.messaging();
       //모든 유저 정보가 담긴 DB를 탐색.
       admin.firestore().collection("registeredToken").get().then((snapshot) => {
         snapshot.forEach((docs) => {
-          console.log(docs.data().token);
+          //console.log(docs.data().token);
           //토큰 값이 있고, 알람이 허용됫으면
           if(docs.data().alarmPermission) {
             registerToken.push(docs.data().token);
