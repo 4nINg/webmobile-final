@@ -383,7 +383,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid rgb(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   margin-right: 3%;
   margin-left: 1%;
   width: 23%;
@@ -402,7 +402,7 @@ export default {
   width: 100%;
   height: 100%;
   font-size: 2em;
-  background-color: rgb(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7);
   color: white;
   display: flex;
   justify-content: center;
@@ -423,7 +423,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .reviewContentDiv span {
@@ -470,7 +470,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .reviewModalContainer {
@@ -534,7 +534,7 @@ export default {
 }
 
 .showCommentDiv > div:hover {
-  box-shadow: 0.2em 0.2em 0.2em 0.2em rgb(0, 0, 0, 0.1);
+  box-shadow: 0.2em 0.2em 0.2em 0.2em rgba(0, 0, 0, 0.1);
 }
 
 .modifyCompleteCommentInner,
@@ -585,7 +585,7 @@ export default {
 .vForDiv {
   margin-top: 1%;
   padding-bottom: 3%;
-  border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   width: 100%;
 }
 

@@ -128,12 +128,12 @@ export default {
 }
 .signupbox {
   width: 30%;
-  background-color: rgb(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   margin-left: 30%;
   box-sizing: border-box;
   /* border-box: 테두리 기준으로 크기 정함. */
   font-family: sans-serif;
-  box-shadow: 1px 1px 1px 1px rgb(212, 212, 212);
+  box-shadow: 1px 1px 1px 1px rgba(212, 212, 212);
   letter-spacing: 0.05em;
   position: relative;
 }
@@ -186,12 +186,12 @@ export default {
   width: 80%;
   border: none;
   outline: none;
-  border: 1px solid rgb(184, 184, 184);
+  border: 1px solid rgba(184, 184, 184);
   background: transparent;
   height: 1.7em;
   font-size: 0.8em;
   font-weight: bold;
-  box-shadow: 1px 1px 1px 1px rgb(119, 119, 119);
+  box-shadow: 1px 1px 1px 1px rgba(119, 119, 119);
 }
 .signupFormButton span:nth-child(1):hover,
 .signupFormButton span:nth-child(2):hover {

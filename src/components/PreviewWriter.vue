@@ -150,7 +150,7 @@ export default {
   margin-bottom: 2%;
   font-size: 1.6em;
   padding-bottom: 2%;
-  border-bottom: 1px solid rgb(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
   margin-top: 2%;
 }
 
@@ -192,13 +192,13 @@ export default {
   cursor: pointer;
   font-size: 1.3em;
   text-transform: uppercase;
-  border: 1px solid rgb(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.7);
   padding: 0.3em;
   border-radius: 0.5em;
   margin-top: 5%;
 }
 
 .previewWriteBtn:hover {
-  box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(0, 0, 0, 0.1);
+  box-shadow: 0.1em 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.1);
 }
 </style>

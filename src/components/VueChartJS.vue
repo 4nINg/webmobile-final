@@ -20,7 +20,7 @@ export default {
           //User
           {
             label: "User",
-            backgroundColor: "rgb(255,255,0,0)",
+            backgroundColor: "rgba(255,255,0,0)",
             pointBackgroundColor: "black",
             borderWidth: 2,
             pointBorderColor: "black",
@@ -31,7 +31,7 @@ export default {
           //Review
           {
             label: "Review",
-            backgroundColor: "rgb(255,0,255,0)",
+            backgroundColor: "rgba(255,0,255,0)",
             pointBackgroundColor: "black",
             borderWidth: 2,
             pointBorderColor: "black",
@@ -42,7 +42,7 @@ export default {
           //Preview
           {
             label: "Preview",
-            backgroundColor: "rgb(0,255,255,0)",
+            backgroundColor: "rgba(0,255,255,0)",
             pointBackgroundColor: "black",
             borderWidth: 2,
             pointBorderColor: "black",

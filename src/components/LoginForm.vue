@@ -103,7 +103,7 @@ export default {
 .loginbox {
   width: 30%;
   margin-bottom: 3%;
-  background-color: rgb(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   margin-left: 30%;
   box-sizing: border-box;
   font-family: sans-serif;
@@ -113,7 +113,7 @@ export default {
 }
 .avatar {
   font-size: 6vmax;
-  color: rgb(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.5);
   border-radius: 30%;
   margin-top: -6%;
   width: 100%;

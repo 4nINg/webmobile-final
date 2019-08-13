@@ -67,6 +67,6 @@ export default {
 }
 
 .previewCommentSubmitBtn:hover {
-  box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(0, 0, 0, 0.1);
+  box-shadow: 0.1em 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.1);
 }
 </style>

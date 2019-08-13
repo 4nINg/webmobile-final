@@ -41,7 +41,7 @@ export default {
 <style>
 .commentInputText {
   width: 100%;
-  border: 1px solid rgb(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 0.3em;
   padding: 0.5em;
 }
@@ -53,13 +53,13 @@ export default {
 .commentSubmitBtn {
   cursor: pointer;
   padding: 0.3em;
-  border: 1px solid rgb(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 0.3em;
   margin-left: 2%;
 }
 
 .commentSubmitBtn:hover {
-  box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(0, 0, 0, 0.1);
+  box-shadow: 0.1em 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.1);
 }
 
 .commentWirteMainDiv {

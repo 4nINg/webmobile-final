@@ -558,7 +558,7 @@ export default {
   height: 87%;
   width: 93%;
   margin-left: 7%;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .searchBox {
@@ -589,7 +589,7 @@ export default {
 }
 
 .searchTxt {
-  background-color: rgb(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   width: 94.5%;
   height: 100%;
   padding: 3% 3%;
@@ -604,7 +604,7 @@ export default {
 }
 
 .searchSuggetDiv {
-  border: 1px solid rgb(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom-left-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
   background-color: white;
@@ -619,7 +619,7 @@ export default {
   padding-top: 1%;
   margin-left: 1%;
   padding-bottom: 1%;
-  border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-input-placeholder {
@@ -638,7 +638,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 25%;
-  border: 1px solid rgb(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: auto;
 }
 
@@ -671,7 +671,7 @@ export default {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: hidden; /* Enable scroll if needed */
-  /* background-color: rgb(0, 0, 0); Fallback color */
+  /* background-color: rgba(0, 0, 0); Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
@@ -745,7 +745,7 @@ export default {
 
 .selectDay:hover,
 .selectedDay {
-  background-color: rgb(255, 98, 0);
+  background-color: rgba(255, 98, 0);
 }
 
 .megaboxInner,
@@ -755,7 +755,7 @@ export default {
   padding-bottom: 4%;
   margin-top: 4%;
   font-size: 1.1em;
-  border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 

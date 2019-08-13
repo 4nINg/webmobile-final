@@ -404,7 +404,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: rgb(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .previewWriteModalContent {
@@ -429,7 +429,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid rgb(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   margin-right: 3%;
   margin-left: 1%;
   width: 23%;
@@ -448,7 +448,7 @@ export default {
   width: 100%;
   height: 100%;
   font-size: 2em;
-  background-color: rgb(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7);
   color: white;
   display: flex;
   justify-content: center;
@@ -485,7 +485,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: rgb(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .previewModalContainer {
@@ -533,7 +533,7 @@ export default {
 }
 
 .inModalPreviewImgPart img {
-  border: 1px solid rgb(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.4);
   width: 100%;
   height: 95%;
 }
@@ -592,7 +592,7 @@ export default {
 }
 
 .inmodalPreviewBtnDiv > div:hover {
-  box-shadow: 0.2em 0.2em 0.2em 0.2em rgb(0, 0, 0, 0.1);
+  box-shadow: 0.2em 0.2em 0.2em 0.2em rgba(0, 0, 0, 0.1);
 }
 
 .completeModifyPreviewCommentInner {
@@ -648,7 +648,7 @@ export default {
 .previewCommentVForDiv {
   margin-top: 1%;
   padding-bottom: 1%;
-  border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -699,7 +699,7 @@ export default {
   align-items: center;
   text-align: center;
   margin-right: 1%;
-  border: 1px solid rgb(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.5);
   border-radius: 0.5em;
 }
 .deletePreviewCommentDiv {
@@ -711,7 +711,7 @@ export default {
   text-align: center;
   margin-right: 1%;
   margin-left: 1%;
-  border: 1px solid rgb(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.5);
   border-radius: 0.5em;
 }
 </style>

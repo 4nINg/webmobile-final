@@ -80,7 +80,7 @@ export default {
     selectPage: function() {
       if (this.selectPage === 1) {
         document.querySelector(".headerDiv").style.backgroundColor =
-          "rgb(255, 255, 255, 0.7)";
+          "rgba(255, 255, 255, 0.7)";
       } else {
         document.querySelector(".headerDiv").style.backgroundColor =
           "transparent";

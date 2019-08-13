@@ -277,7 +277,7 @@ export default {
   width: 90%;
   height: 87%;
   position: relative;
-  background: rgb(255,255,255,0.8);
+  background: rgba(255,255,255,0.8);
 }
 
 
@@ -506,13 +506,13 @@ label {
 
 
 .userGradeRadioBtn + span{
-  color: rgb(106, 176, 76, 0.3);
+  color: rgba(106, 176, 76, 0.3);
 }
 .userGradeRadioBtn + span:not(:first-child) {
   margin-left: 5px;
 }
 .userGradeRadioBtn:checked + span{
-  color: rgb(106, 176, 76, 1);
+  color: rgba(106, 176, 76, 1);
 }
 
 

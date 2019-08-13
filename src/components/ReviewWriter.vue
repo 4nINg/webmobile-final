@@ -97,7 +97,7 @@ export default {
   width: 85%;
   height: 90%;
   /* margin: 7% auto; */
-  /* border: 1px solid rgb(0, 0, 0, 0.1); */
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
 }
 
 .titleInputDiv {
@@ -157,13 +157,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgb(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.5);
   border-radius: 1em;
   cursor: pointer;
 }
 
 .writerBtnDiv > div:hover {
-  box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(0, 0, 0, 0.1);
+  box-shadow: 0.1em 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.1);
 }
 
 .writerBtnDiv span {
