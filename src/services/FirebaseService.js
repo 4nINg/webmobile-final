@@ -268,7 +268,7 @@ export default {
                 uid: uid,
                 grade: grade
             }).then(() => {
-                console.log("수정완료!")
+                alert("변경완료!")
             })
             .catch(err => {
                 console.log("setUserGrade Error => " + err);

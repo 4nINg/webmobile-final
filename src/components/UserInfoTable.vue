@@ -195,7 +195,6 @@ export default {
 
       await FirebaseService.setUserGrade(this.userInfoList[index].uid, grade);
       await this.getUserList();
-      console.log("꾸ㅡㅌ")
     },
     async deleteUser(index) {
       var deleteCheck = confirm(this.userInfoList[index].username + "님의 계정을 삭제하시겠습니까?");

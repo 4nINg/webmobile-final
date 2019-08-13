@@ -267,7 +267,7 @@ export default {
         ".previewCommentVForDivContent"
       ); // 원래 댓글 내용
 
-      document.querySelector(".previewCommentWriteDiv").style.display = "none"; // 댓글 작성창
+      // document.querySelector(".previewCommentWriteDiv").style.display = "none"; // 댓글 작성창
       previewCommentVForDivContent[index].style.display = "none";
       modifyPreviewCommentInput[index].style.display = "block";
       modifyPreviewCommentDiv[index].style.display = "none";
@@ -291,7 +291,7 @@ export default {
       var previewCommentVForDivContent = document.querySelectorAll(
         ".previewCommentVForDivContent"
       ); // 원래 댓글 내용
-      document.querySelector(".previewCommentWriteDiv").style.display = "block"; // 댓글작성 창
+      // document.querySelector(".previewCommentWriteDiv").style.display = "block"; // 댓글작성 창
       FirebaseService.modifyPreviewComment(
         this.previewComment[index].id,
         modifyPreviewCommentInput[index].value

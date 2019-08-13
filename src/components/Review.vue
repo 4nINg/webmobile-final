@@ -345,8 +345,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   position: absolute;
-  top: 7.5%;
-  right: 5%;
+  top: 5.5%;
+  right: 100px;
 }
 
 .writeBtnDiv span {
@@ -435,6 +435,7 @@ export default {
 .rightArrow {
   cursor: pointer;
   top: 50%;
+  color: white;
 }
 
 .reviewModal {
