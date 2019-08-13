@@ -527,7 +527,7 @@ export default {
 .reviewModalContent p {
   width: 100%;
   height: 90%;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .showCommentDiv {
@@ -564,7 +564,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   height: 80%;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .showInModalreview {
