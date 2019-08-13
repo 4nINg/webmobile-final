@@ -53,7 +53,7 @@ new Vue({
                             3 : idTokenResult.claims.grade
                     }
                     store.dispatch('autoSignIn', user)
-                    if (idTokenResult.claims.grade == 1) {
+                    if (firebaseUser.email == "admin@admin.com") {
                         document.querySelector("#adminPageBtn").style.display = "block";
                     } else {
                         document.querySelector("#adminPageBtn").style.display = "none";

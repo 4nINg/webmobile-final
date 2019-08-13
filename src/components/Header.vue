@@ -6,10 +6,10 @@
     </div>
     <div class="headerBtn">
       <div>
-        <span id="SubscribeBtn" @click="subscribeAlarm()" style="display: none;">
+        <span id = "SubscribeBtn" @click="subscribeAlarm()" style="display: none;">
           <i class="fas fa-bell-slash"></i>
         </span>
-        <span id="SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
+        <span id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
           <i class="fas fa-bell"></i>
         </span>
       </div>
@@ -44,9 +44,9 @@ export default {
     },
     goToLogout() {
       var logoutFlag = confirm("정말로 로그 아웃 하시겠습니까?");
-      if (logoutFlag) {
+      if(logoutFlag) {
         this.$store.dispatch("userSignOut").finally(() => {
-          this.changeSelectPage(0);
+        this.changeSelectPage(0);
         });
       }
     },

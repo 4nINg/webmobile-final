@@ -148,6 +148,24 @@ export default new Vuex.Store({
                               });
                               commit('setLoading', false);
 
+                              // 현재 유저의 alarm 승인 여부를 확인 후, 승인됫다면 현재 웹의 토큰값을 받아와서 저장.
+                              firebase.firestore()
+                              .collection('registeredToken')
+                              .doc(firebase.auth().currentUser.uid)
+                              .get().then(function(doc) {
+                                if(doc.data().alarmPermission) {
+                                  firebase.messaging().getToken().then(function(currentToken) {
+                                    firebase.firestore()
+                                    .collection('registeredToken')
+                                    .doc(firebase.auth().currentUser.uid)
+                                    .update({
+                                      token : currentToken
+                                    });
+                                  });
+                                }
+                              })
+
+
                               alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
                               window.location.reload();
                               // 현재 로그인된 사용자에 등록.
@@ -155,6 +173,8 @@ export default new Vuex.Store({
                                   uid: firebase.auth().currentUser.uid,
                                   email: firebase.auth().currentUser.email
                               });
+
+
 
                           })
                           .catch(err => {
@@ -228,6 +248,9 @@ export default new Vuex.Store({
                         alert("구글 로그인 에러: " + err.message);
                         commit('setLoading', false);
                     })
+                }else {
+                  alert("이미 로그인 되어 있는 아이디입니다.")
+                  commit('setLoading', false);
                 }
               });
         },
@@ -236,37 +259,64 @@ export default new Vuex.Store({
 
             var temp = '';
             var currentUser;
-            commit('setLoading', true)
-            firebase.auth().signInWithPopup(facebook_provider)
-                .then(result => {
-                    currentUser = result.user;
-                    currentUser.getIdTokenResult().then(idTokenResult => {
-                        if (idTokenResult.claims.grade == 'undefined' || idTokenResult.claims.grade == null) {
-                            //setUserGrade 해줘야함
-                            FirebaseService.setUserGrade(currentUser.uid, 3);
-                        }
-                    })
+            var arrTemp = [];
+            var flag = true;
 
-                    alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
-                    window.location.reload();
-                    firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
-                        uid: firebase.auth().currentUser.uid,
-                        email: firebase.auth().currentUser.email,
-                        token: null,
-                        alarmPermission: false
-                    }, { merge: true });
+            firebase.database()
+              .ref('connectedUsers/')
+              .once('value', function(snapshot){
+                snapshot.forEach(function(doc) {
+                    arrTemp.push(doc.val().email);
+                })
+                //return arrTemp;
+              })
+              .then(() => {
+                for(var i in arrTemp) {
+                  //console.log(arrTemp[i]);
+                  if(arrTemp[i] === payload.email) {
+                    flag = false;
+                  }
+                }
+              })
+              .then(() => {
+                if(flag) {
+                  commit('setLoading', true)
+                  firebase.auth().signInWithPopup(facebook_provider)
+                      .then(result => {
+                          currentUser = result.user;
+                          currentUser.getIdTokenResult().then(idTokenResult => {
+                              if (idTokenResult.claims.grade == 'undefined' || idTokenResult.claims.grade == null) {
+                                  //setUserGrade 해줘야함
+                                  FirebaseService.setUserGrade(currentUser.uid, 3);
+                              }
+                          })
 
-                    // 현재 로그인된 사용자에 등록.
-                    firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
-                        uid: firebase.auth().currentUser.uid,
-                        email: firebase.auth().currentUser.email
-                    });
-                })
-                .catch(err => {
-                    commit('setError', true);
-                    alert("페이스북 로그인 에러: " + err.message);
-                    commit('setLoading', false);
-                })
+                          alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
+                          window.location.reload();
+                          firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
+                              uid: firebase.auth().currentUser.uid,
+                              email: firebase.auth().currentUser.email,
+                              token: null,
+                              alarmPermission: false
+                          }, { merge: true });
+
+                          // 현재 로그인된 사용자에 등록.
+                          firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
+                              uid: firebase.auth().currentUser.uid,
+                              email: firebase.auth().currentUser.email
+                          });
+                      })
+                      .catch(err => {
+                          commit('setError', true);
+                          alert("페이스북 로그인 에러: " + err.message);
+                          commit('setLoading', false);
+                      })
+                }else {
+                  alert("이미 로그인 되어 있는 아이디입니다.")
+                  commit('setLoading', false);
+                }
+              })
+
 
         },
     },

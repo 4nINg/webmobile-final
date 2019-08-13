@@ -189,8 +189,10 @@ export default {
             return;
           }
           grade = radio[i].value;
+          break;
         }
       }
+
       await FirebaseService.setUserGrade(this.userInfoList[index].uid, grade);
       await this.getUserList();
     },
@@ -339,7 +341,7 @@ export default {
   display: flex;
   align-items: center;
   text-align: center;
-  
+
   border-bottom: 1px solid black;
 }
 
