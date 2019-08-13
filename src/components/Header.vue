@@ -101,10 +101,10 @@ export default {
                   }
                   //console.log(currentToken);
                 });
-              });
+              })
           })
-          .catch(function(err) {
-            throw err;
+          .catch(err => {
+            this.$store.state.error = err;
           });
         //구독취소 버튼 활성화
         document.querySelector("#SubscribeBtn").style = "display:none";
@@ -147,14 +147,11 @@ export default {
                           );
                       }
                     });
-                  });
+                  })
               })
-              .catch(function(err) {
-                throw err;
-              });
           })
-          .catch(function(err) {
-            throw err;
+          .catch(err => {
+            this.$store.state.error = err;
           });
         //구독하기 버튼 활성화
         document.querySelector("#SubscribeBtn").style = "display:visible";
@@ -193,7 +190,8 @@ export default {
   font-size: 2.8em;
   margin-left: 0.3em;
   margin-top: -0.1em;
-  font-family: "Nanum Brush Script", cursive;
+  font-family: 'Song Myung', serif;
+  /* font-family: "Nanum Brush Script", cursive; */
   font-weight: 400;
 }
 

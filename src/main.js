@@ -4,14 +4,12 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import axios from "axios";
-import cheerio from "cheerio";
 import firebase from "firebase";
 import FirebaseService from "./services/FirebaseService";
 import VueAxios from 'vue-axios';
 
 
 Vue.use(axios, VueAxios);
-Vue.use(cheerio);
 Vue.config.productionTip = false
 Vue.config.devtools = true
 Vue.prototype.$http = require('axios');
@@ -23,6 +21,7 @@ new Vue({
     render: h => h(App),
     created() {
         firebase.auth().onAuthStateChanged((firebaseUser) => {
+          store.state.loading = true;
             // FirebaseService.getUserList();
             if (firebaseUser) {
                 //유저가 로그인 하게 되면
@@ -41,7 +40,7 @@ new Vue({
                       }
                     }
                   })
-                });
+                })
 
                 var user;
                 firebaseUser.getIdTokenResult().then(idTokenResult => {
@@ -58,6 +57,7 @@ new Vue({
                     } else {
                         document.querySelector("#adminPageBtn").style.display = "none";
                     }
+
                 })
             } else {
                 console.log("비로그인 상태")
@@ -65,7 +65,11 @@ new Vue({
                 //로그아웃을 하면 구독,취소 버튼 비활성화.
                 document.querySelector('#SubscribeCancel').style = 'display:none';
                 document.querySelector('#SubscribeBtn').style = 'display:none';
+                store.state.loading = false;
             }
+        })
+        .catch(err => {
+          store.state.error = err;
         })
     }
 }).$mount("#app");
