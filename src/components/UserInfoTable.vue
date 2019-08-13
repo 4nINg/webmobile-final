@@ -166,7 +166,10 @@ export default {
         }
 
         this.numOfUser = this.userInfoList.length;
-      })
+      }).catch(err => {
+        this.$store.state.error = err;
+      });
+
       for (var i = 0; i < this.userInfoList.length; i++) {
         if(this.userInfoList[i].email == "admin@admin.com") continue;
         var radio = document.getElementsByName('userGrade' + i);

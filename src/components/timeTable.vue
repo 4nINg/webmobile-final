@@ -309,6 +309,9 @@ export default {
               }
             }
           }
+        })
+        .catch(err => {
+          this.$store.state.error = err;
         });
     },
     crawLotte() {
@@ -358,6 +361,9 @@ export default {
               }
             }
           }
+        })
+        .catch(err => {
+          this.$store.state.error = err;
         });
     },
     crawCgv() {
@@ -407,6 +413,9 @@ export default {
               }
             }
           }
+        })
+        .catch(err => {
+          this.$store.state.error = err;
         });
     },
     searchMovie() {
@@ -640,6 +649,20 @@ export default {
   width: 25%;
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: auto;
+}
+
+::-ms-scrollbar-track{
+  width: 0.1%;
+  background-color: white;
+}
+
+::-ms-scrollbar{
+  width: 0.1em;
+}
+
+::-ms-scrollbar-thumb{
+  border-radius: 15%;
+  background-color: black;
 }
 
 ::-webkit-scrollbar-track {

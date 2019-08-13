@@ -4,8 +4,8 @@ import "firebase/storage";
 import "firebase/auth";
 import "firebase/functions";
 import * as admin from 'firebase-admin';
-
 import "@firebase/messaging";
+import store from "../store.js";
 
 const INFO = "info";
 const REVIEW = "review";
@@ -50,12 +50,13 @@ Notification.requestPermission().then(function(Permission) {
         console.log("No Permission");
     }
 }).catch(function(err) {
-    console.log("Error ", err);
+    store.state.error = err;
 });
 
 firebase.firestore().enablePersistence()
     .catch(function(err) {
         if (err.code == 'failed-precondition') {} else if (err.code == 'unimplemented') {}
+        // store.state.error = err;
     });
 
 //포그라운드 상태에서 메세지 받는 처리 방식
@@ -107,6 +108,9 @@ export default {
                     data.id = doc.id;
                     return data;
                 });
+            })
+            .catch(err => {
+              store.state.error = err;
             });
     },
     // 리뷰 작성
@@ -121,6 +125,9 @@ export default {
             })
             .then(() => {}).catch((error) => {
                 alert(error)
+            })
+            .catch(err => {
+              store.state.error = err;
             });
     },
     // 리뷰 수정
@@ -128,11 +135,15 @@ export default {
         firestore.collection(REVIEW).doc(reviewId).update({
             title: mtitle,
             body: mbody
+        }).catch(err => {
+          store.state.error = err;
         });
     },
     // 리뷰 삭제
     deleteReview(reviewId) {
-        firestore.collection(REVIEW).doc(reviewId).delete();
+        firestore.collection(REVIEW).doc(reviewId).delete().catch(err => {
+          store.state.error = err;
+        });
     },
     // ==================================================== 리뷰 댓글 =================================================================
     // 모든 리뷰 댓글 다 들고오기
@@ -147,6 +158,8 @@ export default {
                     data.id = doc.id;
                     return data;
                 });
+            }).catch(err => {
+              store.state.error = err;
             });
     },
     // 리뷰 댓글 등록하기
@@ -158,17 +171,23 @@ export default {
             username: username,
             id: "",
             created_at: firebase.firestore.FieldValue.serverTimestamp()
-        })
+        }).catch(err => {
+          store.state.error = err;
+        });
     },
     // 리뷰 댓글 수정
     modifyReviewComment(reviewCommentId, content) {
         firestore.collection(REVIEWCOMMENT).doc(reviewCommentId).update({
             content: content
+        }).catch(err => {
+          store.state.error = err;
         });
     },
     // 리뷰 댓글 삭제
     deleteReviewComment(reviewCommentId) {
-        firestore.collection(REVIEWCOMMENT).doc(reviewCommentId).delete();
+        firestore.collection(REVIEWCOMMENT).doc(reviewCommentId).delete().catch(err => {
+          store.state.error = err;
+        });
     },
     // ==================================================== 프리뷰 =================================================================
     getPreviewList() {
@@ -182,6 +201,8 @@ export default {
                     data.id = doc.id;
                     return data;
                 });
+            }).catch(err => {
+              store.state.error = err;
             });
     },
     postPreview(title, uid, writer, body, imgUrl, imgName) {
@@ -193,16 +214,22 @@ export default {
             imgUrl: imgUrl,
             imgName: imgName,
             created_at: firebase.firestore.FieldValue.serverTimestamp()
+        }).catch(err => {
+          store.state.error = err;
         });
     },
     deletePreview(previewId) {
-        firestore.collection(PREVIEW).doc(previewId).delete();
+        firestore.collection(PREVIEW).doc(previewId).delete().catch(err => {
+          store.state.error = err;
+        });
     },
     modifyPreview(previewId, title, body, imgUrl, imgName) {
         if (imgUrl === "") {
             firestore.collection(PREVIEW).doc(previewId).update({
                 title: title,
                 body: body
+            }).catch(err => {
+              store.state.error = err;
             });
         } else {
             firestore.collection(PREVIEW).doc(previewId).update({
@@ -210,6 +237,8 @@ export default {
                 body: body,
                 imgUrl: imgUrl,
                 imgName: imgName,
+            }).catch(err => {
+              store.state.error = err;
             });
         }
     },
@@ -226,6 +255,8 @@ export default {
                     data.id = doc.id;
                     return data;
                 });
+            }).catch(err => {
+              store.state.error = err;
             });
     },
     // 프리뷰댓글 등록
@@ -237,17 +268,23 @@ export default {
             username: username,
             id: "",
             created_at: firebase.firestore.FieldValue.serverTimestamp()
-        })
+        }).catch(err => {
+          store.state.error = err;
+        });
     },
     // 프리뷰 댓글 수정
     modifyPreviewComment(previewCommentId, content) {
         firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).update({
             content: content
+        }).catch(err => {
+          store.state.error = err;
         });
     },
     // 프리뷰 댓글 삭제
     deletePreviewComment(previewCommentId) {
-        firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).delete();
+        firestore.collection(PREVIEWCOMMENT).doc(previewCommentId).delete().catch(err => {
+          store.state.error = err;
+        });
     },
 
     //사용자 정보 불러오기
@@ -258,7 +295,9 @@ export default {
                 // console.log(result.data)
                 return result.data;
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+              store.state.error = err;
+            })
             .finally(() => {});
     },
     //사용자 등급 설정
@@ -271,8 +310,8 @@ export default {
                 alert("변경완료!")
             })
             .catch(err => {
-                console.log("setUserGrade Error => " + err);
-            })
+              store.state.error = err;
+            });
     },
     //사용자 삭제
     async deleteUser(uid) {
@@ -282,8 +321,8 @@ export default {
                 alert("삭제완료!")
             })
             .catch(err => {
-                console.log("deleteUser Error => " + err);
-            })
+              store.state.error = err;
+            });
     },
     // review 개수
     async getNumOfReview() {
@@ -295,6 +334,8 @@ export default {
             });
             result.push(cnt);
             return result;
+        }).catch(err => {
+          store.state.error = err;
         });
     },
     // preview 개수
@@ -307,6 +348,8 @@ export default {
             });
             result.push(cnt);
             return result;
+        }).catch(err => {
+          store.state.error = err;
         });
     },
     //관리자페이지용 review get
@@ -324,6 +367,8 @@ export default {
                 }
                 return data
             });
+        }).catch(err => {
+          store.state.error = err;
         });
     },
     //관리자페이지용 preview get
@@ -341,6 +386,8 @@ export default {
                 }
                 return data
             });
+        }).catch(err => {
+          store.state.error = err;
         });
     }
 }
