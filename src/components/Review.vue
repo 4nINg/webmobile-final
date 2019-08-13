@@ -314,13 +314,16 @@ export default {
         this.getReviewList();
       }
     },
-    checkSession(uid){
-      if(this.$store.state.user !== null && (this.$store.state.user.uid == uid || this.$store.state.user.grade == 1)){
+    checkSession(uid) {
+      if (
+        this.$store.state.user !== null &&
+        (this.$store.state.user.uid == uid || this.$store.state.user.grade == 1)
+      ) {
         return true;
-      }else{
+      } else {
         return false;
       }
-    },
+    }
   }
 };
 </script>
@@ -346,7 +349,7 @@ export default {
   justify-content: flex-end;
   position: absolute;
   top: 7.5%;
-  right: 5%;
+  right: 10%;
 }
 
 .writeBtnDiv span {
