@@ -40,28 +40,14 @@ export default {
         email: this.email,
         password: this.password
       });
-      // .finally(() => {
-      //   this.changeSelectPage(0);
-      //   // if(!this.$store.getters.isAdmin){
-      //   //   document.querySelector("#adminPageBtn").style.display = "none";
-      //   // }else{
-      //   //   document.querySelector("#adminPageBtn").style.display = "block";
-      //   // }
-      // });
     },
     //google login
     loginWithGoogle() {
       this.$store.dispatch("userSignInWithGoogle", {});
-      // .finally(() => {
-      //   this.changeSelectPage(0);
-      // });
     },
     //facebook login
     loginWithFacebook() {
       this.$store.dispatch("userSignInWithFacebook", {});
-      // .finally(() => {
-      //   this.changeSelectPage(0);
-      // });
     },
     signUp() {
       this.changeSelectPage(5);
@@ -197,5 +183,8 @@ export default {
   color: white;
   border: 1px solid rgb(66, 103, 178);
   transition: 1s;
+}
+.loginFormButton span{
+  cursor: pointer;
 }
 </style>

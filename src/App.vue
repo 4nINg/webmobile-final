@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Error v-if="this.$store.state.error"></Error>
-    <Loading v-if="this.$store.state.loading"></Loading>
+    <ErrorPage v-if="this.$store.state.error !== null"></ErrorPage>
+    <LoadingPage v-if="this.$store.state.loading"></LoadingPage>
     <Header :selectPage="selectPage" @inChildSelectPage="childSelectPage"></Header>
     <div class="backgroudDiv"></div>
     <MainPage v-if="selectPage === 0"></MainPage>
@@ -28,8 +28,8 @@ import CommentWriter from "@/components/CommentWriter";
 import Admin from "@/components/Admin";
 import SignUpForm from "@/components/SignUpForm";
 import Preview from "@/components/Preview";
-import Loading from "@/components/Loading";
-import Error from "@/components/Error";
+import LoadingPage from "@/components/Loading";
+import ErrorPage from "@/components/Error";
 
 export default {
   name: "App",
@@ -51,7 +51,8 @@ export default {
     Admin,
     SignUpForm,
     Preview,
-    Loading
+    LoadingPage,
+    ErrorPage
   },
   methods: {
     childSelectPage(i) {
@@ -86,11 +87,6 @@ export default {
           "transparent";
       }
     }
-    // this.$store.state.loading: function(){
-    //   if(this.$store.state.loading){
-    //
-    //   }
-    // }
   }
 };
 </script>

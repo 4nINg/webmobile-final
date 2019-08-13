@@ -71,9 +71,8 @@ export default new Vuex.Store({
                     })
                 })
                 .catch((err) => {
-                    commit('setError', err.message)
-                    alert("일반회원가입 에러 => " + err)
                     commit('setLoading', false)
+                    commit('setError', err)
                 })
         },
         // 페이지 refresh 시에 세션 확인 후 '자동 로그인'
@@ -81,7 +80,6 @@ export default new Vuex.Store({
             commit('setUser', { email: payload.email, username: payload.username, grade: payload.grade, uid: payload.uid });
             commit('setLoading', false);
             commit('setError', null);
-            // console.log("autoSignIn 페이로드 => email : " + payload.email + " username : " + payload.username + " token : " + payload.uid + " grade : " + payload.grade )
         },
         // 로그아웃
         userSignOut({ commit }) {
@@ -94,8 +92,8 @@ export default new Vuex.Store({
                 alert("로그아웃 완료!");
 
             }).catch(err => {
-                commit('setError', err.message)
-                commit('setLoading', false);
+              commit('setLoading', false)
+              commit('setError', err)
             })
 
             //접속 유저 DB에서 삭제
@@ -108,10 +106,6 @@ export default new Vuex.Store({
                         }
                     })
                 })
-                .catch((err) => {
-                    throw err;
-                })
-
         },
         // 일반 로그인
         userSignIn({ commit }, payload) {
@@ -163,6 +157,7 @@ export default new Vuex.Store({
                                   });
                                 }
                               })
+                              alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
                           })
 
                           //로그인 유저 REALTIME DB에 저장.
@@ -170,13 +165,11 @@ export default new Vuex.Store({
                               uid: firebase.auth().currentUser.uid,
                               email: firebase.auth().currentUser.email
                           });
-                          alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
                           window.location.reload();
                       })
-                      .catch(error => {
-                          commit('setError', true);
-                          alert("일반 로그인 에러: " + error);
+                      .catch(err => {
                           commit('setLoading', false);
+                          commit('setError', err);
                       })
                 }else {
                   alert("이미 로그인 되어 있는 아이디입니다.")
@@ -254,9 +247,8 @@ export default new Vuex.Store({
 
                     })
                     .catch(err => {
-                        commit('setError', true);
-                        alert("구글 로그인 에러: " + err.message);
                         commit('setLoading', false);
+                        commit('setError', err);
                     })
                 }else {
                   alert("이미 로그인 되어 있는 아이디입니다.")
@@ -335,9 +327,8 @@ export default new Vuex.Store({
 
                       })
                       .catch(err => {
-                          commit('setError', true);
-                          alert("페이스북 로그인 에러: " + err.message);
                           commit('setLoading', false);
+                          commit('setError', err);
                       })
                 }else {
                   alert("이미 로그인 되어 있는 아이디입니다.")
