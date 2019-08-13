@@ -146,7 +146,7 @@ export default new Vuex.Store({
                                   username: firebaseUser.user.displayName,
                                   grade: idTokenResult.claims.grade
                               });
-                              commit('setLoading', false);
+
                               // 현재 유저의 alarm 승인 여부를 확인 후, 승인됫다면 현재 웹의 토큰값을 받아와서 저장.
                               firebase.firestore()
                               .collection('registeredToken')
@@ -163,15 +163,17 @@ export default new Vuex.Store({
                                   });
                                 }
                               })
-                          })
+                              alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
 
+                          })
+                          window.location.reload();
+                          //commit('setLoading', false);
                           //로그인 유저 REALTIME DB에 저장.
                           firebase.database().ref('connectedUsers/' + firebase.auth().currentUser.email.split("@")[0]).set({
                               uid: firebase.auth().currentUser.uid,
                               email: firebase.auth().currentUser.email
                           });
-                          alert("반갑습니다.\n" + this.state.user.username + "님 로그인되었습니다.");
-                          window.location.reload();
+
                       })
                       .catch(error => {
                           commit('setError', true);
@@ -234,6 +236,8 @@ export default new Vuex.Store({
                                 });
                               }
                             })
+                            alert("반갑습니다.\n" + currentUser.displayName + "님 Google 아이디로 로그인되었습니다.");
+                            window.location.reload();
                         })
 
                         firebase.firestore().collection('registeredToken').doc(firebase.auth().currentUser.uid).set({
@@ -249,8 +253,7 @@ export default new Vuex.Store({
                             email: firebase.auth().currentUser.email
                         });
 
-                        alert("반갑습니다.\n" + currentUser.displayName + "님 Google 아이디로 로그인되었습니다.");
-                        window.location.reload();
+
 
                     })
                     .catch(err => {
@@ -314,6 +317,8 @@ export default new Vuex.Store({
                                     });
                                   });
                                 }
+                                alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
+                                window.location.reload();
                               })
                           })
 
@@ -329,10 +334,6 @@ export default new Vuex.Store({
                               uid: firebase.auth().currentUser.uid,
                               email: firebase.auth().currentUser.email
                           });
-                          alert("반갑습니다.\n" + currentUser.displayName + "님 Facebook 아이디로 로그인되었습니다.");
-                          window.location.reload();
-
-
                       })
                       .catch(err => {
                           commit('setError', true);

@@ -12,20 +12,22 @@ self.addEventListener("install", function(event) {
 var DYNAMIC_CACHE = "다이나믹-캐시-스토리지1";
 
 self.addEventListener("activate", function(event) {
-    console.log("activate start");
-    event.waitUntil(
-        caches.keys().then(function(cacheNames) {
-            return Promise.all(
-                cacheNames.map(function(cacheName) {
-                    return caches.delete(cacheName);
-                })
-            );
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.filter(function(cacheName) {
+
+        }).map(function(cacheName) {
+            return caches.delete(cacheName);
         })
-    );
-    console.log("activate end");
+      );
+    })
+  );
 });
 
+
 self.addEventListener("fetch", event => {
+    console.log("fetch");
     event.respondWith(
         caches.match(event.request).then(response => {
             // 캐시에 있으면 repsonse를 그대로 돌려준다.
@@ -77,6 +79,7 @@ self.addEventListener("fetch", event => {
         })
     );
 });
+
 
 // 백그라운드일때 메세지를 받고 처리 방식
 firebase.messaging().setBackgroundMessageHandler(function(payload) {
