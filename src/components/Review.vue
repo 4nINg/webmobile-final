@@ -159,10 +159,15 @@ export default {
     };
   },
   mounted() {
-    this.getReviewCommentList();
-    this.getReviewList();
+    this.reviewPageInit();
   },
   methods: {
+    async reviewPageInit(){
+      await this.setLoadingTrue();
+      await this.getReviewList();
+      await this.getReviewCommentList();
+      await this.setLoadingFalse();
+    },
     isSubmit() {
       this.getReviewList();
       this.getReviewCommentList();
@@ -321,6 +326,12 @@ export default {
         return false;
       }
     },
+    setLoadingTrue(){
+       this.$store.state.loading = true;
+     },
+     setLoadingFalse(){
+       this.$store.state.loading = false;
+     },
   }
 };
 </script>

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Error v-if="this.$store.state.error"></Error>
     <Loading v-if="this.$store.state.loading"></Loading>
     <Header :selectPage="selectPage" @inChildSelectPage="childSelectPage"></Header>
     <div class="backgroudDiv"></div>
@@ -28,6 +29,7 @@ import Admin from "@/components/Admin";
 import SignUpForm from "@/components/SignUpForm";
 import Preview from "@/components/Preview";
 import Loading from "@/components/Loading";
+import Error from "@/components/Error";
 
 export default {
   name: "App",

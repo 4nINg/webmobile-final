@@ -432,7 +432,7 @@ export default {
     },
     async movieDetail() {
       this.searchSuggestList = [];
-      this.$store.state.loading = true;
+      // this.$store.state.loading = true;
       var self = this;
       var searchResult = null;
       var finalKeyword = this.searchKeyword.replace(" (우리말녹음)", "");
@@ -453,7 +453,7 @@ export default {
           } catch (error) {
             this.searchMovieImgUrl = "";
           }
-          this.$store.state.loading = false;
+          // this.$store.state.loading = false;
         });
       this.searchKeyword = "";
       this.searchSuggestList = [];
@@ -872,5 +872,6 @@ export default {
 
 .searchSuggest {
   width: 100%;
+  cursor: pointer;
 }
 </style>

@@ -171,6 +171,12 @@ export default {
     };
   },
   methods: {
+    async previewPageInit(){
+      await this.setLoadingTrue();
+      await this.getPreviewList();
+      await this.getPreviewCommentList();
+      await this.setLoadingFalse();
+    },
     isSubmit() {
       this.getPreviewCommentList();
       this.getPreviewList();
@@ -360,7 +366,13 @@ export default {
       }else{
         return false;
       }
-    }
+    },
+    setLoadingTrue(){
+       this.$store.state.loading = true;
+     },
+     setLoadingFalse(){
+       this.$store.state.loading = false;
+     },
   },
   components: {
     PreviewWriter,
@@ -368,8 +380,7 @@ export default {
     PreviewCommentWriter
   },
   mounted() {
-    this.getPreviewList();
-    this.getPreviewCommentList();
+    this.previewPageInit();
     this.isModify = false;
   }
 };
