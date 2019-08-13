@@ -4,15 +4,12 @@
       <span class="logo">빠른 영화, 빠른 영화관</span>
       <span class="mainLogo">빠영빠영.</span>
     </div>
-    <div class>
-      <span @click="changeSelectPage(-1)" id="adminPageBtn">Admin</span>
-      <div id="SubscribeBtn" @click="subscribeAlarm()" style="display: none;">
-        <span style="color:black; font-size:2em; margin:1.5em; ">
+    <div class="headerBtn">
+      <div>
+        <span id = "SubscribeBtn" @click="subscribeAlarm()" style="display: none;">
           <i class="fas fa-bell-slash"></i>
         </span>
-      </div>
-      <div id="SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
-        <span style="color:black; font-size:2em; margin:1.5em;">
+        <span id = "SubscribeCancel" @click="subscribeAlarmCancel()" style="display: none;">
           <i class="fas fa-bell"></i>
         </span>
       </div>
@@ -46,9 +43,12 @@ export default {
       this.changeSelectPage(4);
     },
     goToLogout() {
-      this.$store.dispatch("userSignOut").finally(() => {
+      var logoutFlag = confirm("정말로 로그 아웃 하시겠습니까?");
+      if(logoutFlag) {
+        this.$store.dispatch("userSignOut").finally(() => {
         this.changeSelectPage(0);
-      });
+        });
+      }
     },
     changeSelectPage(i) {
       if (
@@ -176,7 +176,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: black;
   text-align: center;
   width: 100%;
   height: 13%;

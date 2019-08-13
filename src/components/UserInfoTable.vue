@@ -189,10 +189,13 @@ export default {
             return;
           }
           grade = radio[i].value;
+          break;
         }
       }
+
       await FirebaseService.setUserGrade(this.userInfoList[index].uid, grade);
       await this.getUserList();
+      console.log("꾸ㅡㅌ")
     },
     async deleteUser(index) {
       var deleteCheck = confirm(this.userInfoList[index].username + "님의 계정을 삭제하시겠습니까?");
@@ -339,7 +342,7 @@ export default {
   display: flex;
   align-items: center;
   text-align: center;
-  
+
   border-bottom: 1px solid black;
 }
 

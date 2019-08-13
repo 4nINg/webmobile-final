@@ -262,9 +262,9 @@ export default {
             .finally(() => {});
     },
     //사용자 등급 설정
-    setUserGrade(uid, grade) {
+    async setUserGrade(uid, grade) {
         const setUserGradeFunc = functions.httpsCallable('setUserGrade');
-        setUserGradeFunc({
+        await setUserGradeFunc({
                 uid: uid,
                 grade: grade
             }).then(() => {
