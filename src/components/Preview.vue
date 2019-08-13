@@ -171,6 +171,12 @@ export default {
     };
   },
   methods: {
+    async previewPageInit(){
+      await this.setLoadingTrue();
+      await this.getPreviewList();
+      await this.getPreviewCommentList();
+      await this.setLoadingFalse();
+    },
     isSubmit() {
       this.getPreviewCommentList();
       this.getPreviewList();
@@ -267,7 +273,7 @@ export default {
         ".previewCommentVForDivContent"
       ); // 원래 댓글 내용
 
-      document.querySelector(".previewCommentWriteDiv").style.display = "none"; // 댓글 작성창
+      // document.querySelector(".previewCommentWriteDiv").style.display = "none"; // 댓글 작성창
       previewCommentVForDivContent[index].style.display = "none";
       modifyPreviewCommentInput[index].style.display = "block";
       modifyPreviewCommentDiv[index].style.display = "none";
@@ -291,7 +297,7 @@ export default {
       var previewCommentVForDivContent = document.querySelectorAll(
         ".previewCommentVForDivContent"
       ); // 원래 댓글 내용
-      document.querySelector(".previewCommentWriteDiv").style.display = "block"; // 댓글작성 창
+      // document.querySelector(".previewCommentWriteDiv").style.display = "block"; // 댓글작성 창
       FirebaseService.modifyPreviewComment(
         this.previewComment[index].id,
         modifyPreviewCommentInput[index].value
@@ -360,7 +366,13 @@ export default {
       }else{
         return false;
       }
-    }
+    },
+    setLoadingTrue(){
+       this.$store.state.loading = true;
+     },
+     setLoadingFalse(){
+       this.$store.state.loading = false;
+     },
   },
   components: {
     PreviewWriter,
@@ -368,8 +380,7 @@ export default {
     PreviewCommentWriter
   },
   mounted() {
-    this.getPreviewList();
-    this.getPreviewCommentList();
+    this.previewPageInit();
     this.isModify = false;
   }
 };

@@ -265,7 +265,7 @@ export default {
     crawMegabox() {
       var self = this;
       axios
-        .get("http://localhost:8888/megabox", {
+        .get("http://192.168.100.81:8888/megabox", {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -314,7 +314,7 @@ export default {
     crawLotte() {
       var self = this;
       axios
-        .get("http://localhost:8888/lottecinema", {
+        .get("http://192.168.100.81:8888/lottecinema", {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -363,7 +363,7 @@ export default {
     crawCgv() {
       var self = this;
       axios
-        .get("http://localhost:8888/cgv", {
+        .get("http://192.168.100.81:8888/cgv", {
           headers: {
             "Access-Control-Allow-Origin": "*"
           }
@@ -432,7 +432,7 @@ export default {
     },
     async movieDetail() {
       this.searchSuggestList = [];
-      this.$store.state.loading = true;
+      // this.$store.state.loading = true;
       var self = this;
       var searchResult = null;
       var finalKeyword = this.searchKeyword.replace(" (우리말녹음)", "");
@@ -453,7 +453,7 @@ export default {
           } catch (error) {
             this.searchMovieImgUrl = "";
           }
-          this.$store.state.loading = false;
+          // this.$store.state.loading = false;
         });
       this.searchKeyword = "";
       this.searchSuggestList = [];
@@ -546,7 +546,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style>
@@ -872,5 +872,6 @@ export default {
 
 .searchSuggest {
   width: 100%;
+  cursor: pointer;
 }
 </style>

@@ -159,10 +159,15 @@ export default {
     };
   },
   mounted() {
-    this.getReviewCommentList();
-    this.getReviewList();
+    this.reviewPageInit();
   },
   methods: {
+    async reviewPageInit(){
+      await this.setLoadingTrue();
+      await this.getReviewList();
+      await this.getReviewCommentList();
+      await this.setLoadingFalse();
+    },
     isSubmit() {
       this.getReviewList();
       this.getReviewCommentList();
@@ -314,13 +319,22 @@ export default {
         this.getReviewList();
       }
     },
-    checkSession(uid){
-      if(this.$store.state.user !== null && (this.$store.state.user.uid == uid || this.$store.state.user.grade == 1)){
+    checkSession(uid) {
+      if (
+        this.$store.state.user !== null &&
+        (this.$store.state.user.uid == uid || this.$store.state.user.grade == 1)
+      ) {
         return true;
-      }else{
+      } else {
         return false;
       }
     },
+    setLoadingTrue(){
+       this.$store.state.loading = true;
+     },
+     setLoadingFalse(){
+       this.$store.state.loading = false;
+     },
   }
 };
 </script>
@@ -345,8 +359,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   position: absolute;
-  top: 7.5%;
-  right: 5%;
+  top: 5.5%;
+  right: 100px;
 }
 
 .writeBtnDiv span {
@@ -435,6 +449,7 @@ export default {
 .rightArrow {
   cursor: pointer;
   top: 50%;
+  color: white;
 }
 
 .reviewModal {
